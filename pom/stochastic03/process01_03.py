@@ -16,7 +16,7 @@ from  scipy.stats import chi2_contingency
 # numberExamples = 11591
 
 # KaKr
-df = pd.read_csv('datasetKaKr.csv', sep=";" , decimal=',')
+df = pd.read_csv('files/datasetKaKr.csv', sep=";", decimal=',')
 numberExamples = 57951
 
 # PiIv

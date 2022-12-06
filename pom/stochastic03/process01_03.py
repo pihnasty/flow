@@ -1,29 +1,36 @@
 # ba01.csv Kawalec W, Król R.: Generating of Electric Energy by a Declined Overburden Conveyor in a Continuous Surface Mine. Energies 14, 1–13 (2021). https://doi.org/10.3390/en14134030
 
+import copy
+import math
 import sys
+
+import numpy as np
+import pandas as pd
+from scipy.stats import chi2_contingency
+
+import Graphics.CombinedCharts.LineHistChart as lineHistChart
 import Graphics.Histograms.Hist as hist
 import Graphics.LineCharts.LineChart as lineChart
-import Graphics.CombinedCharts.LineHistChart as lineHistChart
 import utils.FileUtil as file_util
-import pandas as pd
-import numpy as np
-import math
-import copy
-from  scipy.stats import chi2_contingency
+from utils.progress import progress
 
 # df = pd.read_csv('netflix_titles.csv', sep=",")
 # df = pd.read_csv('ba01.csv', sep=";" , decimal=',')
 # numberExamples = 11591
 
+# universal .csv
+df = pd.read_csv('dataset.csv', sep=";", decimal=',')
+numberExamples = df.shape[0]
 # KaKr
-df = pd.read_csv('files/datasetKaKr.csv', sep=";", decimal=',')
-numberExamples = 57951
+# df = pd.read_csv('datasetKaKr.csv', sep=";" , decimal=',')
+# numberExamples = 57951
+
 
 # PiIv
 # df = pd.read_csv('datasetPiIv_gamma52.csv', sep=";" , decimal=',')
 # numberExamples = 999
 
-countOfIntervalsXi2 = 5.0*math.sqrt(numberExamples)
+# countOfIntervalsXi2 = 5.0*math.sqrt(numberExamples)
 # countOfIntervalsXi2 = 5.0*math.log10(numberExamples)
 countOfIntervalsXi2 = 50
 
@@ -83,6 +90,29 @@ def k(tau # interval between the sections
         iTauI = (i+tauI) % numberExamples
         integral = integral + dataY[i]*dataY[iTauI]*delta_t
     return integral
+
+# Print iterations progress
+def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
+    """
+    Call in a loop to create terminal progress bar
+    @params:
+        iteration   - Required  : current iteration (Int)
+        total       - Required  : total iterations (Int)
+        prefix      - Optional  : prefix string (Str)
+        suffix      - Optional  : suffix string (Str)
+        decimals    - Optional  : positive number of decimals in percent complete (Int)
+        length      - Optional  : character length of bar (Int)
+        fill        - Optional  : bar fill character (Str)
+        printEnd    - Optional  : end character (e.g. "\r", "\r\n") (Str)
+    """
+    percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
+    filledLength = int(length * iteration // total)
+    bar = fill * filledLength + '-' * (length - filledLength)
+    print(f'\r{prefix} |{bar}| {percent}% {suffix}', end = printEnd)
+    # Print New Line on Complete
+    if iteration == total:
+        print()
+
 # ================================================ initial =================================================
 path = 'figures/initial'
 file_util.make_dir_if_not(path)
@@ -183,16 +213,20 @@ autoKorelationCoeffitient = [d2X, d2Y, d2Y2]
 i=0
 j=0
 
+d_auto_korelation_centered_mass_stdColumn=d_auto_korelation_centered_mass["flow"].std()**2
+
 for tau in d_auto_korelation_centered_mass["time"]:
     if(i % period == 0 and j< autoKorelationCoeffitient[0].__len__()):
         try:
             autoKorelationCoeffitient[2][j] = np.exp(-0.1*tau)
-            autoKorelationCoeffitient[1][j] = k(tau, d_auto_korelation_centered_mass["time"],d_auto_korelation_centered_mass["flow"])
+            autoKorelationCoeffitient[1][j] = k(tau, d_auto_korelation_centered_mass["time"],d_auto_korelation_centered_mass["flow"])/d_auto_korelation_centered_mass_stdColumn
             autoKorelationCoeffitient[0][j] = tau
             j=j+1
+            progress(i+1, numberExamples)
         except IndexError:
             print("")
     i=i+1
+
 path = 'figures/autoCorelation'
 file_util.make_dir_if_not(path)
 columName ='flow_autoKorelation'

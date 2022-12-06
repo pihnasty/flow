@@ -1,29 +1,36 @@
 # ba01.csv Kawalec W, Król R.: Generating of Electric Energy by a Declined Overburden Conveyor in a Continuous Surface Mine. Energies 14, 1–13 (2021). https://doi.org/10.3390/en14134030
 
+import copy
+import math
 import sys
+
+import numpy as np
+import pandas as pd
+from scipy.stats import chi2_contingency
+
+import Graphics.CombinedCharts.LineHistChart as lineHistChart
 import Graphics.Histograms.Hist as hist
 import Graphics.LineCharts.LineChart as lineChart
-import Graphics.CombinedCharts.LineHistChart as lineHistChart
 import utils.FileUtil as file_util
-import pandas as pd
-import numpy as np
-import math
-import copy
-from  scipy.stats import chi2_contingency
+from utils.progress import progress
 
 # df = pd.read_csv('netflix_titles.csv', sep=",")
 # df = pd.read_csv('ba01.csv', sep=";" , decimal=',')
 # numberExamples = 11591
 
+# universal .csv
+df = pd.read_csv('dataset.csv', sep=";", decimal=',')
+numberExamples = df.shape[0]
 # KaKr
-df = pd.read_csv('files/datasetKaKr.csv', sep=";", decimal=',')
-numberExamples = 57951
+# df = pd.read_csv('datasetKaKr.csv', sep=";" , decimal=',')
+# numberExamples = 57951
+
 
 # PiIv
 # df = pd.read_csv('datasetPiIv_gamma52.csv', sep=";" , decimal=',')
 # numberExamples = 999
 
-countOfIntervalsXi2 = 5.0*math.sqrt(numberExamples)
+# countOfIntervalsXi2 = 5.0*math.sqrt(numberExamples)
 # countOfIntervalsXi2 = 5.0*math.log10(numberExamples)
 countOfIntervalsXi2 = 50
 
@@ -83,6 +90,8 @@ def k(tau # interval between the sections
         iTauI = (i+tauI) % numberExamples
         integral = integral + dataY[i]*dataY[iTauI]*delta_t
     return integral
+
+
 # ================================================ initial =================================================
 path = 'figures/initial'
 file_util.make_dir_if_not(path)
@@ -183,16 +192,20 @@ autoKorelationCoeffitient = [d2X, d2Y, d2Y2]
 i=0
 j=0
 
+d_auto_korelation_centered_mass_stdColumn=d_auto_korelation_centered_mass["flow"].std()**2
+
 for tau in d_auto_korelation_centered_mass["time"]:
     if(i % period == 0 and j< autoKorelationCoeffitient[0].__len__()):
         try:
             autoKorelationCoeffitient[2][j] = np.exp(-0.1*tau)
-            autoKorelationCoeffitient[1][j] = k(tau, d_auto_korelation_centered_mass["time"],d_auto_korelation_centered_mass["flow"])
+            autoKorelationCoeffitient[1][j] = k(tau, d_auto_korelation_centered_mass["time"],d_auto_korelation_centered_mass["flow"])/d_auto_korelation_centered_mass_stdColumn
             autoKorelationCoeffitient[0][j] = tau
             j=j+1
+            progress(i+1, numberExamples)
         except IndexError:
             print("")
     i=i+1
+
 path = 'figures/autoCorelation'
 file_util.make_dir_if_not(path)
 columName ='flow_autoKorelation'

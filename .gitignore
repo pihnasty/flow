@@ -7,3 +7,14 @@
 # Editor-based HTTP Client requests
 /httpRequests/
 /files/*
+# added manually
+*.csv
+*.jpeg
+/.idea/misc.xml
+/.idea/workspace.xml
+/.idea/.gitignore
+/.idea/flow.iml
+/.idea/modules.xml
+/.idea/other.xml
+/.idea/vcs.xml
+

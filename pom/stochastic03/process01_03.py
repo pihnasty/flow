@@ -1,4 +1,5 @@
-# ba01.csv Kawalec W, Król R.: Generating of Electric Energy by a Declined Overburden Conveyor in a Continuous Surface Mine. Energies 14, 1–13 (2021). https://doi.org/10.3390/en14134030
+# ba01.csv Kawalec W, Król R.: Generating of Electric Energy by a Declined Overburden Conveyor
+# in a Continuous Surface Mine. Energies 14, 1–13 (2021). https://doi.org/10.3390/en14134030
 
 import copy
 import math
@@ -19,10 +20,12 @@ from utils.progress import progress
 # numberExamples = 11591
 
 # universal .csv
-df = pd.read_csv('dataset.csv', sep=";", decimal=',')
+filesCategory = 'files/'
+fileName = 'dataset_2021_KaKr.csv'
+df = pd.read_csv(filesCategory + fileName, sep=";", decimal=',')
 numberExamples = df.shape[0]
 # KaKr
-# df = pd.read_csv('datasetKaKr.csv', sep=";" , decimal=',')
+# df = pd.read_csv('dataset_2021_KaKr.csv', sep=";" , decimal=',')
 # numberExamples = 57951
 
 
@@ -44,26 +47,28 @@ def densityValue(initialColumnData, minValue, maxValue, numberOfBars):
     yValue = [0] * numberOfBars
     xValue [0] = intervalValue
     for value in enumerate(columnData):
-        if(value[1] < intervalValue):
-            yValue[indexIndex] +=1/elementSize/delta
+        if value[1] < intervalValue:
+            yValue[indexIndex] += 1 / elementSize / delta
         else:
-            indexIndex+=1
-            if(indexIndex < len(xValue)):
+            indexIndex += 1
+            if indexIndex < len(xValue):
                 intervalValue = intervalValue + delta
                 xValue[indexIndex] = intervalValue
     returnValue = [xValue, yValue]
     return returnValue
 
+
 def densityExpectedValue(initialData, densityParameters):
     expectedData = copy.deepcopy(initialData)
-    if(densityParameters["lawDensity"]=="norm"):
+    if densityParameters["lawDensity"] == "norm":
         for i, val in enumerate(expectedData[0]):
-            value = (expectedData[0][i]-densityParameters["average"])/densityParameters["std"]
-            expectedData[1][i] = (1.0/densityParameters["std"]/(2.0*math.pi)**(0.5))*math.exp(-0.5*value**2)
+            value = (expectedData[0][i] - densityParameters["average"]) / densityParameters["std"]
+            expectedData[1][i] = (1.0 / densityParameters["std"] / (2.0 * math.pi) ** (0.5)) * math.exp(
+                -0.5 * value ** 2)
 
-    delta = (densityParameters["max"]-densityParameters["min"])/densityParameters["countOfIntervalsXi2"]
+    delta = (densityParameters["max"] - densityParameters["min"]) / densityParameters["countOfIntervalsXi2"]
 
-    pSum = sum(expectedData[1])*delta
+    pSum = sum(expectedData[1]) * delta
 
     for i, val in enumerate(expectedData[1]):
         expectedData[1][i] = expectedData[1][i]/pSum
@@ -93,7 +98,7 @@ def k(tau # interval between the sections
 
 
 # ================================================ initial =================================================
-path = 'figures/initial'
+path = 'figures/'+ fileName + '/initial'
 file_util.make_dir_if_not(path)
 columName = 'flow_line'
 xlabelName = r'$t$'
@@ -120,7 +125,7 @@ tMin=df['time'].min()
 tMax=df['time'].max()
 d2['time']=(df['time']-tMin)/(tMax-tMin)
 # ============================================= initial_dimensionless ======================================
-path = 'figures/initial_dimensionless'
+path = 'figures/' + fileName + '/initial_dimensionless'
 file_util.make_dir_if_not(path)
 columName ='flow_line'
 xlabelName = r'$\tau$'
@@ -130,9 +135,11 @@ lineChart.linePlot(path + '/' + columName, d2['time'].values
          , xMin = d2['time'].min(), xMax = d2['time'].max()
          , y1Min= d2['flow'].min(), y1Max= d2['flow'].max(), _fontsize=8)
 columName ='time'
-hist.histPlot(path + '/' + columName, d2, columName, countOfIntervalsXi2, True, 'density', r'$\tau$'         , 0.7, 0.7, _dpi=600)
+hist.histPlot(path + '/' + columName, d2, columName, countOfIntervalsXi2, True, 'density', r'$\tau$', 0.7, 0.7,
+              _dpi=600)
 columName ='flow'
-hist.histPlot(path + '/' + columName, d2, columName, countOfIntervalsXi2, True, r'f($\gamma$)',r'$\gamma$', 0.7, 0.7, _dpi=600)
+hist.histPlot(path + '/' + columName, d2, columName, countOfIntervalsXi2, True, r'f($\gamma$)', r'$\gamma$', 0.7, 0.7,
+              _dpi=600)
 
 d3 = densityValue(d2['flow'].values, d2['flow'].min(), d2['flow'].max(), countOfIntervalsXi2)
 
@@ -143,7 +150,7 @@ densityParameters= {"lawDensity" : "norm"
     , "average" : 0.0, "std" : 1.0}
 d3normal = densityExpectedValue(d3, densityParameters)
 # ================================================ check ============================================
-path = 'figures/check'
+path = 'figures/' + fileName + '/check'
 file_util.make_dir_if_not(path)
 x = d3[0]
 y1 = d3[1]
@@ -166,13 +173,15 @@ lineHistChart.lineHistPlot(path + '/' + columName, x
              , xMin=min(x), xMax=max(x)
              , y1Min=min(y1), y1Max=max(y1), _fontsize=8)
 
-frequencyParameters= {"delta" : (d2['flow'].max()-d2['flow'].min())/countOfIntervalsXi2, "numberExamples" : numberExamples}
+frequencyParameters = {"delta": (d2['flow'].max() - d2['flow'].min()) / countOfIntervalsXi2,
+                       "numberExamples": numberExamples}
 d31 = frequencyValue(d3, frequencyParameters)
 d31normal = frequencyValue(d3normal, frequencyParameters)
 columName ='flow_frequency'
 xlabelName = r'$\gamma$'
 lineChart.linePlot(path + '/' + columName, d31[0], d31[1], d31[1], xlabelName, r'Frequency of the value '+xlabelName
-# lineChart.linePlot(path + '/' + columName, d31[0], d31[1], d31normal[1], xlabelName, r'Frequency of the value '+xlabelName
+                   # lineChart.linePlot(path + '/' + columName, d31[0], d31[1], d31normal[1], xlabelName,
+                   # r'Frequency of the value '+xlabelName
          , 0.7, _dpi=600
          , xMin=min(d31[0]), xMax=max( d31[0])
          , y1Min=min(d31[1]), y1Max=max(d31[1]), _fontsize=8)
@@ -180,9 +189,10 @@ lineChart.linePlot(path + '/' + columName, d31[0], d31[1], d31[1], xlabelName, r
 d4=[d31[1], d31normal[1]]
 kf = chi2_contingency(d4)
 print('chisq-statistic=%.4f, p-value=%.4f, df=%i expected_frep=%s'%kf)
-# ================================================ autoKorelationCoeffitient ============================================
+# ================================================ autoKorelationCoeffitient ===========================================
 d_auto_korelation_centered_mass=copy.copy(d2)
-d_auto_korelation_centered_mass['flow']=(d2['flow']) - d2['flow'].mean() # !!!!!! is transformed the dimensionless flow into a centered dimensionless flow with an average constant in time
+# !!!!!! is transformed the dimensionless flow into a centered dimensionless flow with an average constant in time
+d_auto_korelation_centered_mass['flow']=(d2['flow']) - d2['flow'].mean()
 period = 200   #  The variable [period] is introduced to reduce calculations.
 # The variable specifies that only the point for which the ratio is valid [i % period == 0] is calculated for the plot.
 d2X=[0] * round(numberExamples/period)
@@ -198,7 +208,9 @@ for tau in d_auto_korelation_centered_mass["time"]:
     if(i % period == 0 and j< autoKorelationCoeffitient[0].__len__()):
         try:
             autoKorelationCoeffitient[2][j] = np.exp(-0.1*tau)
-            autoKorelationCoeffitient[1][j] = k(tau, d_auto_korelation_centered_mass["time"],d_auto_korelation_centered_mass["flow"])/d_auto_korelation_centered_mass_stdColumn
+            autoKorelationCoeffitient[1][j] = k(tau, d_auto_korelation_centered_mass["time"],
+                                                d_auto_korelation_centered_mass[
+                                                    "flow"]) / d_auto_korelation_centered_mass_stdColumn
             autoKorelationCoeffitient[0][j] = tau
             j=j+1
             progress(i+1, numberExamples)
@@ -206,7 +218,7 @@ for tau in d_auto_korelation_centered_mass["time"]:
             print("")
     i=i+1
 
-path = 'figures/autoCorelation'
+path = 'figures/' + fileName + '/autoCorelation'
 file_util.make_dir_if_not(path)
 columName ='flow_autoKorelation'
 xlabelName = r'$\vartheta$'
@@ -216,5 +228,3 @@ lineChart.linePlot(path + '/' + columName, autoKorelationCoeffitient[0]
          , xMax = 0.5, y1Min= min(autoKorelationCoeffitient[1]), y1Max= max(autoKorelationCoeffitient[1]), _fontsize=8)
 
 sys.exit()
-
-

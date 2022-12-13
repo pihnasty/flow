@@ -21,7 +21,7 @@ from utils.progress import progress
 
 # universal .csv
 filesCategory = 'files/'
-fileName = 'dataset_2018_Ka_bar.csv'
+fileName = 'dataset_2021_BhAsHuHoEv.csv'
 df = pd.read_csv(filesCategory + fileName, sep=";", decimal=',')
 numberExamples = df.shape[0]
 # KaKr

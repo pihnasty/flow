@@ -8,13 +8,8 @@
 /httpRequests/
 /files/*
 # added manually
-*.csv
+#*.csv
 *.jpeg
-/.idea/misc.xml
-/.idea/workspace.xml
-/.idea/.gitignore
-/.idea/flow.iml
-/.idea/modules.xml
-/.idea/other.xml
-/.idea/vcs.xml
+/.idea/*
 
+/.idea/pylint.xml

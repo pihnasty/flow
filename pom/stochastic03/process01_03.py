@@ -21,7 +21,7 @@ from utils.progress import progress
 
 # universal .csv
 filesCategory = 'files/'
-fileName = 'dataset_2021_KaKr.csv'
+fileName = 'dataset_2021_BhAsHuHoEv.csv'
 df = pd.read_csv(filesCategory + fileName, sep=";", decimal=',')
 numberExamples = df.shape[0]
 # KaKr
@@ -217,6 +217,8 @@ for tau in d_auto_korelation_centered_mass["time"]:
         except IndexError:
             print("")
     i=i+1
+
+progress(numberExamples, numberExamples)
 
 path = 'figures/' + fileName + '/autoCorelation'
 file_util.make_dir_if_not(path)

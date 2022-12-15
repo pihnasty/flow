@@ -1,5 +1,5 @@
 """
-This module includes a function that displays progress bar in console.
+This function displays progress bar in console.
 Based on:
 https://gist.github.com/vladignatyev/06860ec2040cb497f0f3
 """

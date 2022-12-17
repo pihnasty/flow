@@ -2,17 +2,17 @@
 max-line-length=120
 
 [BASIC]
-# Naming style matching correct argument names.
-argument-naming-style=camelCase
+# Naming style matching correct argument names. camelCase
+argument-naming-style=csnake_case
 
-# Naming style matching correct variable names. snake_case
-variable-naming-style=camelCase
+# Naming style matching correct variable names. snake_case camelCase
+variable-naming-style=snake_case
 
-# Naming style matching correct method names. snake_case
-method-naming-style=camelCase
+# Naming style matching correct method names. snake_case camelCase
+method-naming-style=snake_case
 
 # Naming style matching correct function names. snake_case
 function-naming-style=camelCase
 
-# Naming style matching correct constant names. UPPER_CASE
-const-naming-style=camelCase
+# Naming style matching correct constant names. UPPER_CASE camelCase
+const-naming-style=UPPER_CASE

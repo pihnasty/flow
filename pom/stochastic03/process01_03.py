@@ -5,7 +5,6 @@ import copy
 import math
 import sys
 
-import numpy as np
 import pandas as pd
 from scipy.stats import chi2_contingency
 
@@ -13,7 +12,8 @@ import Graphics.CombinedCharts.LineHistChart as lineHistChart
 import Graphics.Histograms.Hist as hist
 import Graphics.LineCharts.LineChart as lineChart
 import utils.FileUtil as file_util
-from utils.progress import progress
+import StatUtils.Extentions as extentions
+
 
 # df = pd.read_csv('netflix_titles.csv', sep=",")
 # df = pd.read_csv('ba01.csv', sep=";" , decimal=',')
@@ -81,23 +81,12 @@ def frequencyValue(data, frecuencyParameters):
         frecuencyData[1][i] = data[1][i] * frecuencyParameters["delta"] * frecuencyParameters["numberExamples"]
     return frecuencyData
 
-def k(tau # interval between the sections
-      , dataX
-      , dataY
-      ):
-    _tMin = min(dataX)
-    _tMax = max(dataX)
-    numberExamples = len(dataX)
-    delta_t = (_tMax - _tMin) / numberExamples
-    tauI = round(tau/delta_t)
-    integral = 0
-    for i, val in enumerate(dataY):
-        iTauI = (i+tauI) % numberExamples
-        integral = integral + dataY[i]*dataY[iTauI]*delta_t
-    return integral
-
-
 # ================================================ initial =================================================
+
+fontsize=14
+
+extentions.c1_plot(fileName, fontsize)
+
 path = 'figures/'+ fileName + '/initial'
 file_util.make_dir_if_not(path)
 columName = 'flow_line'
@@ -123,7 +112,7 @@ stdColumnD2=d2.std()
 
 tMin=df['time'].min()
 tMax=df['time'].max()
-d2['time']=(df['time']-tMin)/(tMax-tMin)
+d2['time'] = (df['time'] - tMin) / (tMax - tMin) * 2
 # ============================================= initial_dimensionless ======================================
 path = 'figures/' + fileName + '/initial_dimensionless'
 file_util.make_dir_if_not(path)
@@ -195,38 +184,11 @@ d_auto_korelation_centered_mass=copy.copy(d2)
 d_auto_korelation_centered_mass['flow']=(d2['flow']) - d2['flow'].mean()
 period = 200   #  The variable [period] is introduced to reduce calculations.
 # The variable specifies that only the point for which the ratio is valid [i % period == 0] is calculated for the plot.
-d2X=[0] * round(numberExamples/period)
-d2Y=[0] * round(numberExamples/period)
-d2Y2=[0] * round(numberExamples/period)
-autoKorelationCoeffitient = [d2X, d2Y, d2Y2]
-i=0
-j=0
 
-d_auto_korelation_centered_mass_stdColumn=d_auto_korelation_centered_mass["flow"].std()**2
-
-for tau in d_auto_korelation_centered_mass["time"]:
-    if(i % period == 0 and j< autoKorelationCoeffitient[0].__len__()):
-        try:
-            autoKorelationCoeffitient[2][j] = np.exp(-0.1*tau)
-            autoKorelationCoeffitient[1][j] = k(tau, d_auto_korelation_centered_mass["time"],
-                                                d_auto_korelation_centered_mass[
-                                                    "flow"]) / d_auto_korelation_centered_mass_stdColumn
-            autoKorelationCoeffitient[0][j] = tau
-            j=j+1
-            progress(i+1, numberExamples)
-        except IndexError:
-            print("")
-    i=i+1
-
-progress(numberExamples, numberExamples)
-
-path = 'figures/' + fileName + '/autoCorelation'
-file_util.make_dir_if_not(path)
-columName ='flow_autoKorelation'
-xlabelName = r'$\vartheta$'
-lineChart.linePlot(path + '/' + columName, autoKorelationCoeffitient[0]
-         # , autoKorelationCoeffitient[1], autoKorelationCoeffitient[2], xlabelName, r'k($\vartheta$) ', 0.7, _dpi=600
-         , autoKorelationCoeffitient[1], autoKorelationCoeffitient[1], xlabelName, r'k($\vartheta$) ', 0.7, _dpi=600
-         , xMax = 0.5, y1Min= min(autoKorelationCoeffitient[1]), y1Max= max(autoKorelationCoeffitient[1]), _fontsize=8)
+#===============================================================================
+extentions.c0_show_k0(fileName, d_auto_korelation_centered_mass, period)
+extentions.c0_show_1_v(fileName, d_auto_korelation_centered_mass, period)
+extentions.c0_show_work_equals_0_5(fileName, d_auto_korelation_centered_mass, period)
+extentions.c0_show_test_equals_0_5(fileName, d_auto_korelation_centered_mass, period)
 
 sys.exit()

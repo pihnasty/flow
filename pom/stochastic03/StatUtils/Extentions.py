@@ -139,7 +139,8 @@ def c0_show_k0(fileName
                 print("IndexError")
         i=i+1
 
-    progress(len(d_auto_korelation_centered_mass["time"]), len(d_auto_korelation_centered_mass["time"]))
+    progress(len(d_auto_korelation_centered_mass["time"]),
+             len(d_auto_korelation_centered_mass["time"]), '\n')
 
     path = 'figures/' + fileName + '/autoCorelation'
     fileUtil.make_dir_if_not(path)
@@ -181,6 +182,9 @@ def c0_show_1_v(fileName
             except IndexError:
                 print("")
         i = i + 1
+
+    progress(len(d_auto_korelation_centered_mass["time"]),
+             len(d_auto_korelation_centered_mass["time"]), '\n')
 
     path = 'figures/' + fileName + '/autoCorelation'
     fileUtil.make_dir_if_not(path)
@@ -231,6 +235,9 @@ def c0_show_work_equals_0_5(fileName
                 j = j + 1
         i = i + 1
 
+    progress(len(d_auto_korelation_centered_mass["time"]) / 2,
+             len(d_auto_korelation_centered_mass["time"]) / 2, '\n')
+
     path = 'figures/' + fileName + '/autoCorelation'
     fileUtil.make_dir_if_not(path)
     columName = 'flow_autoKorelation_C0_work_equals_0_5_'
@@ -280,6 +287,9 @@ def c0_show_test_equals_0_5(fileName
                 autoKorelationCoeffitient_C0[0][j] = tau
                 j = j + 1
         i = i + 1
+
+    progress(len(d_auto_korelation_centered_mass["time"]) / 2,
+             len(d_auto_korelation_centered_mass["time"]) / 2, '\n')
 
     path = 'figures/' + fileName + '/autoCorelation'
     fileUtil.make_dir_if_not(path)

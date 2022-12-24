@@ -1,4 +1,4 @@
-# ba01.csv Kawalec W, Król R.: Generating of Electric Energy by a Declined Overburden Conveyor
+#  Kawalec W, Król R.: Generating of Electric Energy by a Declined Overburden Conveyor
 # in a Continuous Surface Mine. Energies 14, 1–13 (2021). https://doi.org/10.3390/en14134030
 
 import copy
@@ -16,12 +16,11 @@ import StatUtils.Extentions as extentions
 
 
 # df = pd.read_csv('netflix_titles.csv', sep=",")
-# df = pd.read_csv('ba01.csv', sep=";" , decimal=',')
 # numberExamples = 11591
 
 # universal .csv
 filesCategory = 'files/'
-fileName = 'dataset_2021_PiIv_gamma2.csv'
+fileName = 'dataset_2021_BhAsHuHoEv.csv'
 df = pd.read_csv(filesCategory + fileName, sep=";", decimal=',')
 numberExamples = df.shape[0]
 # KaKr
@@ -112,7 +111,8 @@ stdColumnD2=d2.std()
 
 tMin=df['time'].min()
 tMax=df['time'].max()
-d2['time'] = (df['time'] - tMin) / (tMax - tMin) * 2
+d2['time'] = (df['time'] - tMin) / (tMax - tMin)
+#             * 2
 # ============================================= initial_dimensionless ======================================
 path = 'figures/' + fileName + '/initial_dimensionless'
 file_util.make_dir_if_not(path)
@@ -190,5 +190,6 @@ extentions.c0_show_k0(fileName, d_auto_korelation_centered_mass, period)
 extentions.c0_show_1_v(fileName, d_auto_korelation_centered_mass, period)
 extentions.c0_show_work_equals_0_5(fileName, d_auto_korelation_centered_mass, period)
 extentions.c0_show_test_equals_0_5(fileName, d_auto_korelation_centered_mass, period)
+extentions.c0_show_var2(fileName, d_auto_korelation_centered_mass, period)
 
 sys.exit()

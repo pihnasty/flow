@@ -357,11 +357,11 @@ def c0_show_test_equals_0_5(fileName
 
 
 # ===================================== c0_show_var2=====================================================================
-def c0_show_var2(fileName
+def c0_show_var2(experiment
                  , d_auto_korelation_centered_mass
-                 , period
                  ):
     count = len(d_auto_korelation_centered_mass["time"])
+    period = experiment["period"]
     d2X = [0] * round(count / period)
     d2Y = [0] * round(count / period)
     d2Y2 = [0] * round(count / period)
@@ -374,7 +374,7 @@ def c0_show_var2(fileName
         if (i % period == 0):
             if (j < len(autoKorelationCoeffitient_C0[0])):
                 try:
-                    autoKorelationCoeffitient_C0[2][j] = np.exp(-tau / 0.07)
+                    autoKorelationCoeffitient_C0[2][j] = np.exp(-tau / experiment["tau_correlation"])
                     autoKorelationCoeffitient_C0[1][j] = c0_var2(tau, d_auto_korelation_centered_mass["time"],
                                                                  d_auto_korelation_centered_mass[
                                                                      "flow"]) / (
@@ -391,17 +391,23 @@ def c0_show_var2(fileName
 
     progress(len(d_auto_korelation_centered_mass["time"]), len(d_auto_korelation_centered_mass["time"]), '\n')
 
-    path = 'figures/' + fileName + '/autoCorelation'
+    path = 'figures/' + experiment["file_name"] + '/autoCorelation'
     fileUtil.make_dir_if_not(path)
     columName = 'flow_autoKorelation_C0_var2'
     xlabelName = r'$\vartheta$'
-    lineChart.linePlot(path + '/' + columName, autoKorelationCoeffitient_C0[0]
+    autoKorelationCoeffitient_C0s = [
+        autoKorelationCoeffitient_C0[experiment["c0_show_var2"]["1"]]
+        , autoKorelationCoeffitient_C0[experiment["c0_show_var2"]["2"]]
+        , autoKorelationCoeffitient_C0[experiment["c0_show_var2"]["3"]]
+    ]
+    lineChart.linePlot2(path + '/' + columName, autoKorelationCoeffitient_C0[0]
                        # , autoKorelationCoeffitient[1], autoKorelationCoeffitient[2], xlabelName, r'k($\vartheta$) ', 0.7, _dpi=600
-                       , autoKorelationCoeffitient_C0[1], autoKorelationCoeffitient_C0[1], xlabelName,
+                       , autoKorelationCoeffitient_C0s
+                       , xlabelName,
                        r'k($\vartheta$) ',
                        0.7, _dpi=600
                        , xMax=1.0
-                       , y1Min= -0.5
+                       , y1Min=-0.5
                        # , y1Min=min(autoKorelationCoeffitient_C0[1])
                        , y1Max=max(autoKorelationCoeffitient_C0[1]),
                        _fontsize=8)

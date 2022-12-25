@@ -1,6 +1,3 @@
-#  Kawalec W, Król R.: Generating of Electric Energy by a Declined Overburden Conveyor
-# in a Continuous Surface Mine. Energies 14, 1–13 (2021). https://doi.org/10.3390/en14134030
-
 import copy
 import math
 import sys
@@ -14,13 +11,19 @@ import Graphics.LineCharts.LineChart as lineChart
 import utils.FileUtil as file_util
 import StatUtils.Extentions as extentions
 
-
 # df = pd.read_csv('netflix_titles.csv', sep=",")
 # numberExamples = 11591
 
 # universal .csv
+from pom.stochastic03.InitData.inizialize_data import experiments
+
+experiment = experiments["0001"]
+
+
+
+
 filesCategory = 'files/'
-fileName = 'dataset_2021_BhAsHuHoEv.csv'
+fileName = experiment["file_name"]
 df = pd.read_csv(filesCategory + fileName, sep=";", decimal=',')
 numberExamples = df.shape[0]
 # KaKr
@@ -190,6 +193,6 @@ extentions.c0_show_k0(fileName, d_auto_korelation_centered_mass, period)
 extentions.c0_show_1_v(fileName, d_auto_korelation_centered_mass, period)
 extentions.c0_show_work_equals_0_5(fileName, d_auto_korelation_centered_mass, period)
 extentions.c0_show_test_equals_0_5(fileName, d_auto_korelation_centered_mass, period)
-extentions.c0_show_var2(fileName, d_auto_korelation_centered_mass, period)
+extentions.c0_show_var2(experiment, d_auto_korelation_centered_mass)
 
 sys.exit()

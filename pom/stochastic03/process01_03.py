@@ -21,7 +21,7 @@ import StatUtils.Extentions as extentions
 
 # universal .csv
 filesCategory = 'files/'
-fileName = 'dataset_2021_PiIv_gamma2.csv'
+fileName = 'dataset_2010_JeRiBeStJeMiRa_Bottom.csv'
 df = pd.read_csv(filesCategory + fileName, sep=";", decimal=',')
 numberExamples = df.shape[0]
 # KaKr

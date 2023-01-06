@@ -8,7 +8,8 @@ def linePlot(fileName
              , xlabelName
              , title
              , _alpha # яркость столбцов диаграммы
-             , _color = 'black'  # the column color of the diagram
+             , _color1 = 'black'  # the column color of the diagram
+             , _color2 = 'black'  # the column color of the diagram
              , _dpi=1000
              , xMin=0.0
              , xMax=0.0
@@ -20,14 +21,14 @@ def linePlot(fileName
 
     dateS = datetime.datetime.now()
     syffix=dateS.strftime("%Y_%m_%d_%H_%M_%S")
-    plt.grid(True, color =_color, alpha = _alpha/2)      #
+    plt.grid(True, color =_color1, alpha = _alpha/2)      #
     plt.rcParams["figure.figsize"] = [4.0, 3.0]   # size of the figure 3.0*2.54 ~ 7.5 cm     # plt.figure(figsize=(12, 7))
     plt.xlabel(xlabelName, fontsize=_fontsize, loc='right')
     plt.xlim(min(x), max(x))    # set xMin, xMax
     plt.xlim(min(y1), max(y1))    # set yMin, yMax
     # https://devpractice.ru/matplotlib-lesson-4-1-viz-linear-chart/
-    plt.plot(x, y1, 'k', alpha=0.7, lw=2)
-    plt.plot(x, y2, 'k', alpha=0.7, lw=2)
+    plt.plot(x, y1, 'k', alpha=0.7, lw=2, color=_color1)
+    plt.plot(x, y2, 'k', alpha=0.7, lw=2, color=_color2)
     plt.xticks(fontsize=_fontsize)
     plt.ylim(0)
 

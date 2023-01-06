@@ -189,10 +189,91 @@ period = 200   #  The variable [period] is introduced to reduce calculations.
 # The variable specifies that only the point for which the ratio is valid [i % period == 0] is calculated for the plot.
 
 #===============================================================================
-extentions.c0_show_k0(fileName, d_auto_korelation_centered_mass, period)
-extentions.c0_show_1_v(fileName, d_auto_korelation_centered_mass, period)
-extentions.c0_show_work_equals_0_5(fileName, d_auto_korelation_centered_mass, period)
-extentions.c0_show_test_equals_0_5(fileName, d_auto_korelation_centered_mass, period)
-extentions.c0_show_var2(experiment, d_auto_korelation_centered_mass)
+if (experiment["show_prepare_k"] == True):
+    extentions.c0_show_k0(fileName, d_auto_korelation_centered_mass, period)
+    extentions.c0_show_1_v(fileName, d_auto_korelation_centered_mass, period)
+    extentions.c0_show_work_equals_0_5(fileName, d_auto_korelation_centered_mass, period)
+    extentions.c0_show_test_equals_0_5(fileName, d_auto_korelation_centered_mass, period)
+    extentions.c0_show_var2(experiment, d_auto_korelation_centered_mass)
+    extentions.c0_show_tau_tau_minus_v_tau_plus_v(experiment, d_auto_korelation_centered_mass)
+
+
+
+# dimensionless_flow=copy.copy(d2)
+# extentions.prediction_std(experiment["period"], experiment["tau_correlation"], dimensionless_flow)
+
+
+dimensionless_flow = copy.copy(d2)
+fourier_coefficients_gamma = [0] * round(experiment["number_of_harmonics"])
+
+for n in range(len(fourier_coefficients_gamma)):
+    print(['n=', n])
+    fourier_coefficients_gamma[n] = extentions.fourier_coefficients(experiment["period"], dimensionless_flow, n)
+
+approximated_gamma = extentions.approximated_gamma(experiment["period"], fourier_coefficients_gamma, dimensionless_flow)
+extentions.approximated_gamma_show(
+    experiment
+    , dimensionless_flow
+    , approximated_gamma
+    , 'approximatedGamma'
+    , r'$\gamma$($\tau$)'
+)
+
+dimensionless_flow = copy.copy(d2)
+fourier_coefficients_gamma_d = [0] * round(experiment["number_of_harmonics"])
+std = d_auto_korelation_centered_mass["flow"].std()
+
+c0_tau_tau_minus_v_tau_plus_vs = extentions.c0_tau_tau_minus_v_tau_plus_v_tau_plus_1_s(
+    experiment["period"]
+    , dimensionless_flow
+)
+extentions.c0_show_tau_tau_minus_v_tau_plus_v2(
+    experiment
+    , c0_tau_tau_minus_v_tau_plus_vs[0]
+    , c0_tau_tau_minus_v_tau_plus_vs[1]
+)
+
+for n in range(len(fourier_coefficients_gamma_d)):
+    print(['n=', n])
+    fourier_coefficients_gamma_d[n] = extentions.fourier_coefficients_d(
+        experiment["period"]
+        , experiment["tau_correlation"]
+        , std
+        , experiment["relative_sigma_correlation"]
+        , c0_tau_tau_minus_v_tau_plus_vs
+        , fourier_coefficients_gamma
+        , n)
+
+approximated_gamma_d = extentions.approximated_gamma(
+    experiment["period"]
+    , fourier_coefficients_gamma_d
+    , dimensionless_flow
+)
+extentions.approximated_gamma_show(
+    experiment
+    , dimensionless_flow
+    , approximated_gamma_d
+    , 'approximatedGamma_d_'
+    , r'$\gamma_d$($\tau$)'
+)
+
+
+# ================================================ autoKorelationCoeffitient ===========================================
+d_auto_korelation_centered_mass2=copy.copy(d2)
+# !!!!!! is transformed the dimensionless flow into a centered dimensionless flow with an average constant in time
+d_auto_korelation_centered_mass2['flow']=(d2['flow']) - approximated_gamma_d
+period = 200   #  The variable [period] is introduced to reduce calculations.
+# The variable specifies that only the point for which the ratio is valid [i % period == 0] is calculated for the plot.
+
+#===============================================================================
+# if (experiment["show_prepare_k"] == True):
+extentions.c0_show_k0(fileName, d_auto_korelation_centered_mass2, period)
+extentions.c0_show_1_v(fileName, d_auto_korelation_centered_mass2, period)
+extentions.c0_show_work_equals_0_5(fileName, d_auto_korelation_centered_mass2, period)
+extentions.c0_show_test_equals_0_5(fileName, d_auto_korelation_centered_mass2, period)
+extentions.c0_show_var2(experiment, d_auto_korelation_centered_mass2)
+extentions.c0_show_tau_tau_minus_v_tau_plus_v(experiment, d_auto_korelation_centered_mass2)
+
+
 
 sys.exit()

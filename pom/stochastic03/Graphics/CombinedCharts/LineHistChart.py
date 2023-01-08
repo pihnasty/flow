@@ -1,7 +1,7 @@
 import datetime
 from matplotlib import pyplot as plt
 
-def lineHistPlot(fileName
+def linePlotHist(fileName
                  , x
                  , y1
                  , y2

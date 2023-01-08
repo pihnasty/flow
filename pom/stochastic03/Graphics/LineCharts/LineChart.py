@@ -49,6 +49,7 @@ def linePlot(fileName
 
     plt.savefig(fileName + syffix + ".jpeg", dpi=_dpi)
     plt.show()
+    plt.close()
 
 def linePlot2(fileName
              , x
@@ -72,7 +73,7 @@ def linePlot2(fileName
     plt.rcParams["figure.figsize"] = [4.0, 3.0]   # size of the figure 3.0*2.54 ~ 7.5 cm     # plt.figure(figsize=(12, 7))
     plt.xlabel(xlabelName, fontsize=_fontsize, loc='right')
     plt.xlim(min(x), max(x))    # set xMin, xMax
-    plt.xlim(min(ys[0]), max(ys[0]))    # set yMin, yMax
+    plt.ylim(min(ys[0]), max(ys[0]))    # set yMin, yMax
     # https://devpractice.ru/matplotlib-lesson-4-1-viz-linear-chart/
     for y in ys:
         plt.plot(x, y, 'k', alpha=0.7, lw=2)

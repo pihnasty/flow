@@ -5,11 +5,12 @@ import sys
 import pandas as pd
 from scipy.stats import chi2_contingency
 
-import Graphics.CombinedCharts.LineHistChart as lineHistChart
 import Graphics.Histograms.Hist as hist
 import Graphics.LineCharts.LineChart as lineChart
 import utils.FileUtil as file_util
 import StatUtils.Extentions as extentions
+import StatUtils.stat_func as stat_func
+import StatUtils.show as show
 
 # df = pd.read_csv('netflix_titles.csv', sep=",")
 # numberExamples = 11591
@@ -28,37 +29,8 @@ df = pd.read_csv(filesCategory + fileName, sep=";", decimal=',')
 numberExamples = df.shape[0]
 # KaKr
 # df = pd.read_csv('dataset_2021_KaKr.csv', sep=";" , decimal=',')
-# numberExamples = 57951
-
-
-# PiIv
-# df = pd.read_csv('datasetPiIv_gamma52.csv', sep=";" , decimal=',')
-# numberExamples = 999
-
-# countOfIntervalsXi2 = 5.0*math.sqrt(numberExamples)
 # countOfIntervalsXi2 = 5.0*math.log10(numberExamples)
-countOfIntervalsXi2 = 50
-
-def densityValue(initialColumnData, minValue, maxValue, numberOfBars):
-    delta = (maxValue - minValue)/numberOfBars
-    columnData = sorted(initialColumnData)
-    elementSize = len(columnData)
-    indexIndex = 0
-    intervalValue = minValue + delta
-    xValue = [0] * numberOfBars
-    yValue = [0] * numberOfBars
-    xValue [0] = intervalValue
-    for value in enumerate(columnData):
-        if value[1] < intervalValue:
-            yValue[indexIndex] += 1 / elementSize / delta
-        else:
-            indexIndex += 1
-            if indexIndex < len(xValue):
-                intervalValue = intervalValue + delta
-                xValue[indexIndex] = intervalValue
-    returnValue = [xValue, yValue]
-    return returnValue
-
+count_of_intervals_xi2 = experiment["number_of_intervals_xi2"]
 
 def densityExpectedValue(initialData, densityParameters):
     expectedData = copy.deepcopy(initialData)
@@ -98,9 +70,9 @@ lineChart.linePlot(path + '/' + columName, df['time'].values
                    , 0.7, _dpi=600, xMin=df['time'].min(), xMax=df['time'].max(), _fontsize=12)
 
 columName = 'time'
-hist.histPlot(path + '/' + columName, df, columName, countOfIntervalsXi2, True, 'density', r'$t$', 0.7, 0.7, _dpi=600)
+hist.histPlot(path + '/' + columName, df, columName, count_of_intervals_xi2, True, 'density', r'$t$', 0.7, 0.7, _dpi=600)
 columName = 'flow'
-hist.histPlot(path + '/' + columName, df, columName, countOfIntervalsXi2, True, r'f($\lambda$)', r'$\lambda$', 0.7, 0.7,
+hist.histPlot(path + '/' + columName, df, columName, count_of_intervals_xi2, True, r'f($\lambda$)', r'$\lambda$', 0.7, 0.7,
               _dpi=600)
 
 averageColumn=df['flow'].mean()
@@ -127,60 +99,53 @@ lineChart.linePlot(path + '/' + columName, d2['time'].values
          , xMin = d2['time'].min(), xMax = d2['time'].max()
          , y1Min= d2['flow'].min(), y1Max= d2['flow'].max(), _fontsize=8)
 columName ='time'
-hist.histPlot(path + '/' + columName, d2, columName, countOfIntervalsXi2, True, 'density', r'$\tau$', 0.7, 0.7,
+hist.histPlot(path + '/' + columName, d2, columName, count_of_intervals_xi2, True, 'density', r'$\tau$', 0.7, 0.7,
               _dpi=600)
 columName ='flow'
-hist.histPlot(path + '/' + columName, d2, columName, countOfIntervalsXi2, True, r'f($\gamma$)', r'$\gamma$', 0.7, 0.7,
+hist.histPlot(path + '/' + columName, d2, columName, count_of_intervals_xi2, True, r'f($\gamma$)', r'$\gamma$', 0.7, 0.7,
               _dpi=600)
 
-d3 = densityValue(d2['flow'].values, d2['flow'].min(), d2['flow'].max(), countOfIntervalsXi2)
+d3 = stat_func.density_values(d2['flow'].values, count_of_intervals_xi2)
 
 densityParameters= {"lawDensity" : "norm"
     , "min" : d2['flow'].min()
     , "max" : d2['flow'].max()
-    , "countOfIntervalsXi2" : countOfIntervalsXi2
+    , "countOfIntervalsXi2" : count_of_intervals_xi2
     , "average" : 0.0, "std" : 1.0}
 d3normal = densityExpectedValue(d3, densityParameters)
-# ================================================ check ============================================
-path = 'figures/' + fileName + '/check'
-file_util.make_dir_if_not(path)
+# ================================================ check ==============================================================
 x = d3[0]
 y1 = d3[1]
 y2 = d3normal[1]
-columName ='flow_density'
-xlabelName = r'$\gamma$'
-lineChart.linePlot(path + '/' + columName, x, y1, y1, xlabelName, r'f($\gamma$)'
-# lineChart.linePlot(path + '/' + columName, x, y1, y2, xlabelName, r'f($\gamma$)'
-         , 0.7, _dpi=600
-         , xMin=min(x), xMax=max(x)
-         , y1Min=min(y1), y1Max=max(y1), _fontsize=10)
+flow_densities = [d3[0], d3[1], d3normal[1]]
+show.flow_density(experiment, '/check', flow_densities, 'flow_density', r'$\gamma$', r'f($\gamma$)', 0.7)
+show.frequency_plot_hist(
+    experiment, '/check', x, d3normal[1], d2['flow'], 'flow_frequency_hist', r'$\gamma$', r'f($\gamma$)', 0.7
+)
 
-columName ='flow_frequency_hist'
-lineHistChart.lineHistPlot(path + '/' + columName, x
-             , y2
-             , d2['flow']
-             , countOfIntervalsXi2
-             , xlabelName, r'f($\gamma$)'
-             , 0.7, _dpi=600
-             , xMin=min(x), xMax=max(x)
-             , y1Min=min(y1), y1Max=max(y1), _fontsize=8)
+# # this module compares two distribution functions: experimental and with normal distribution,
+# applying Pearson's criterion
 
-frequencyParameters = {"delta": (d2['flow'].max() - d2['flow'].min()) / countOfIntervalsXi2,
-                       "numberExamples": numberExamples}
-d31 = frequencyValue(d3, frequencyParameters)
-d31normal = frequencyValue(d3normal, frequencyParameters)
-columName ='flow_frequency'
-xlabelName = r'$\gamma$'
-lineChart.linePlot(path + '/' + columName, d31[0], d31[1], d31[1], xlabelName, r'Frequency of the value '+xlabelName
-                   # lineChart.linePlot(path + '/' + columName, d31[0], d31[1], d31normal[1], xlabelName,
-                   # r'Frequency of the value '+xlabelName
-         , 0.7, _dpi=600
-         , xMin=min(d31[0]), xMax=max( d31[0])
-         , y1Min=min(d31[1]), y1Max=max(d31[1]), _fontsize=8)
+# path = 'figures/' + fileName + '/check'
+# frequencyParameters = {"delta": (d2['flow'].max() - d2['flow'].min()) / count_of_intervals_xi2,
+#                        "numberExamples": numberExamples}
+# d31 = frequencyValue(d3, frequencyParameters)
+# d31normal = frequencyValue(d3normal, frequencyParameters)
+# columName ='flow_frequency'
+# xlabelName = r'$\gamma$'
+# lineChart.linePlot(path + '/' + columName, d31[0], d31[1], d31[1], xlabelName, r'Frequency of the value '+xlabelName
+#                    # lineChart.linePlot(path + '/' + columName, d31[0], d31[1], d31normal[1], xlabelName,
+#                    # r'Frequency of the value '+xlabelName
+#          , 0.7, _dpi=600
+#          , xMin=min(d31[0]), xMax=max( d31[0])
+#          , y1Min=min(d31[1]), y1Max=max(d31[1]), _fontsize=8)
+#
+# d4=[d31[1], d31normal[1]]
+# kf = chi2_contingency(d4)
+# print('chisq-statistic=%.4f, p-value=%.4f, df=%i expected_frep=%s'%kf)
 
-d4=[d31[1], d31normal[1]]
-kf = chi2_contingency(d4)
-print('chisq-statistic=%.4f, p-value=%.4f, df=%i expected_frep=%s'%kf)
+
+
 # ================================================ autoKorelationCoeffitient ===========================================
 d_auto_korelation_centered_mass=copy.copy(d2)
 # !!!!!! is transformed the dimensionless flow into a centered dimensionless flow with an average constant in time
@@ -266,14 +231,29 @@ period = 200   #  The variable [period] is introduced to reduce calculations.
 # The variable specifies that only the point for which the ratio is valid [i % period == 0] is calculated for the plot.
 
 #===============================================================================
-# if (experiment["show_prepare_k"] == True):
-extentions.c0_show_k0(fileName, d_auto_korelation_centered_mass2, period)
-extentions.c0_show_1_v(fileName, d_auto_korelation_centered_mass2, period)
-extentions.c0_show_work_equals_0_5(fileName, d_auto_korelation_centered_mass2, period)
-extentions.c0_show_test_equals_0_5(fileName, d_auto_korelation_centered_mass2, period)
-extentions.c0_show_var2(experiment, d_auto_korelation_centered_mass2)
-extentions.c0_show_tau_tau_minus_v_tau_plus_v(experiment, d_auto_korelation_centered_mass2)
+if (experiment["show_prepare_k"] == True):
+    extentions.c0_show_k0(fileName, d_auto_korelation_centered_mass2, period)
+    extentions.c0_show_1_v(fileName, d_auto_korelation_centered_mass2, period)
+    extentions.c0_show_work_equals_0_5(fileName, d_auto_korelation_centered_mass2, period)
+    extentions.c0_show_test_equals_0_5(fileName, d_auto_korelation_centered_mass2, period)
+    extentions.c0_show_var2(experiment, d_auto_korelation_centered_mass2)
+    extentions.c0_show_tau_tau_minus_v_tau_plus_v(experiment, d_auto_korelation_centered_mass2)
 
+# ================================================ check after Fourier analysis  =======================================
+density_values_lambda_s = stat_func.density_values(
+    d_auto_korelation_centered_mass2['flow'].values, experiment["number_of_intervals_xi2"]
+)
+flow_densities = [density_values_lambda_s[0], density_values_lambda_s[1]]
 
+show.flow_density(
+    experiment, '/check_after_Fourier_analysis', flow_densities, 'flow_density', r'$\gamma$', r'f($\gamma$)', 0.7
+)
+show.frequency_plot_hist(
+    experiment
+    , '/check_after_Fourier_analysis'
+    , density_values_lambda_s[0]
+    , density_values_lambda_s[1]
+    , d_auto_korelation_centered_mass2['flow'], 'flow_frequency_hist', r'$\gamma$', r'f($\gamma$)', 0.7
+)
 
 sys.exit()

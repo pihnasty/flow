@@ -11,8 +11,8 @@ variable-naming-style=snake_case
 # Naming style matching correct method names. snake_case camelCase
 method-naming-style=snake_case
 
-# Naming style matching correct function names. snake_case
-function-naming-style=camelCase
+# Naming style matching correct function names. snake_case camelCase
+function-naming-style=snake_case
 
 # Naming style matching correct constant names. UPPER_CASE camelCase
 const-naming-style=UPPER_CASE

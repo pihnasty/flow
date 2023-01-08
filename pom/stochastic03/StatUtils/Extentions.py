@@ -579,6 +579,8 @@ def c0_show_var2(experiment
         autoKorelationCoeffitient_C0[experiment["c0_show_var2"]["1"]]
         , autoKorelationCoeffitient_C0[experiment["c0_show_var2"]["2"]]
         , autoKorelationCoeffitient_C0[experiment["c0_show_var2"]["3"]]
+        , autoKorelationCoeffitient_C0[experiment["c0_show_var2"]["4"]]
+        , autoKorelationCoeffitient_C0[experiment["c0_show_var2"]["5"]]
     ]
     lineChart.linePlot2(path + '/' + columName, autoKorelationCoeffitient_C0[0]
                        # , autoKorelationCoeffitient[1], autoKorelationCoeffitient[2], xlabelName, r'k($\vartheta$) ', 0.7, _dpi=600
@@ -759,17 +761,11 @@ def fourier_coefficients_d(period
         'n=', n, "   discriminant", discriminant
         , "   fourier_coefficients_gamma[n]", fourier_coefficients_gamma[n]
     ])
-    if (discriminant < 0):
-        discriminant = 0
-        print("")
 
-    print([
-        'fourier_coefficients_gamma[n] - math.sqrt(discriminant) / 2 ='
-        , fourier_coefficients_gamma[n] - math.sqrt(discriminant) / 2
-    ])
-
-
-    return ( 2 * fourier_coefficients_gamma[n] - math.sqrt(discriminant) ) / 2
+    value = 0
+    if (discriminant >= 0):
+        value = (2 * fourier_coefficients_gamma[n] - math.sqrt(discriminant)) / 2
+    return value
 
 
 def approximated_gamma(period

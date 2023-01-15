@@ -230,6 +230,26 @@ d_auto_korelation_centered_mass2['flow']=(d2['flow']) - approximated_gamma_d
 period = 200   #  The variable [period] is introduced to reduce calculations.
 # The variable specifies that only the point for which the ratio is valid [i % period == 0] is calculated for the plot.
 
+extentions.approximated_gamma_s_show(
+    experiment
+    , dimensionless_flow
+    , d_auto_korelation_centered_mass2
+    , 'approximatedGamma_s_'
+    , r'$\gamma_s$($\tau$)'
+)
+
+approximated_gamma_d2=copy.copy(d_auto_korelation_centered_mass2)
+approximated_gamma_d2["flow"]=approximated_gamma_d
+approximated_gamma_d2["time"]=dimensionless_flow["time"]
+extentions.approximated_gamma_s_show(
+    experiment
+    , dimensionless_flow
+    , approximated_gamma_d2
+    , 'approximatedGamma_d2_'
+    , r'$\gamma_d$($\tau$)'
+)
+
+
 #===============================================================================
 if (experiment["show_prepare_k"] == True):
     extentions.c0_show_k0(fileName, d_auto_korelation_centered_mass2, period)
@@ -246,14 +266,14 @@ density_values_lambda_s = stat_func.density_values(
 flow_densities = [density_values_lambda_s[0], density_values_lambda_s[1]]
 
 show.flow_density(
-    experiment, '/check_after_Fourier_analysis', flow_densities, 'flow_density', r'$\gamma$', r'f($\gamma$)', 0.7
+    experiment, '/check_after_Fourier_analysis', flow_densities, 'flow_density', r'$\gamma_s$', r'f($\gamma_s$)', 0.7
 )
 show.frequency_plot_hist(
     experiment
     , '/check_after_Fourier_analysis'
     , density_values_lambda_s[0]
     , density_values_lambda_s[1]
-    , d_auto_korelation_centered_mass2['flow'], 'flow_frequency_hist', r'$\gamma$', r'f($\gamma$)', 0.7
+    , d_auto_korelation_centered_mass2['flow'], 'flow_frequency_hist', r'$\gamma_s$', r'f($\gamma_s$)', 0.7
 )
 
 sys.exit()

@@ -652,46 +652,49 @@ def c0_show_tau_tau_minus_v_tau_plus_v(experiment
                         , y1Max=max(autoKorelationCoeffitient_C0[1]),
                         _fontsize=8)
 
-#=======================================================================================================================
+
+# =======================================================================================================================
 def c0_show_tau_tau_minus_v_tau_plus_v2(experiment
-                                       , x
-                                        ,y
-                                       ):
+                                        , x
+                                        , y
+                                        ):
     path = 'figures/' + experiment["file_name"] + '/autoCorelation'
     fileUtil.make_dir_if_not(path)
-    columName = 'flow_autoKorelation_C0_tau_tau_minus_v_tau_plus_v2'
+    columName = 'flow_autoKorelation_C0_tau_tau_minus_v_tau_plus_v2_'
     xlabelName = r'$\vartheta$'
     autoKorelationCoeffitient_C0s = [y]
-    lineChart.linePlot2(path + '/' + columName, x
-                        # , autoKorelationCoeffitient[1], autoKorelationCoeffitient[2], xlabelName, r'k($\vartheta$) ', 0.7, _dpi=600
-                        , autoKorelationCoeffitient_C0s
-                        , xlabelName,
-                        r'k($\vartheta$) ',
-                        0.7, _dpi=600
-                        , xMax=1.0
-                        , y1Min=-0.5
-                        # , y1Min=min(autoKorelationCoeffitient_C0[1])
-                        , y1Max=max(y),
-                        _fontsize=8)
+    lineChart.linePlot2(
+        path + '/' + columName
+        , x
+        , autoKorelationCoeffitient_C0s
+        , xlabelName
+        , r'$С_0(\vartheta)$ '
+        , 0.7
+        , _dpi=600
+        , xMax=1.0
+        , y1Min=-0.5
+        , y1Max=max(y),
+        _fontsize=8
+    )
+
 
 def c0_show_tau_tau_minus_v_tau_plus_v_tau_plus_1(experiment
-                                        , x
-                                        ,y
-                                        ):
+                                                  , x
+                                                  , y
+                                                  ):
     path = 'figures/' + experiment["file_name"] + '/autoCorelation'
     fileUtil.make_dir_if_not(path)
     columName = 'flow_autoKorelation_C0_tau_tau_minus_v_tau_plus_v2'
     xlabelName = r'$\tau$'
     autoKorelationCoeffitient_C0s = [y]
     lineChart.linePlot2(path + '/' + columName, x
-                        # , autoKorelationCoeffitient[1], autoKorelationCoeffitient[2], xlabelName, r'k($\vartheta$) ', 0.7, _dpi=600
                         , autoKorelationCoeffitient_C0s
                         , xlabelName,
-                        r'C($\tau$) ',
-                        0.7, _dpi=600
+                        r'C($\tau$) '
+                        , 0.7
+                        , _dpi=600
                         , xMax=1.0
-                        , y1Min=-0.5
-                        # , y1Min=min(autoKorelationCoeffitient_C0[1])
+                        , y1Min=-0.5  # , y1Min=min(autoKorelationCoeffitient_C0[1])
                         , y1Max=max(y),
                         _fontsize=8)
 
@@ -716,6 +719,28 @@ def approximated_gamma_show(experiment
                        , xMin=min(dimensionless_flow["time"]), xMax=max(dimensionless_flow["time"])
                        , y1Min=min(dimensionless_flow["flow"]), y1Max=max(dimensionless_flow["flow"]), _fontsize=10)
 
+def approximated_gamma_s_show(experiment
+                            , dimensionless_flow
+                            , approximated_gamma
+                            , columName
+                            , title
+                            ):
+    path = 'figures/' + experiment["file_name"] + '/approximatedGamma'
+    fileUtil.make_dir_if_not(path)
+    xlabelName = r'$\tau$'
+    approximated_gamma_s = [
+        approximated_gamma["flow"]
+    ]
+
+    lineChart.linePlot2(path + '/' + columName
+                        , approximated_gamma["time"]
+                        , approximated_gamma_s
+                        , xlabelName, title
+                        , 0.7
+                        , _dpi=600
+                        , xMin=min(approximated_gamma["time"]), xMax=max(approximated_gamma["time"])
+                        , y1Min=min(approximated_gamma["flow"]), y1Max=max(approximated_gamma["flow"])
+                        , _fontsize=8)
 
 def fourier_coefficients(period
                          , dimensionless_flow
@@ -762,11 +787,15 @@ def fourier_coefficients_d(period
         , "   fourier_coefficients_gamma[n]", fourier_coefficients_gamma[n]
     ])
 
-    value = 0
-    if (discriminant >= 0):
-        value = (2 * fourier_coefficients_gamma[n] - math.sqrt(discriminant)) / 2
-    return value
+    if (discriminant < 0):
+        discriminant = 0
 
+    value = 0
+    if (fourier_coefficients_gamma[n] > 0):
+        value = (2 * fourier_coefficients_gamma[n] - math.sqrt(discriminant)) / 2
+    else:
+        value  = (2 * fourier_coefficients_gamma[n] + math.sqrt(discriminant)) / 2
+    return value
 
 def approximated_gamma(period
                        , fourier_coefficients

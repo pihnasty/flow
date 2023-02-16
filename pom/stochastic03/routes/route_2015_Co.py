@@ -5,7 +5,7 @@ graph_name = 'route_2015_Co'
 fileName = graph_name + '.gv'
 
 f = graphviz.Digraph(name=graph_name, filename=filesCategory + fileName,
-                     format='png',
+                     format='jpeg',
                      engine='neato',
                      # engine='dot'
                      )

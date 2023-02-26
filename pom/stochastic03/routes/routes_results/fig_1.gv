@@ -1,0 +1,16 @@
+digraph fig_1 {
+	bgcolor=white center=1 dpi=600 rankdir=LR ratio=fill size="4,3"
+	node [fixedsize=true fontsize=14 height=0.15 label="" labelloc=b penwidth=0.5 shape=invtriangle width=0.15]
+	1 [pos="0, 0.3!" xlabel=<&gamma;<SUB>1</SUB>(&tau;)>]
+	2 [pos="0.17, 0.3!" xlabel=<&gamma;<SUB>2</SUB>(&tau;)>]
+	3 [pos="0.27, 0.38!" xlabel=<&gamma;<SUB>m</SUB>(&tau;)>]
+	4 [pos="0.60, 0.38!"]
+	5 [pos="0.90, 0.38!" xlabel=<&gamma;<SUB>M</SUB>(&tau;)>]
+	6 [pos="1, 0.44!" xlabel=<&gamma;<SUB>M+1</SUB>(&tau;)>]
+	edge [arrowsize=0.4 fontcolor=black fontsize=14 penwidth=0.5]
+	1 -> 2 [labelangle=320 labeldistance=2.1 taillabel=<&xi;<SUB>1</SUB>, g<SUB>1</SUB>(&tau;)>]
+	2 -> 3 [labelangle=310 labeldistance=4.5 taillabel=<&xi;<SUB>2</SUB>, g<SUB>2</SUB>(&tau;)>]
+	3 -> 4 [labelangle=340 labeldistance=3.8 taillabel=<&xi;<SUB>m</SUB>, g<SUB>m</SUB>(&tau;)>]
+	4 -> 5
+	5 -> 6 [labelangle=310 labeldistance=4.7 taillabel=<&xi;<SUB>M</SUB>, g<SUB>M</SUB>(&tau;)>]
+}

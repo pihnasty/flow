@@ -1,29 +1,37 @@
 import graphviz
+from pom.stochastic03.InitData.initialize_routes import experiments
+
+
+param = experiments['default']
 
 filesCategory = 'routes_results/'
-graph_name = 'fig_1'
+graph_name = param['graph_name']
 fileName = graph_name + '.gv'
 
 f = graphviz.Digraph(name=graph_name, filename=filesCategory + fileName,
-                     format='jpeg',
-                     engine='neato',
-                     # engine='dot'
+                     format=param['file_format'],
+                     engine=param['engine'],
                      )
-f.attr(rankdir='LR', ratio='fill', size='4,3',
-       dpi='600',
+
+graph_attr = param['graph_attr']
+f.attr(
+       rankdir=graph_attr['rankdir'],
+       ratio='fill',
+       size=graph_attr['size'],
+       dpi=graph_attr['dpi'],
        bgcolor='white',
        center='1'
        )
 
+node_attr = param['node_attr']
 f.attr('node',
-       shape='invtriangle',
-       # shape='none',
-       penwidth='0.5',
+       shape=node_attr['shape'],
+       penwidth=node_attr['penwidth'],
        label='',
        fixedsize='true',
-       width='0.15',
-       height='0.15',
-       fontsize='14',  # flow font size
+       width=node_attr['width'],
+       height=node_attr['height'],
+       fontsize=node_attr['fontsize'],  # Flow font size
        labelloc='b'
        )
 f.node('1', pos='0, 0.3!', xlabel='<&gamma;<SUB>1</SUB>(&tau;)>')
@@ -35,12 +43,14 @@ f.node('6', pos='1, 0.44!',
        # labelloc='c',
        xlabel='<&gamma;<SUB>M+1</SUB>(&tau;)>')
 
+edge_attr = param['edge_attr']
 f.attr('edge',
-       penwidth='0.5',
+       penwidth=edge_attr['penwidth'],
        fontcolor='black',
-       fontsize='14',  # speed and length font size
-       arrowsize='0.4'
+       fontsize=edge_attr['fontsize'],  # Speed and Length of conveyer font size
+       arrowsize=edge_attr['arrowsize'],
        )
+
 f.edge('1', '2',
        taillabel='<&xi;<SUB>1</SUB>, g<SUB>1</SUB>(&tau;)>',
        # label='',

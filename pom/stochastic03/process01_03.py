@@ -27,9 +27,6 @@ filesCategory = 'files/'
 fileName = experiment["file_name"]
 df = pd.read_csv(filesCategory + fileName, sep=";", decimal=',')
 numberExamples = df.shape[0]
-# KaKr
-# df = pd.read_csv('dataset_2021_KaKr.csv', sep=";" , decimal=',')
-# countOfIntervalsXi2 = 5.0*math.log10(numberExamples)
 count_of_intervals_xi2 = experiment["number_of_intervals_xi2"]
 
 def densityExpectedValue(initialData, densityParameters):
@@ -227,7 +224,7 @@ extentions.approximated_gamma_show(
 d_auto_korelation_centered_mass2=copy.copy(d2)
 # !!!!!! is transformed the dimensionless flow into a centered dimensionless flow with an average constant in time
 d_auto_korelation_centered_mass2['flow']=(d2['flow']) - approximated_gamma_d
-period = 200   #  The variable [period] is introduced to reduce calculations.
+PERIOD = 200   #  The variable [period] is introduced to reduce calculations.
 # The variable specifies that only the point for which the ratio is valid [i % period == 0] is calculated for the plot.
 
 extentions.approximated_gamma_s_show(
@@ -248,10 +245,22 @@ extentions.approximated_gamma_s_show(
     , 'approximatedGamma_d2_'
     , r'$\gamma_d$($\tau$)'
 )
+RESULT_DATA_CATEDORY = 'resultData/' + experiment["file_name"] + '/approximated/'
+file_util.make_dir_if_not(RESULT_DATA_CATEDORY)
+approximated_gamma_d2.to_csv(RESULT_DATA_CATEDORY + 'gamma_d.csv', sep=";", decimal=',', index=False)
+approximated_gamma_s2 = copy.copy(approximated_gamma_d2)
+approximated_gamma_s2['flow'] = dimensionless_flow['flow'] - approximated_gamma_d2['flow']
+approximated_gamma_s2.to_csv(RESULT_DATA_CATEDORY + 'gamma_s.csv', sep=";", decimal=',', index=False)
+dimensionless_flow.to_csv(RESULT_DATA_CATEDORY + 'gamma.csv', sep=";", decimal=',', index=False)
 
+fourier_coefficients_gamma_d2 = pd.DataFrame()
+fourier_coefficients_gamma_d2['number'] = range(experiment["number_of_harmonics"])
+fourier_coefficients_gamma_d2['fourier coefficient'] = fourier_coefficients_gamma_d
+fourier_coefficients_gamma_d2.to_csv(RESULT_DATA_CATEDORY + 'fourier_coefficients_gamma_d.csv', sep=";", decimal=','
+                                     , index=False)
 
 #===============================================================================
-if (experiment["show_prepare_k"] == True):
+if experiment["show_prepare_k"] == True:
     extentions.c0_show_k0(fileName, d_auto_korelation_centered_mass2, period)
     extentions.c0_show_1_v(fileName, d_auto_korelation_centered_mass2, period)
     extentions.c0_show_work_equals_0_5(fileName, d_auto_korelation_centered_mass2, period)

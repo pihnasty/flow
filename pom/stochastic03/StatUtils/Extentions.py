@@ -4,6 +4,7 @@ import pom.stochastic03.utils.FileUtil as fileUtil
 from pom.stochastic03.utils.progress import progress
 import numpy as np
 
+RESULT_DATA = 'resultData/'
 
 def prediction_std(period
                    , correlation_time
@@ -53,7 +54,7 @@ def c1_plot(fileName, fontsize):
             c1_tau [0] [i] = i * dtau_correlation
             c1_tau [1] [i] = c_1(c1_tau [0] [i])
 
-    path = 'figures/' + fileName + '/common'
+    path = RESULT_DATA + fileName + '/common'
     fileUtil.make_dir_if_not(path)
     columName ='flow_c1_tau'
 
@@ -369,7 +370,7 @@ def c0_show_k0(fileName
     progress(len(d_auto_korelation_centered_mass["time"]),
              len(d_auto_korelation_centered_mass["time"]), '\n')
 
-    path = 'figures/' + fileName + '/autoCorelation'
+    path = RESULT_DATA + fileName + '/autoCorelation'
     fileUtil.make_dir_if_not(path)
     columName ='flow_autoKorelation_k0_'
     xlabelName = r'$\vartheta$'
@@ -414,7 +415,7 @@ def c0_show_1_v(fileName
     progress(len(d_auto_korelation_centered_mass["time"]),
              len(d_auto_korelation_centered_mass["time"]), '\n')
 
-    path = 'figures/' + fileName + '/autoCorelation'
+    path = RESULT_DATA + fileName + '/autoCorelation'
     fileUtil.make_dir_if_not(path)
     columName = 'flow_autoKorelation_C0_1_v_'
     xlabelName = r'$\vartheta$'
@@ -467,7 +468,7 @@ def c0_show_work_equals_0_5(fileName
     progress(len(d_auto_korelation_centered_mass["time"]) / 2,
              len(d_auto_korelation_centered_mass["time"]) / 2, '\n')
 
-    path = 'figures/' + fileName + '/autoCorelation'
+    path = RESULT_DATA + fileName + '/autoCorelation'
     fileUtil.make_dir_if_not(path)
     columName = 'flow_autoKorelation_C0_work_equals_0_05_'
     xlabelName = r'$\vartheta$'
@@ -520,7 +521,7 @@ def c0_show_test_equals_0_5(fileName
     progress(len(d_auto_korelation_centered_mass["time"]) / 2,
              len(d_auto_korelation_centered_mass["time"]) / 2, '\n')
 
-    path = 'figures/' + fileName + '/autoCorelation'
+    path = RESULT_DATA + fileName + '/autoCorelation'
     fileUtil.make_dir_if_not(path)
     columName = 'flow_autoKorelation_C0_test_equals_05_1_'
     xlabelName = r'$\vartheta$'
@@ -571,7 +572,7 @@ def c0_show_var2(experiment
 
     progress(len(d_auto_korelation_centered_mass["time"]), len(d_auto_korelation_centered_mass["time"]), '\n')
 
-    path = 'figures/' + experiment["file_name"] + '/autoCorelation'
+    path = RESULT_DATA + experiment["file_name"] + '/autoCorelation'
     fileUtil.make_dir_if_not(path)
     columName = 'flow_autoKorelation_C0_var2'
     xlabelName = r'$\vartheta$'
@@ -631,7 +632,7 @@ def c0_show_tau_tau_minus_v_tau_plus_v(experiment
 
     progress(len(d_auto_korelation_centered_mass["time"]), len(d_auto_korelation_centered_mass["time"]), '\n')
 
-    path = 'figures/' + experiment["file_name"] + '/autoCorelation'
+    path = RESULT_DATA + experiment["file_name"] + '/autoCorelation'
     fileUtil.make_dir_if_not(path)
     columName = 'flow_autoKorelation_C0_tau_tau_minus_v_tau_plus_v'
     xlabelName = r'$\vartheta$'
@@ -658,7 +659,7 @@ def c0_show_tau_tau_minus_v_tau_plus_v2(experiment
                                         , x
                                         , y
                                         ):
-    path = 'figures/' + experiment["file_name"] + '/autoCorelation'
+    path = RESULT_DATA + experiment["file_name"] + '/autoCorelation'
     fileUtil.make_dir_if_not(path)
     columName = 'flow_autoKorelation_C0_tau_tau_minus_v_tau_plus_v2_'
     xlabelName = r'$\vartheta$'
@@ -682,7 +683,7 @@ def c0_show_tau_tau_minus_v_tau_plus_v_tau_plus_1(experiment
                                                   , x
                                                   , y
                                                   ):
-    path = 'figures/' + experiment["file_name"] + '/autoCorelation'
+    path = RESULT_DATA + experiment["file_name"] + '/autoCorelation'
     fileUtil.make_dir_if_not(path)
     columName = 'flow_autoKorelation_C0_tau_tau_minus_v_tau_plus_v2'
     xlabelName = r'$\tau$'
@@ -704,7 +705,7 @@ def approximated_gamma_show(experiment
                             , columName
                             , title
                  ):
-    path = 'figures/' + experiment["file_name"] + '/approximatedGamma'
+    path = RESULT_DATA + experiment["file_name"] + '/approximatedGamma'
     fileUtil.make_dir_if_not(path)
     xlabelName = r'$\tau$'
 
@@ -717,7 +718,8 @@ def approximated_gamma_show(experiment
                        , 0.7, _dpi=600
                        , _color2 = "black"
                        , xMin=min(dimensionless_flow["time"]), xMax=max(dimensionless_flow["time"])
-                       , y1Min=min(dimensionless_flow["flow"]), y1Max=max(dimensionless_flow["flow"]), _fontsize=10)
+                       , y1Min=limit_min_value(min(dimensionless_flow["flow"]),0)
+                       , y1Max=max(dimensionless_flow["flow"]), _fontsize=10)
 
 def approximated_gamma_s_show(experiment
                             , dimensionless_flow
@@ -725,7 +727,7 @@ def approximated_gamma_s_show(experiment
                             , columName
                             , title
                             ):
-    path = 'figures/' + experiment["file_name"] + '/approximatedGamma'
+    path = RESULT_DATA + experiment["file_name"] + '/approximatedGamma'
     fileUtil.make_dir_if_not(path)
     xlabelName = r'$\tau$'
     approximated_gamma_s = [
@@ -840,3 +842,16 @@ def approximated_gamma_d(period
                 progress(i, count)
         progress(count, count)
     return approximated_gamma_function
+
+
+def limit_min_value(value_1, value_2):
+    """
+    Method returns the minimum value of two numbers.
+    :param value_1: first value.
+    :param value_2: second value.
+    :return: the minimum value of two numbers.
+    """
+    value = value_1
+    if (value_2 < value):
+        value = value_2
+    return value

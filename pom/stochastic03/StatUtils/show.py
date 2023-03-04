@@ -6,7 +6,7 @@ import pom.stochastic03.Graphics.CombinedCharts.LineHistChart as lineHistChart
 import pom.stochastic03.utils.FileUtil as file_util
 import pom.stochastic03.StatUtils.stat_func as stat_func
 
-
+RESULT_DATA = 'resultData/'
 def visual_lines(lines, experiment, plot_name):
     """
     Visualization of lines depending on the design of the experiment.
@@ -42,7 +42,7 @@ def flow_density(
     :param ylabel_name: y-axis label.
     :param alpha: chart bar brightness.
     """
-    path = 'figures/' + experiment["file_name"] + sub_directory_name
+    path = RESULT_DATA + experiment["file_name"] + sub_directory_name
     file_util.make_dir_if_not(path)
     xvalues = flow_densities[0]
     yvalues = visual_lines(flow_densities, experiment, "show_flow_density")
@@ -84,7 +84,7 @@ def frequency_plot_hist(
     :param ylabel_name: y-axis label.
     :param alpha: chart bar brightness.
     """
-    path = 'figures/' + experiment["file_name"] + sub_directory_name
+    path = RESULT_DATA + experiment["file_name"] + sub_directory_name
     file_util.make_dir_if_not(path)
 
     values = visual_lines([x_values, plot_values, hist_values], experiment, "frequency_plot_hist")

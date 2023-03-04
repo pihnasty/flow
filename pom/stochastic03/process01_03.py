@@ -20,12 +20,10 @@ from pom.stochastic03.InitData.inizialize_data import experiments
 
 experiment = experiments["0001"]
 
-
-
-
-filesCategory = 'files/'
+RESULT_DATA = 'resultData/'
+FILES_CATEGORY = 'files/'
 fileName = experiment["file_name"]
-df = pd.read_csv(filesCategory + fileName, sep=";", decimal=',')
+df = pd.read_csv(FILES_CATEGORY + fileName, sep=";", decimal=',')
 numberExamples = df.shape[0]
 count_of_intervals_xi2 = experiment["number_of_intervals_xi2"]
 
@@ -58,18 +56,18 @@ fontsize=14
 
 extentions.c1_plot(fileName, fontsize)
 
-path = 'figures/'+ fileName + '/initial'
+path = RESULT_DATA + fileName + '/initial'
 file_util.make_dir_if_not(path)
-columName = 'flow_line'
+column_name = 'flow_line'
 xlabelName = r'$t$'
-lineChart.linePlot(path + '/' + columName, df['time'].values
+lineChart.linePlot(path + '/' + column_name, df['time'].values
                    , df['flow'].values, df['flow'].values, xlabelName, r'$\lambda(t)$'
                    , 0.7, _dpi=600, xMin=df['time'].min(), xMax=df['time'].max(), _fontsize=12)
 
-columName = 'time'
-hist.histPlot(path + '/' + columName, df, columName, count_of_intervals_xi2, True, 'density', r'$t$', 0.7, 0.7, _dpi=600)
-columName = 'flow'
-hist.histPlot(path + '/' + columName, df, columName, count_of_intervals_xi2, True, r'f($\lambda$)', r'$\lambda$', 0.7, 0.7,
+column_name = 'time'
+hist.histPlot(path + '/' + column_name, df, column_name, count_of_intervals_xi2, True, 'density', r'$t$', 0.7, 0.7, _dpi=600)
+column_name = 'flow'
+hist.histPlot(path + '/' + column_name, df, column_name, count_of_intervals_xi2, True, r'f($\lambda$)', r'$\lambda$', 0.7, 0.7,
               _dpi=600)
 
 averageColumn=df['flow'].mean()
@@ -86,21 +84,21 @@ tMax=df['time'].max()
 d2['time'] = (df['time'] - tMin) / (tMax - tMin)
 #             * 2
 # ============================================= initial_dimensionless ======================================
-path = 'figures/' + fileName + '/initial_dimensionless'
+path = RESULT_DATA + fileName + '/initial_dimensionless'
 file_util.make_dir_if_not(path)
-columName ='flow_line'
+column_name ='flow_line'
 xlabelName = r'$\tau$'
-lineChart.linePlot(path + '/' + columName, d2['time'].values
+lineChart.linePlot(path + '/' + column_name, d2['time'].values
          , d2['flow'].values, d2['flow'].values, xlabelName, r'$\gamma(\tau)$'
          , 0.7, _dpi=600
          , xMin = d2['time'].min(), xMax = d2['time'].max()
          , y1Min= d2['flow'].min(), y1Max= d2['flow'].max(), _fontsize=8)
-columName ='time'
-hist.histPlot(path + '/' + columName, d2, columName, count_of_intervals_xi2, True, 'density', r'$\tau$', 0.7, 0.7,
+column_name ='time'
+hist.histPlot(path + '/' + column_name, d2, column_name, count_of_intervals_xi2, True, 'density', r'$\tau$', 0.7, 0.7,
               _dpi=600)
-columName ='flow'
-hist.histPlot(path + '/' + columName, d2, columName, count_of_intervals_xi2, True, r'f($\gamma$)', r'$\gamma$', 0.7, 0.7,
-              _dpi=600)
+column_name ='flow'
+hist.histPlot(path + '/' + column_name, d2, column_name, count_of_intervals_xi2, True, r'f($\gamma$)'
+              , r'$\gamma$', 0.7, 0.7, _dpi=600)
 
 d3 = stat_func.density_values(d2['flow'].values, count_of_intervals_xi2)
 
@@ -123,7 +121,7 @@ show.frequency_plot_hist(
 # # this module compares two distribution functions: experimental and with normal distribution,
 # applying Pearson's criterion
 
-# path = 'figures/' + fileName + '/check'
+# path = RESULT_DATA + fileName + '/check'
 # frequencyParameters = {"delta": (d2['flow'].max() - d2['flow'].min()) / count_of_intervals_xi2,
 #                        "numberExamples": numberExamples}
 # d31 = frequencyValue(d3, frequencyParameters)
@@ -151,7 +149,7 @@ period = 200   #  The variable [period] is introduced to reduce calculations.
 # The variable specifies that only the point for which the ratio is valid [i % period == 0] is calculated for the plot.
 
 #===============================================================================
-if (experiment["show_prepare_k"] == True):
+if experiment["show_prepare_k"] == True:
     extentions.c0_show_k0(fileName, d_auto_korelation_centered_mass, period)
     extentions.c0_show_1_v(fileName, d_auto_korelation_centered_mass, period)
     extentions.c0_show_work_equals_0_5(fileName, d_auto_korelation_centered_mass, period)
@@ -245,7 +243,7 @@ extentions.approximated_gamma_s_show(
     , 'approximatedGamma_d2_'
     , r'$\gamma_d$($\tau$)'
 )
-RESULT_DATA_CATEDORY = 'resultData/' + experiment["file_name"] + '/approximated/'
+RESULT_DATA_CATEDORY = RESULT_DATA + experiment["file_name"] + '/output/'
 file_util.make_dir_if_not(RESULT_DATA_CATEDORY)
 approximated_gamma_d2.to_csv(RESULT_DATA_CATEDORY + 'gamma_d.csv', sep=";", decimal=',', index=False)
 approximated_gamma_s2 = copy.copy(approximated_gamma_d2)
@@ -260,7 +258,7 @@ fourier_coefficients_gamma_d2.to_csv(RESULT_DATA_CATEDORY + 'fourier_coefficient
                                      , index=False)
 
 #===============================================================================
-if experiment["show_prepare_k"] == True:
+if experiment["show_prepare_k"]:
     extentions.c0_show_k0(fileName, d_auto_korelation_centered_mass2, period)
     extentions.c0_show_1_v(fileName, d_auto_korelation_centered_mass2, period)
     extentions.c0_show_work_equals_0_5(fileName, d_auto_korelation_centered_mass2, period)

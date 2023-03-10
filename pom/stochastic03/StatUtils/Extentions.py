@@ -437,9 +437,9 @@ def c0_show_work_equals_0_5(fileName
             ):
 
     count = len(d_auto_korelation_centered_mass["time"])
-    d2X = [0] * round(count / period)
-    d2Y = [0] * round(count / period)
-    d2Y2 = [0] * round(count / period)
+    d2X = [0] * round(count / period + 1)
+    d2Y = [0] * round(count / period + 1)
+    d2Y2 = [0] * round(count / period + 1)
     autoKorelationCoeffitient_C0 = [d2X, d2Y, d2Y2]
     d_auto_korelation_centered_mass_stdColumn = d_auto_korelation_centered_mass["flow"].std() ** 2
     _tMax = max(d_auto_korelation_centered_mass["time"])
@@ -489,11 +489,10 @@ def c0_show_test_equals_0_5(fileName
                             , d_auto_korelation_centered_mass
                             , period
                             ):
-
     count = len(d_auto_korelation_centered_mass["time"])
-    d2X = [0] * round(count / period)
-    d2Y = [0] * round(count / period)
-    d2Y2 = [0] * round(count / period)
+    d2X = [0] * round(count / period + 1)
+    d2Y = [0] * round(count / period + 1)
+    d2Y2 = [0] * round(count / period + 1)
     autoKorelationCoeffitient_C0 = [d2X, d2Y, d2Y2]
     d_auto_korelation_centered_mass_stdColumn = d_auto_korelation_centered_mass["flow"].std() ** 2
     _tMax = max(d_auto_korelation_centered_mass["time"])
@@ -543,9 +542,9 @@ def c0_show_var2(experiment
                  ):
     count = len(d_auto_korelation_centered_mass["time"])
     period = experiment["period"]
-    d2X = [0] * round(count / period)
-    d2Y = [0] * round(count / period)
-    d2Y2 = [0] * round(count / period)
+    d2X = [0] * round(count / period + 1)
+    d2Y = [0] * round(count / period + 1)
+    d2Y2 = [0] * round(count / period + 1)
     autoKorelationCoeffitient_C0 = [d2X, d2Y, d2Y2]
     d_auto_korelation_centered_mass_stdColumn = d_auto_korelation_centered_mass["flow"].std() ** 2
     _tMax = max(d_auto_korelation_centered_mass["time"])
@@ -597,36 +596,33 @@ def c0_show_var2(experiment
 
 
 # ===================================== c0_show_tau_tau_minus_v_tau_plus_v =============================================
-def c0_show_tau_tau_minus_v_tau_plus_v(experiment
-                 , d_auto_korelation_centered_mass
-                 ):
+def c0_show_tau_tau_minus_v_tau_plus_v(experiment, d_auto_korelation_centered_mass):
     count = len(d_auto_korelation_centered_mass["time"])
     period = experiment["period"]
-    d2X = [0] * round(count / period)
-    d2Y = [0] * round(count / period)
-    d2Y2 = [0] * round(count / period)
-    autoKorelationCoeffitient_C0 = [d2X, d2Y, d2Y2]
-    d_auto_korelation_centered_mass_stdColumn = d_auto_korelation_centered_mass["flow"].std() ** 2
-    _tMax = max(d_auto_korelation_centered_mass["time"])
+    d2x = [0] * round(count / period + 1)
+    d2y = [0] * round(count / period + 1)
+    d2y2 = [0] * round(count / period + 1)
+    auto_korelation_coeffitient_c0 = [d2x, d2y, d2y2]
+    d_auto_korelation_centered_mass_std_column = d_auto_korelation_centered_mass["flow"].std() ** 2
     i = 0
     j = 0
     for tau in d_auto_korelation_centered_mass["time"]:
         if (i % period == 0):
-            if (j < len(autoKorelationCoeffitient_C0[0])):
+            if (j < len(auto_korelation_coeffitient_c0[0])):
                 try:
-                    autoKorelationCoeffitient_C0[2][j] = np.exp(-tau / experiment["tau_correlation"])
-                    autoKorelationCoeffitient_C0[1][j] = c0_tau_tau_minus_v_tau_plus_v(
+                    auto_korelation_coeffitient_c0[2][j] = np.exp(-tau / experiment["tau_correlation"])
+                    auto_korelation_coeffitient_c0[1][j] = c0_tau_tau_minus_v_tau_plus_v(
                         tau
                         , d_auto_korelation_centered_mass["time"]
                         , d_auto_korelation_centered_mass["flow"]) / (
-                                                             d_auto_korelation_centered_mass_stdColumn)
-                    autoKorelationCoeffitient_C0[0][j] = tau
+                                                               d_auto_korelation_centered_mass_std_column)
+                    auto_korelation_coeffitient_c0[0][j] = tau
                     j = j + 1
                     progress(i + 1, len(d_auto_korelation_centered_mass["time"]))
                 except IndexError:
                     print("")
             else:
-                autoKorelationCoeffitient_C0[0][j] = tau
+                auto_korelation_coeffitient_c0[0][j] = tau
                 j = j + 1
         i = i + 1
 
@@ -634,26 +630,25 @@ def c0_show_tau_tau_minus_v_tau_plus_v(experiment
 
     path = RESULT_DATA + experiment["file_name"] + '/autoCorelation'
     fileUtil.make_dir_if_not(path)
-    columName = 'flow_autoKorelation_C0_tau_tau_minus_v_tau_plus_v'
-    xlabelName = r'$\vartheta$'
-    autoKorelationCoeffitient_C0s = [
-        autoKorelationCoeffitient_C0[experiment["c0_show_var2"]["1"]]
-        , autoKorelationCoeffitient_C0[experiment["c0_show_var2"]["2"]]
-        , autoKorelationCoeffitient_C0[experiment["c0_show_var2"]["3"]]
+    colum_name = 'flow_autoKorelation_C0_tau_tau_minus_v_tau_plus_v'
+    xlabel_name = r'$\vartheta$'
+    auto_korelation_coeffitient_c0s = [
+        auto_korelation_coeffitient_c0[experiment["c0_show_var2"]["1"]]
+        , auto_korelation_coeffitient_c0[experiment["c0_show_var2"]["2"]]
+        , auto_korelation_coeffitient_c0[experiment["c0_show_var2"]["3"]]
     ]
-    lineChart.linePlot2(path + '/' + columName, autoKorelationCoeffitient_C0[0]
-                        # , autoKorelationCoeffitient[1], autoKorelationCoeffitient[2], xlabelName, r'k($\vartheta$) ', 0.7, _dpi=600
-                        , autoKorelationCoeffitient_C0s
-                        , xlabelName,
+    lineChart.linePlot2(path + '/' + colum_name, auto_korelation_coeffitient_c0[0]
+                        # , autoKorelationCoeffitient[1], autoKorelationCoeffitient[2],
+                        # xlabelName, r'k($\vartheta$) ', 0.7, _dpi=600
+                        , auto_korelation_coeffitient_c0s
+                        , xlabel_name,
                         r'k($\vartheta$) ',
                         0.7, _dpi=600
                         , xMax=1.0
                         , y1Min=-0.5
                         # , y1Min=min(autoKorelationCoeffitient_C0[1])
-                        , y1Max=max(autoKorelationCoeffitient_C0[1]),
+                        , y1Max=max(auto_korelation_coeffitient_c0[1]),
                         _fontsize=8)
-
-
 # =======================================================================================================================
 def c0_show_tau_tau_minus_v_tau_plus_v2(experiment
                                         , x

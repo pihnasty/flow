@@ -3,8 +3,6 @@ import math
 import sys
 
 import pandas as pd
-from scipy.stats import chi2_contingency
-
 import Graphics.Histograms.Hist as hist
 import Graphics.LineCharts.LineChart as lineChart
 import utils.FileUtil as file_util

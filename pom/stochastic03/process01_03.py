@@ -10,10 +10,12 @@ import StatUtils.Extentions as extentions
 import StatUtils.stat_func as stat_func
 import StatUtils.show as show
 
+from datetime import datetime
+
 # universal .csv
 from pom.stochastic03.InitData.inizialize_data import experiments
 
-experiment = experiments["0001"]
+experiment = experiments["dataset_2021_DoKrWa.csv"]
 
 RESULT_DATA = 'resultData/'
 FILES_CATEGORY = 'files/'
@@ -46,6 +48,7 @@ def frequencyValue(data, frecuencyParameters):
     return frecuencyData
 
 # ================================================ initial =================================================
+start_time = datetime.now()
 
 fontsize=14
 
@@ -282,5 +285,7 @@ analysis_result = pd.DataFrame()
 analysis_result['name'] = ["quality criteria"]
 analysis_result['value'] = [quality_criterion]
 analysis_result.to_csv(RESULT_DATA_CATEDORY + 'analysis_result.csv', sep=";", decimal=',', index=False)
+
+print('All operations are finished for:', datetime.now() - start_time)
 
 sys.exit()

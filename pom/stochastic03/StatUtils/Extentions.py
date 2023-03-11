@@ -437,16 +437,16 @@ def c0_show_work_equals_0_5(fileName
             ):
 
     count = len(d_auto_korelation_centered_mass["time"])
-    d2X = [0] * round(count / period + 1)
-    d2Y = [0] * round(count / period + 1)
-    d2Y2 = [0] * round(count / period + 1)
+    d2X = [0] * round(count / period)
+    d2Y = [0] * round(count / period)
+    d2Y2 = [0] * round(count / period)
     autoKorelationCoeffitient_C0 = [d2X, d2Y, d2Y2]
     d_auto_korelation_centered_mass_stdColumn = d_auto_korelation_centered_mass["flow"].std() ** 2
     _tMax = max(d_auto_korelation_centered_mass["time"])
     i = 0
     j = 0
     for tau in d_auto_korelation_centered_mass["time"]:
-        if (i % period == 0):
+        if (i % period == 0 and j < len(autoKorelationCoeffitient_C0[0])):
             if (j < len(autoKorelationCoeffitient_C0[0]) / 2):
                 try:
                     autoKorelationCoeffitient_C0[2][j] = np.exp(-tau / 0.07)
@@ -490,16 +490,16 @@ def c0_show_test_equals_0_5(fileName
                             , period
                             ):
     count = len(d_auto_korelation_centered_mass["time"])
-    d2X = [0] * round(count / period + 1)
-    d2Y = [0] * round(count / period + 1)
-    d2Y2 = [0] * round(count / period + 1)
+    d2X = [0] * round(count / period)
+    d2Y = [0] * round(count / period)
+    d2Y2 = [0] * round(count / period)
     autoKorelationCoeffitient_C0 = [d2X, d2Y, d2Y2]
     d_auto_korelation_centered_mass_stdColumn = d_auto_korelation_centered_mass["flow"].std() ** 2
     _tMax = max(d_auto_korelation_centered_mass["time"])
     i = 0
     j = 0
     for tau in d_auto_korelation_centered_mass["time"]:
-        if (i % period == 0 ):
+        if (i % period == 0 and j < len(autoKorelationCoeffitient_C0[0])):
             if ( j < len(autoKorelationCoeffitient_C0[0]) / 2 ):
                 try:
                     autoKorelationCoeffitient_C0[2][j] = np.exp(-tau / 0.07)
@@ -542,9 +542,9 @@ def c0_show_var2(experiment
                  ):
     count = len(d_auto_korelation_centered_mass["time"])
     period = experiment["period"]
-    d2X = [0] * round(count / period + 1)
-    d2Y = [0] * round(count / period + 1)
-    d2Y2 = [0] * round(count / period + 1)
+    d2X = [0] * round(count / period)
+    d2Y = [0] * round(count / period)
+    d2Y2 = [0] * round(count / period)
     autoKorelationCoeffitient_C0 = [d2X, d2Y, d2Y2]
     d_auto_korelation_centered_mass_stdColumn = d_auto_korelation_centered_mass["flow"].std() ** 2
     _tMax = max(d_auto_korelation_centered_mass["time"])
@@ -553,20 +553,14 @@ def c0_show_var2(experiment
     for tau in d_auto_korelation_centered_mass["time"]:
         if (i % period == 0):
             if (j < len(autoKorelationCoeffitient_C0[0])):
-                try:
-                    autoKorelationCoeffitient_C0[2][j] = np.exp(-tau / experiment["tau_correlation"])
-                    autoKorelationCoeffitient_C0[1][j] = c0_var2(tau, d_auto_korelation_centered_mass["time"],
-                                                                 d_auto_korelation_centered_mass[
-                                                                     "flow"]) / (
-                                                             d_auto_korelation_centered_mass_stdColumn)
-                    autoKorelationCoeffitient_C0[0][j] = tau
-                    j = j + 1
-                    progress(i + 1, len(d_auto_korelation_centered_mass["time"]))
-                except IndexError:
-                    print("")
-            else:
+                autoKorelationCoeffitient_C0[2][j] = np.exp(-tau / experiment["tau_correlation"])
+                autoKorelationCoeffitient_C0[1][j] = c0_var2(tau, d_auto_korelation_centered_mass["time"],
+                                                             d_auto_korelation_centered_mass[
+                                                                 "flow"]) / (
+                                                         d_auto_korelation_centered_mass_stdColumn)
                 autoKorelationCoeffitient_C0[0][j] = tau
                 j = j + 1
+                progress(i + 1, len(d_auto_korelation_centered_mass["time"]))
         i = i + 1
 
     progress(len(d_auto_korelation_centered_mass["time"]), len(d_auto_korelation_centered_mass["time"]), '\n')
@@ -599,31 +593,23 @@ def c0_show_var2(experiment
 def c0_show_tau_tau_minus_v_tau_plus_v(experiment, d_auto_korelation_centered_mass):
     count = len(d_auto_korelation_centered_mass["time"])
     period = experiment["period"]
-    d2x = [0] * round(count / period + 1)
-    d2y = [0] * round(count / period + 1)
-    d2y2 = [0] * round(count / period + 1)
+    d2x = [0] * round(count / period)
+    d2y = [0] * round(count / period)
+    d2y2 = [0] * round(count / period)
     auto_korelation_coeffitient_c0 = [d2x, d2y, d2y2]
     d_auto_korelation_centered_mass_std_column = d_auto_korelation_centered_mass["flow"].std() ** 2
     i = 0
     j = 0
     for tau in d_auto_korelation_centered_mass["time"]:
-        if (i % period == 0):
-            if (j < len(auto_korelation_coeffitient_c0[0])):
-                try:
-                    auto_korelation_coeffitient_c0[2][j] = np.exp(-tau / experiment["tau_correlation"])
-                    auto_korelation_coeffitient_c0[1][j] = c0_tau_tau_minus_v_tau_plus_v(
-                        tau
-                        , d_auto_korelation_centered_mass["time"]
-                        , d_auto_korelation_centered_mass["flow"]) / (
-                                                               d_auto_korelation_centered_mass_std_column)
-                    auto_korelation_coeffitient_c0[0][j] = tau
-                    j = j + 1
-                    progress(i + 1, len(d_auto_korelation_centered_mass["time"]))
-                except IndexError:
-                    print("")
-            else:
-                auto_korelation_coeffitient_c0[0][j] = tau
-                j = j + 1
+        if (i % period == 0 and j < len(auto_korelation_coeffitient_c0[0])):
+            auto_korelation_coeffitient_c0[2][j] = np.exp(-tau / experiment["tau_correlation"])
+            auto_korelation_coeffitient_c0[1][j] = c0_tau_tau_minus_v_tau_plus_v(
+                tau
+                , d_auto_korelation_centered_mass["time"]
+                , d_auto_korelation_centered_mass["flow"]) / (d_auto_korelation_centered_mass_std_column)
+            auto_korelation_coeffitient_c0[0][j] = tau
+            j = j + 1
+            progress(i + 1, len(d_auto_korelation_centered_mass["time"]))
         i = i + 1
 
     progress(len(d_auto_korelation_centered_mass["time"]), len(d_auto_korelation_centered_mass["time"]), '\n')
@@ -649,7 +635,7 @@ def c0_show_tau_tau_minus_v_tau_plus_v(experiment, d_auto_korelation_centered_ma
                         # , y1Min=min(autoKorelationCoeffitient_C0[1])
                         , y1Max=max(auto_korelation_coeffitient_c0[1]),
                         _fontsize=8)
-# =======================================================================================================================
+# ======================================================================================================================
 def c0_show_tau_tau_minus_v_tau_plus_v2(experiment
                                         , x
                                         , y
@@ -850,3 +836,76 @@ def limit_min_value(value_1, value_2):
     if (value_2 < value):
         value = value_2
     return value
+
+# ===================================== quality_criterion ==============================================================
+def quality_criterion(experiment, flow_centered_mass):
+    """
+    The difference between the stochastic flow and the flow exp(-tau) is estimated.
+    :param experiment: initial data.
+    :param flow_centered_mass: the stochastic flow.
+    :return: integral of tau for ([stochastic flow] -  [flow exp(-tau)])**2.
+    """
+    count = len(flow_centered_mass["time"])
+    period = experiment["period"]
+    d2x = [0] * round(count / period)
+    auto_korelation_coeffitient_exp_minus_tau = [0] * round(count / period)
+    auto_korelation_coeffitient_actual = [0] * round(count / period)
+    delta = [0] * round(count / period)
+    correlation_coefficient = [d2x, auto_korelation_coeffitient_exp_minus_tau
+        , auto_korelation_coeffitient_actual, delta]
+    quality_criterion_value = 0
+
+    std = flow_centered_mass["flow"].std() ** 2
+    i = 0
+    j = 0
+    for tau in flow_centered_mass["time"]:
+        if (i % period == 0 and j < len(correlation_coefficient[0])):
+            correlation_coefficient[2][j] = np.exp(-tau / experiment["tau_correlation"])
+            correlation_coefficient[1][j] = c0_tau_tau_minus_v_tau_plus_v(
+                tau, flow_centered_mass["time"], flow_centered_mass["flow"]
+            ) / (std)
+            correlation_coefficient[0][j] = tau
+            correlation_coefficient[3][j] = (correlation_coefficient[2][j] - correlation_coefficient[1][j])
+            if (j > 0):
+                delta_tau = (correlation_coefficient[0][j] - correlation_coefficient[0][j - 1])
+                quality_criterion_value = quality_criterion_value + correlation_coefficient[3][j] ** 2 * delta_tau
+            j = j + 1
+            progress(i + 1, len(flow_centered_mass["time"]))
+        i = i + 1
+    progress(len(flow_centered_mass["time"]), len(flow_centered_mass["time"]), '\n')
+
+    path = RESULT_DATA + experiment["file_name"] + '/quality_criterion'
+    fileUtil.make_dir_if_not(path)
+    colum_name = 'quality_criterion'
+    xlabel_name = r'$\vartheta$'
+    correlation_coefficients = [
+        correlation_coefficient[experiment["quality_criterion"]["1"]]
+        , correlation_coefficient[experiment["quality_criterion"]["2"]]
+        , correlation_coefficient[experiment["quality_criterion"]["3"]]
+    ]
+    lineChart.linePlot2(path + '/' + colum_name, correlation_coefficient[0]
+                        , correlation_coefficients
+                        , xlabel_name,
+                        r'k($\vartheta$) ',
+                        0.7, _dpi=600
+                        , xMax=1.0
+                        , y1Min=min(correlation_coefficient[1])
+                        , y1Max=max(correlation_coefficient[1]),
+                        _fontsize=8)
+
+    colum_name = 'delta_quality_criterion'
+    xlabel_name = r'$\vartheta$'
+    correlation_coefficients2 = [
+        correlation_coefficient[experiment["quality_criterion"]["3"]]
+    ]
+    lineChart.linePlot2(path + '/' + colum_name, correlation_coefficient[0]
+                        , correlation_coefficients2
+                        , xlabel_name,
+                        r'$\Delta$k($\vartheta$) ',
+                        0.7, _dpi=600
+                        , xMax=1.0
+                        , y1Min=min(correlation_coefficient[1])
+                        , y1Max=max(correlation_coefficient[1]),
+                        _fontsize=8)
+    return quality_criterion_value
+# ======================================================================================================================

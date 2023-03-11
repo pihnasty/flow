@@ -7,6 +7,7 @@ experiments = {
 
         , "period": 200
         , "c0_show_var2": {"0": 0, "1": 1, "2": 1, "3": 1, "4": 1, "5": 1}
+        , "quality_criterion": {"0": 0, "1": 1, "2": 2, "3": 3, "4": 1, "5": 1}
         , "show_prepare_k": True
         , "number_of_harmonics": 50
         , "number_of_intervals_xi2": 50
@@ -30,6 +31,7 @@ experiments = {
 
         , "period": 200
         , "c0_show_var2": {"0": 0, "1": 1, "2": 1, "3": 1, "4": 1, "5": 1}
+        , "quality_criterion": {"0": 0, "1": 1, "2": 2, "3": 3, "4": 1, "5": 1}
         , "show_prepare_k": True
         , "number_of_harmonics": 50
         , "number_of_intervals_xi2": 50
@@ -53,6 +55,7 @@ experiments = {
 
         , "period": 200
         , "c0_show_var2": {"0": 0, "1": 1, "2": 1, "3": 1, "4": 1, "5": 1}
+        , "quality_criterion": {"0": 0, "1": 1, "2": 2, "3": 3, "4": 1, "5": 1}
         , "show_prepare_k": True
         , "number_of_harmonics": 50
         , "number_of_intervals_xi2": 50
@@ -76,6 +79,7 @@ experiments = {
 
         , "period": 200
         , "c0_show_var2": {"0": 0, "1": 1, "2": 1, "3": 1, "4": 1, "5": 1}
+        , "quality_criterion": {"0": 0, "1": 1, "2": 2, "3": 3, "4": 1, "5": 1}
         , "show_prepare_k": True
         , "number_of_harmonics": 50
         , "number_of_intervals_xi2": 50
@@ -99,6 +103,7 @@ experiments = {
 
         , "period": 200
         , "c0_show_var2": {"0": 0, "1": 1, "2": 1, "3": 1, "4": 1, "5": 1}
+        , "quality_criterion": {"0": 0, "1": 1, "2": 2, "3": 3, "4": 1, "5": 1}
         , "show_prepare_k": True
         , "number_of_harmonics": 50
         , "number_of_intervals_xi2": 50
@@ -122,6 +127,7 @@ experiments = {
 
         , "period": 200
         , "c0_show_var2": {"0": 0, "1": 1, "2": 1, "3": 1, "4": 1, "5": 1}
+        , "quality_criterion": {"0": 0, "1": 1, "2": 2, "3": 3, "4": 1, "5": 1}
         , "show_prepare_k": True
         , "number_of_harmonics": 50
         , "number_of_intervals_xi2": 50
@@ -145,6 +151,7 @@ experiments = {
 
         , "period": 200
         , "c0_show_var2": {"0": 0, "1": 1, "2": 1, "3": 1, "4": 1, "5": 1}
+        , "quality_criterion": {"0": 0, "1": 1, "2": 2, "3": 3, "4": 1, "5": 1}
         , "show_prepare_k": True
         , "number_of_harmonics": 50
         , "number_of_intervals_xi2": 50
@@ -166,6 +173,7 @@ experiments = {
         , "relative_sigma_correlation": 0.0625
         , "period": 200
         , "c0_show_var2": {"0": 0, "1": 1, "2": 1, "3": 1, "4": 1, "5": 1}
+        , "quality_criterion": {"0": 0, "1": 1, "2": 2, "3": 3, "4": 1, "5": 1}
         , "show_prepare_k": True
         , "number_of_harmonics": 200
         , "number_of_intervals_xi2": 50

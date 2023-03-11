@@ -281,4 +281,11 @@ show.frequency_plot_hist(
     , d_auto_korelation_centered_mass2['flow'], 'flow_frequency_hist', r'$\gamma_s$', r'f($\gamma_s$)', 0.7
 )
 
+# calculation of the quality criterion for the separation of a deterministic and stochastic flow
+quality_criterion = extentions.quality_criterion(experiment, d_auto_korelation_centered_mass)
+analysis_result = pd.DataFrame()
+analysis_result['name'] = ["quality criteria"]
+analysis_result['value'] = [quality_criterion]
+analysis_result.to_csv(RESULT_DATA_CATEDORY + 'analysis_result.csv', sep=";", decimal=',', index=False)
+
 sys.exit()

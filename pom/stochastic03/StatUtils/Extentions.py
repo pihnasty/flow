@@ -792,13 +792,14 @@ def approximated_gamma(period
         tau = dimensionless_flow["time"][i]
         value = 0.0
         for n in range(coefficients_number):
-            if (n == 0):
+            if n == 0:
                 value = fourier_coefficients[n] / 2
             else:
                 value = value + fourier_coefficients[n] * math.cos(math.pi * n * tau)
-            approximated_gamma_function[i] = value
-            if (i % period == 0):
-                progress(i, count)
+        value = max(value, 0.0)
+        approximated_gamma_function[i] = value
+        if i % period == 0:
+            progress(i, count)
         progress(count, count)
     return approximated_gamma_function
 

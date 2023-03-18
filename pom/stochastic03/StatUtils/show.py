@@ -106,3 +106,48 @@ def frequency_plot_hist(
         , y1Max=max(density_values[1])
         , _fontsize=experiment["plot_parameters"]["frequency_plot_hist"]["fontsize"]
     )
+
+
+def initial_dimension_flow_line(
+        experiment
+        , sub_directory_name
+        , plot_values
+        , file_name_prefix
+        , xlabel_name
+        , ylabel_name
+):
+    """
+    Visualization of the distribution density of a random variable
+    :param experiment: experiment conditions.
+    :param sub_directory_name: the name of the directory where the visualization data is located.
+    :param plot_values: set of plot-values sequence.
+    :param file_name_prefix: file name prefix.
+    :param xlabel_name: x-axis label.
+    :param ylabel_name: y-axis label.
+    """
+    path = RESULT_DATA + experiment["file_name"] + sub_directory_name
+    file_util.make_dir_if_not(path)
+
+    x_values = plot_values[0]
+    y_values = visual_lines(plot_values, experiment, "initial_dimension_flow_line")
+
+    lineChart.line_plot3(path + '/' + file_name_prefix
+                         , x_values
+                         , y_values
+                         , xlabel_name
+                         , ylabel_name
+                         , _alpha=experiment["plot_parameters"]["initial_dimension_flow_line"]["alpha"]
+                         , _color=experiment["plot_parameters"]["initial_dimension_flow_line"]["color"]
+                         , _dpi=experiment["plot_parameters"]["dpi"]
+                         , x_min=min(x_values)
+                         , x_max=max(x_values)
+                         , x_tick_main =experiment["plot_parameters"]["initial_dimension_flow_line"]["x_tick_main"]
+                         , x_tick_auxiliary
+                         =experiment["plot_parameters"]["initial_dimension_flow_line"]["x_tick_auxiliary"]
+                         , y1_min=min(y_values[0])
+                         , y1_max=max(y_values[0])
+                         , y_tick_main =experiment["plot_parameters"]["initial_dimension_flow_line"]["y_tick_main"]
+                         , y_tick_auxiliary
+                         =experiment["plot_parameters"]["initial_dimension_flow_line"]["y_tick_auxiliary"]
+                         , _fontsize=experiment["plot_parameters"]["initial_dimension_flow_line"]["fontsize"]
+                         )

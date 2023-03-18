@@ -10,9 +10,6 @@ import StatUtils.Extentions as extentions
 import StatUtils.stat_func as stat_func
 import StatUtils.show as show
 
-# df = pd.read_csv('netflix_titles.csv', sep=",")
-# numberExamples = 11591
-
 # universal .csv
 from pom.stochastic03.InitData.inizialize_data import experiments
 
@@ -44,7 +41,7 @@ def densityExpectedValue(initialData, densityParameters):
 
 def frequencyValue(data, frecuencyParameters):
     frecuencyData = copy.deepcopy(data)
-    for i, val in enumerate(frecuencyData[0]):
+    for i in enumerate(frecuencyData[0]):
         frecuencyData[1][i] = data[1][i] * frecuencyParameters["delta"] * frecuencyParameters["numberExamples"]
     return frecuencyData
 
@@ -53,15 +50,13 @@ def frequencyValue(data, frecuencyParameters):
 fontsize=14
 
 extentions.c1_plot(fileName, fontsize)
+initial_dimension_flows = [df['time'].values, df['flow'].values]
+show.initial_dimension_flow_line(
+    experiment, '/initial', initial_dimension_flows, 'flow_line', r'$t$', r'$\lambda(t)$'
+)
 
 path = RESULT_DATA + fileName + '/initial'
 file_util.make_dir_if_not(path)
-column_name = 'flow_line'
-xlabelName = r'$t$'
-lineChart.linePlot(path + '/' + column_name, df['time'].values
-                   , df['flow'].values, df['flow'].values, xlabelName, r'$\lambda(t)$'
-                   , 0.7, _dpi=600, xMin=df['time'].min(), xMax=df['time'].max(), _fontsize=12)
-
 column_name = 'time'
 hist.histPlot(path + '/' + column_name, df, column_name, count_of_intervals_xi2, True, 'density', r'$t$', 0.7, 0.7, _dpi=600)
 column_name = 'flow'
@@ -107,13 +102,13 @@ densityParameters= {"lawDensity" : "norm"
     , "average" : 0.0, "std" : 1.0}
 d3normal = densityExpectedValue(d3, densityParameters)
 # ================================================ check ==============================================================
-x = d3[0]
-y1 = d3[1]
-y2 = d3normal[1]
+# x = d3[0]
+# y1 = d3[1]
+# y2 = d3normal[1]
 flow_densities = [d3[0], d3[1], d3normal[1]]
 show.flow_density(experiment, '/check', flow_densities, 'flow_density', r'$\gamma$', r'f($\gamma$)', 0.7)
 show.frequency_plot_hist(
-    experiment, '/check', x, d3normal[1], d2['flow'], 'flow_frequency_hist', r'$\gamma$', r'f($\gamma$)', 0.7
+    experiment, '/check', d3[0], d3normal[1], d2['flow'], 'flow_frequency_hist', r'$\gamma$', r'f($\gamma$)', 0.7
 )
 
 # # this module compares two distribution functions: experimental and with normal distribution,

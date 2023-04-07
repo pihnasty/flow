@@ -2,6 +2,40 @@
 initial data
 """
 experiments = {
+    "dataset_2021_DoKrWa.csv": {
+        "file_name": "dataset_2021_DoKrWa.csv"
+        , "tau_correlation": 0.025
+
+        , "relative_sigma_correlation": 1.0
+
+        , "period": 200
+        , "c0_show_var2": {"0": 0, "1": 1, "2": 1, "3": 1, "4": 1, "5": 1}
+        , "quality_criterion": {"0": 0, "1": 1, "2": 2, "3": 1, "4": 1, "5": 1}
+        , "show_prepare_k": False
+        , "number_of_harmonics": 50
+        , "number_of_intervals_xi2": 50
+        , "plot_parameters": {
+            "dpi": 1000
+            , "initial_dimension_flow_line": {
+                "visual_line_set": {"0": 0, "1": 1, "2": 1, "3": 1, "4": 1, "5": 1}
+                , "fontsize": 11
+                , "alpha" : 0.7
+                , "color" : "black"
+                , "x_tick_main" : 3000.0
+                , "x_tick_auxiliary" : 200
+                , "y_tick_main" : 0
+                , "y_tick_auxiliary" : 0
+            }
+            , "show_flow_density": {
+                "visual_line_set": {"0": 0, "1": 1, "2": 1, "3": 1, "4": 1, "5": 1}
+                , "fontsize": 10
+            }
+            , "frequency_plot_hist": {
+                "visual_line_set": {"0": 0, "1": 1, "2": 2, "3": 1, "4": 1, "5": 1}
+                , "fontsize": 8
+            }
+        }
+    },
     "0001": {
         "file_name": "dataset_2013_KoStBe.csv"
         , "tau_correlation": 0.025
@@ -11,14 +45,14 @@ experiments = {
         , "period": 200
         , "c0_show_var2": {"0": 0, "1": 1, "2": 1, "3": 1, "4": 1, "5": 1}
         , "quality_criterion": {"0": 0, "1": 1, "2": 2, "3": 1, "4": 1, "5": 1}
-        , "show_prepare_k": True
+        , "show_prepare_k": False
         , "number_of_harmonics": 50
         , "number_of_intervals_xi2": 50
         , "plot_parameters": {
             "dpi": 1000
             , "initial_dimension_flow_line": {
                 "visual_line_set": {"0": 0, "1": 1, "2": 1, "3": 1, "4": 1, "5": 1}
-                , "fontsize": 10
+                , "fontsize": 9
                 , "alpha" : 0.7
                 , "color" : "black"
                 , "x_tick_main" : 500.0

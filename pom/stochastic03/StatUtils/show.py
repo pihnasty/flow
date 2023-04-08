@@ -113,8 +113,6 @@ def initial_dimension_flow_line(
         , sub_directory_name
         , plot_values
         , file_name_prefix
-        , xlabel_name
-        , ylabel_name
 ):
     """
     Visualization of the distribution density of a random variable
@@ -134,9 +132,10 @@ def initial_dimension_flow_line(
     lineChart.line_plot3(path + '/' + file_name_prefix
                          , x_values
                          , y_values
-                         , xlabel_name
-                         , ylabel_name
-                         , _alpha=experiment["plot_parameters"]["initial_dimension_flow_line"]["alpha"]
+                         , xlabel_name=experiment["plot_parameters"]["initial_dimension_flow_line"]["x_label_name"]
+                         , title=experiment["plot_parameters"]["initial_dimension_flow_line"]["y_label_name"]
+                         , _alpha_main=experiment["plot_parameters"]["initial_dimension_flow_line"]["alpha_main"]
+                         , _alpha_grid=experiment["plot_parameters"]["initial_dimension_flow_line"]["alpha_grid"]
                          , _color=experiment["plot_parameters"]["initial_dimension_flow_line"]["color"]
                          , _dpi=experiment["plot_parameters"]["dpi"]
                          , x_min=min(x_values)
@@ -144,10 +143,18 @@ def initial_dimension_flow_line(
                          , x_tick_main =experiment["plot_parameters"]["initial_dimension_flow_line"]["x_tick_main"]
                          , x_tick_auxiliary
                          =experiment["plot_parameters"]["initial_dimension_flow_line"]["x_tick_auxiliary"]
+                         , x_axis_order
+                         =experiment["plot_parameters"]["initial_dimension_flow_line"]["x_axis_order"]
                          , y1_min=min(y_values[0])
                          , y1_max=max(y_values[0])
                          , y_tick_main =experiment["plot_parameters"]["initial_dimension_flow_line"]["y_tick_main"]
                          , y_tick_auxiliary
                          =experiment["plot_parameters"]["initial_dimension_flow_line"]["y_tick_auxiliary"]
                          , _fontsize=experiment["plot_parameters"]["initial_dimension_flow_line"]["fontsize"]
+                         , _x_size_plot=experiment["plot_parameters"]["initial_dimension_flow_line"]["x_size_plot"]
+                         , _y_size_plot=experiment["plot_parameters"]["initial_dimension_flow_line"]["y_size_plot"]
+                         , _plot_line_width
+                         =experiment["plot_parameters"]["initial_dimension_flow_line"]["plot_line_width"]
+                         , _grid_line_width
+                         =experiment["plot_parameters"]["initial_dimension_flow_line"]["grid_line_width"]
                          )

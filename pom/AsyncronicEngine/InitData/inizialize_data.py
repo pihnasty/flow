@@ -18,19 +18,19 @@ experiments = {
             "dpi": 1000
             , "engine_mechanical_characteristics": {
                 "visual_line_set": {"0": 0, "1": 1, "2": 1, "3": 1, "4": 1, "5": 1}
-                , "fontsize": 14
+                , "fontsize": 9
                 , "alpha_main" : 1.0
                 , "alpha_grid" : 1.0
                 , "color" : "black"
-                , "x_tick_main" : 0.05
+                , "x_tick_main" : 0.1
                 , "x_tick_auxiliary" : 0.05
                 , "x_axis_order" : "back"      # "back" | "forward"
-                , "y_tick_main" : 0.05
-                , "y_tick_auxiliary" : 0.05
+                , "y_tick_main" : 0.2
+                , "y_tick_auxiliary" : 0.1
                 , "x_label_name" : r'$\omega$/$\omega_0$'
                 , "y_label_name" : r'$M/M_0$'
-                , "x_size_plot" : 172.8 # 86.5
-                , "y_size_plot" : 130.0 #65.0
+                , "x_size_plot" : 86.5 #172.8 # 86.5
+                , "y_size_plot" : 72.0 #130.0 #65.0
                 , "plot_line_width" : 2.0
                 , "grid_line_width" : 1.0
             }

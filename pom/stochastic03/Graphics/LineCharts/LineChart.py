@@ -92,10 +92,11 @@ def linePlot2(fileName
              ):
     plt.close('all')
 
-    dateS = datetime.datetime.now()
-    syffix=dateS.strftime("%Y_%m_%d_%H_%M_%S")
-    plt.grid(True, color =_color, alpha = _alpha/2)      #
-    plt.rcParams["figure.figsize"] = [4.0, 3.0]   # size of the figure 3.0*2.54 ~ 7.5 cm     # plt.figure(figsize=(12, 7))
+    date_s = datetime.datetime.now()
+    syffix=date_s.strftime("%Y_%m_%d_%H_%M_%S")
+    plt.grid(True, color =_color, alpha = _alpha/2)
+    # plt.rcParams["figure.figsize"] = [4.0, 3.0]
+    # size of the figure 3.0*2.54 ~ 7.5 cm     # plt.figure(figsize=(12, 7))
     plt.xlabel(xlabelName, fontsize=_fontsize, loc='right')
     plt.xlim(min(x), max(x))    # set xMin, xMax
     plt.ylim(min(ys[0]), max(ys[0]))    # set yMin, yMax
@@ -115,9 +116,6 @@ def linePlot2(fileName
     plt.title(title
               # , fontweight ="bold"
               , fontsize=_fontsize, loc='left' )
-
-
-
     plt.savefig(fileName + syffix + ".jpeg", dpi=_dpi)
     plt.show()
 
@@ -172,7 +170,6 @@ def line_plot3(file_name
     :param _grid_line_width: grid line width.
     """
     plt.close('all')
-
     dates = datetime.datetime.now()
     syffix=dates.strftime("%Y_%m_%d_%H_%M_%S")
 
@@ -182,6 +179,9 @@ def line_plot3(file_name
     # https://proproprogs.ru/modules/matplotlib-funkciya-plot-dlya-postroeniya-i-oformleniya-dvumernyh-grafikov
     # https://newtechaudit.ru/vizualizacziya-v-python-matplotlib/    #убираем рамку справа
     fig, axis = plt.subplots()
+    # https://devpractice.ru/matplotlib-lesson-4-1-viz-linear-chart/
+    for y_values in ys_values:
+        axis.plot(x_values, y_values, 'k', alpha=_alpha_main, lw=_plot_line_width)
     if x_tick_auxiliary > 0:     #  Set the interval of the auxiliary ticks:
         axis.xaxis.set_minor_locator(ticker.MultipleLocator(x_tick_auxiliary))
     if y_tick_auxiliary > 0:
@@ -192,16 +192,11 @@ def line_plot3(file_name
     if y_tick_main > 0:
         axis.yaxis.set_major_locator(ticker.MultipleLocator(y_tick_main))
     # ==================================================================================================================
-    plt.figure(figsize=(mm_to_inch(_x_size_plot), mm_to_inch(_y_size_plot)))
-    # plt.rcParams["figure.figsize"] = [4.0, 3.0] # size of the figure 3.0*2.54 ~ 7.5 cm
-    # plt.figure(figsize=(12, 7))
     plt.grid(True, color =_color, alpha = _alpha_grid, lw=_grid_line_width)
     plt.xlabel(xlabel_name, fontsize=_fontsize, loc='right')
     plt.xlim(min(x_values), max(x_values))    # set xMin, xMax
     plt.ylim(min(ys_values[0]), max(ys_values[0]))    # set yMin, yMax
-    # https://devpractice.ru/matplotlib-lesson-4-1-viz-linear-chart/
-    for y_values in ys_values:
-        plt.plot(x_values, y_values, 'k', alpha=_alpha_main, lw=_plot_line_width)
+
     plt.xticks(fontsize=_fontsize)
     plt.ylim(0)
     if x_max > 0.0:
@@ -210,7 +205,7 @@ def line_plot3(file_name
         plt.ylim(y1_min, y1_max)
     # plt.yticks(np.linspace(0, 0.0006, 11))
     plt.yticks(fontsize=_fontsize)
-    plt.tight_layout( pad =1.5)           # tight_layout() can take keyword arguments of pad, w_pad and h_pad
+    plt.tight_layout( pad =3.0)           # tight_layout() can take keyword arguments of pad, w_pad and h_pad
     plt.rcParams['axes.xmargin'] = 0      # offset of the axes from the origin, given by xMin, xMax, yMin, yMax
     plt.rcParams['axes.ymargin'] = 0      # offset of the axes from the origin, given by xMin, xMax, yMin, yMax
     plt.title(title
@@ -218,5 +213,7 @@ def line_plot3(file_name
               , fontsize=_fontsize, loc='left' )
     if x_axis_order=="back":
         plt.gca().invert_xaxis()
+    fig.set_figwidth(mm_to_inch(_x_size_plot))
+    fig.set_figheight(mm_to_inch(_y_size_plot))
     plt.savefig(file_name + syffix + ".jpeg", dpi=_dpi)
     plt.show()

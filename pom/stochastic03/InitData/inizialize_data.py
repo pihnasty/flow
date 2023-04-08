@@ -19,12 +19,20 @@ experiments = {
             , "initial_dimension_flow_line": {
                 "visual_line_set": {"0": 0, "1": 1, "2": 1, "3": 1, "4": 1, "5": 1}
                 , "fontsize": 11
-                , "alpha" : 0.7
+                , "alpha_main" : 1.0
+                , "alpha_grid" : 0.7
                 , "color" : "black"
                 , "x_tick_main" : 3000.0
                 , "x_tick_auxiliary" : 200
                 , "y_tick_main" : 0
                 , "y_tick_auxiliary" : 0
+                , "x_axis_order" : "forward"      # "back" | "forward"
+                , "x_label_name" : r'$t$'
+                , "y_label_name" : r'$\lambda(t)$'
+                , "x_size_plot" : 160.5
+                , "y_size_plot" : 120.0
+                , "plot_line_width" : 2.0
+                , "grid_line_width" : 1.0
             }
             , "show_flow_density": {
                 "visual_line_set": {"0": 0, "1": 1, "2": 1, "3": 1, "4": 1, "5": 1}

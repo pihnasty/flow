@@ -54,9 +54,7 @@ fontsize=14
 
 extentions.c1_plot(fileName, fontsize)
 initial_dimension_flows = [df['time'].values, df['flow'].values]
-show.initial_dimension_flow_line(
-    experiment, '/initial', initial_dimension_flows, 'flow_line', r'$t$', r'$\lambda(t)$'
-)
+show.initial_dimension_flow_line(experiment, '/initial', initial_dimension_flows, 'flow_line')
 
 path = RESULT_DATA + fileName + '/initial'
 file_util.make_dir_if_not(path)

@@ -9,13 +9,18 @@ class EngineMechanicalCharacteristics:
     def __init__(self, experiment):
         self.experiment = experiment
         self.result_data = 'resultData/'
-        self.sub_directory_name = ''
+        self.sub_directory_name = '/EngineMechanicalCharacteristics'
         self.file_name_prefix = 'EMCh_'
         self.size=1000
         self.plot_parameters = "plot_parameters"
         self.plot_name ="engine_mechanical_characteristics"
 
     def m_m0(self, w_w0):
+        """
+        Method determines the acceleration mode.
+        :param w_w0:  The relative belt speed.
+        :return:  The relative moment.
+        """
         coef_a = 0
         coef_b = 0
         if 0.0 <= w_w0 < 0.4:
@@ -36,6 +41,9 @@ class EngineMechanicalCharacteristics:
         return coef_a - coef_b * w_w0
 
     def show(self):
+        """
+        The method visualizes the calculated results.
+        """
         path = self.result_data + self.experiment["file_name"] + self.sub_directory_name
         file_util.make_dir_if_not(path)
 

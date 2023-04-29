@@ -3,7 +3,7 @@ initial data
 """
 experiments = {
     "0001": {
-        "file_name": "EngineMechanicalCharacteristics"
+        "file_name": "Engine"
         , "tau_correlation": 0.025
 
         , "relative_sigma_correlation": 1.0
@@ -29,6 +29,24 @@ experiments = {
                 , "y_tick_auxiliary" : 0.1
                 , "x_label_name" : r'$\omega$/$\omega_0$'
                 , "y_label_name" : r'$M/M_0$'
+                , "x_size_plot" : 86.5 #172.8 # 86.5
+                , "y_size_plot" : 72.0 #130.0 #65.0
+                , "plot_line_width" : 2.0
+                , "grid_line_width" : 1.0
+            }
+            , "speed_transition_period": {
+                "visual_line_set": {"0": 0, "1": 1, "2": 2, "3": 3, "4": 4, "5": 1}
+                , "fontsize": 9
+                , "alpha_main" : 1.0
+                , "alpha_grid" : 1.0
+                , "color" : "black"
+                , "x_tick_main" : 2.0
+                , "x_tick_auxiliary" : 1.0
+                , "x_axis_order" : "forward"      # "back" | "forward"
+                , "y_tick_main" : 0.1
+                , "y_tick_auxiliary" : 0.1
+                , "x_label_name" : r'$\tau$/$\tau_{tr}$'
+                , "y_label_name" : r'$g/g_0$'
                 , "x_size_plot" : 86.5 #172.8 # 86.5
                 , "y_size_plot" : 72.0 #130.0 #65.0
                 , "plot_line_width" : 2.0

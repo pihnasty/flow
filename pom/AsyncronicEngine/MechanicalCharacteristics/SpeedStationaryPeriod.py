@@ -3,7 +3,7 @@ import pandas as pd
 import pom.stochastic03.utils.FileUtil as file_util
 import pom.stochastic03.Graphics.LineCharts.LineChart as line_chart
 
-class SpeedTransitionPeriod:
+class SpeedStationaryPeriod:
     """
     Visualization of the distribution density of a random variable
     :param experiment: experiment conditions.
@@ -11,11 +11,11 @@ class SpeedTransitionPeriod:
     def __init__(self, experiment):
         self.experiment = experiment
         self.result_data = 'resultData/'
-        self.sub_directory_name = '/SpeedTransitionPeriod'
+        self.sub_directory_name = '/SpeedStationaryPeriod'
         self.file_name_prefix = 'STP_'
         self.size=1000
         self.plot_parameters = "plot_parameters"
-        self.plot_name = "speed_transition_period"
+        self.plot_name = "speed_stationary_period"
 
     def g_g0(self, k_m, w_w0, tau):
         """
@@ -73,67 +73,37 @@ class SpeedTransitionPeriod:
 
         lines = pd.DataFrame()
         temp_size = int(self.size)
-        lines['g_g0'] = [0.0] * round(temp_size)
-        lines['M_M0'] = [0.0] * round(temp_size)
-        lines['M_M0_1'] = [0.0] * round(temp_size)
-        lines['M_M0_2'] = [0.0] * round(temp_size)
-        lines['M_M0_3'] = [0.0] * round(temp_size)
+        lines['tau'] = [0.0] * round(temp_size)
+        lines['g1'] = [0.0] * round(temp_size)
+        lines['g2'] = [0.0] * round(temp_size)
+        lines['g3'] = [0.0] * round(temp_size)
+        lines['g4'] = [0.0] * round(temp_size)
 
-        w_w0 = 0.0
-        delta_tau = 0
-        x_max = 20
-        k_m = 1.16
-        g_g0 = self.g_g0_check(0)
+        x_max = 1
+        g_st = 0.35
+        k = 0.25
         for i in range(temp_size):
             tau = float(i) / self.size * x_max
-            lines['g_g0'][i] = tau
-            w_w0 = self.g_g0( k_m, w_w0, tau -  delta_tau)
-            lines['M_M0'][i] = w_w0
-            if g_g0 < self.g_g0_check(w_w0):
-                g_g0 = self.g_g0_check(w_w0)
-                delta_tau = tau
+            lines['tau'][i] = tau
+            lines['g1'][i] = - k * (tau) + g_st
 
-        w_w0 = 0.0
-        delta_tau = 0
-        k_m = 1.1976
-        g_g0 = self.g_g0_check(0)
         for i in range(temp_size):
             tau = float(i) / self.size * x_max
-            lines['g_g0'][i] = tau
-            w_w0 = self.g_g0( k_m, w_w0, tau -  delta_tau)
-            lines['M_M0_1'][i] = w_w0
-            if g_g0 < self.g_g0_check(w_w0):
-                g_g0 = self.g_g0_check(w_w0)
-                delta_tau = tau
+            lines['tau'][i] = tau
+            lines['g2'][i] = - k * (tau + tau * tau /2) + g_st
 
-        w_w0 = 0.0
-        delta_tau = 0
-        k_m = 1.25
-        g_g0 = self.g_g0_check(0)
         for i in range(temp_size):
             tau = float(i) / self.size * x_max
-            lines['g_g0'][i] = tau
-            w_w0 = self.g_g0( k_m, w_w0, tau -  delta_tau)
-            lines['M_M0_2'][i] = w_w0
-            if g_g0 < self.g_g0_check(w_w0):
-                g_g0 = self.g_g0_check(w_w0)
-                delta_tau = tau
+            lines['tau'][i] = tau
+            lines['g3'][i] = - k * (tau - 2/(math.pi *2) * math.cos(math.pi *2 * tau)) + g_st - 2*k/(2*math.pi)
 
-        w_w0 = 0.0
-        delta_tau = 0
-        k_m = 1.42857
-        g_g0 = self.g_g0_check(0)
         for i in range(temp_size):
             tau = float(i) / self.size * x_max
-            lines['g_g0'][i] = tau
-            w_w0 = self.g_g0( k_m, w_w0, tau -  delta_tau)
-            lines['M_M0_3'][i] = w_w0
-            if g_g0 < self.g_g0_check(w_w0):
-                g_g0 = self.g_g0_check(w_w0)
-                delta_tau = tau
+            lines['tau'][i] = tau
+            lines['g4'][i] = - k * (tau - 2/(math.pi *2) * math.sin(math.pi *2 * tau)) + g_st
 
-        plot_values = [lines['g_g0'].values, lines['M_M0'].values, lines['M_M0_1'].values,
-                       lines['M_M0_2'].values, lines['M_M0_3'].values]
+        plot_values = [lines['tau'].values, lines['g1'].values, lines['g2'].values,
+                       lines['g3'].values, lines['g4'].values]
 
 
         x_values = plot_values[0]
@@ -154,7 +124,7 @@ class SpeedTransitionPeriod:
                               , x_tick_auxiliary=params["x_tick_auxiliary"]
                               , x_axis_order=params["x_axis_order"]
                               , y1_min=0
-                              , y1_max=1
+                              , y1_max=0.4
                               , y_tick_main=params["y_tick_main"]
                               , y_tick_auxiliary=params["y_tick_auxiliary"]
                               , _fontsize=params["fontsize"]

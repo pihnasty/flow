@@ -26,6 +26,7 @@ def main_dfh():
     """
     experiment = experiments["0002"]
     engine = dfh.DeterministicFlowHarmonics(experiment)
+    # print(engine.read_fourier_coefficients())
     engine.show()
 
 

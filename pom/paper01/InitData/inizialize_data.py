@@ -3,9 +3,9 @@ initial data
 """
 experiments = {
     "0002": {
-        "file_name": "deterministic_flow_harmonics"
+        "file_name": "d_flow_harmonics"
         , "tau_correlation": 0.025
-
+        , "dataset_result_folder_name": "dataset_2021_DoKrWa.csv"
         , "relative_sigma_correlation": 1.0
 
         , "period": 200
@@ -16,7 +16,7 @@ experiments = {
         , "number_of_intervals_xi2": 50
         , "plot_parameters": {
             "dpi": 1000
-            , "deterministic_flow_harmonics": {
+            , "d_flow_harmonics": {
                 "visual_line_set": {"0": 0, "1": 1, "2": 2, "3": 3, "4": 4, "5": 5}
                 , "fontsize": 9
                 , "alpha_main": 1.0

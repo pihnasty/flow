@@ -17,15 +17,18 @@ class DeterministicFlowHarmonics:
     def __init__(self, experiment):
         self.experiment = experiment
         self.result_data = 'resultData/'
-        self.sub_directory_name = ''
+        self.sub_directory_name = experiment["dataset_result_folder_name"]
         self.file_name_prefix = 'd_flow_harm_'
         self.size = 1000
         self.plot_parameters = 'plot_parameters'
-        self.plot_name = 'deterministic_flow_harmonics'
+        self.plot_name = 'd_flow_harmonics'
 
     def show(self):
-        path = self.result_data + self.experiment['file_name'] + self.sub_directory_name
+        path = (self.result_data
+                + self.experiment['file_name'] + '_'
+                + self.sub_directory_name)
         file_util.make_dir_if_not(path)
+        fourier_df = self.read_fourier_coefficients()
 
         lines = pd.DataFrame()
         temp_size = int(self.size)
@@ -35,15 +38,24 @@ class DeterministicFlowHarmonics:
         lines['harmonic2'] = [0.0] * round(temp_size)
         lines['harmonic3'] = [0.0] * round(temp_size)
         lines['harmonic4'] = [0.0] * round(temp_size)
+        lines['harmonic5'] = [0.0] * round(temp_size)
+
 
         for i in range(temp_size):
             tau = float(i) / self.size
             lines['tau'][i] = tau
-            lines['harmonic0'][i] = math.cos(2 * math.pi * tau)
-            lines['harmonic1'][i] = 2.0 * math.cos(3 * math.pi * tau)
-            lines['harmonic2'][i] = math.cos(4 * math.pi * tau)
-            lines['harmonic3'][i] = math.cos(5 * math.pi * tau)
-            lines['harmonic4'][i] = math.cos(5 * math.pi * tau)
+            lines['harmonic0'][i] = fourier_df["fourier coefficient"][0] / 2
+            lines['harmonic1'][i] = (fourier_df["fourier coefficient"][1]
+                                     * math.cos(1 * math.pi * tau))
+            lines['harmonic2'][i] = (fourier_df["fourier coefficient"][2]
+                                     * math.cos(2 * math.pi * tau))
+            lines['harmonic3'][i] = (fourier_df["fourier coefficient"][3]
+                                     * math.cos(3 * math.pi * tau))
+            lines['harmonic4'][i] = (fourier_df["fourier coefficient"][4]
+                                     * math.cos(4 * math.pi * tau))
+            lines['harmonic5'][i] = (fourier_df["fourier coefficient"][5]
+                                     * math.cos(5 * math.pi * tau))
+
 
         plot_values = [lines['tau'].values
             , lines['harmonic0'].values
@@ -51,6 +63,7 @@ class DeterministicFlowHarmonics:
             , lines['harmonic2'].values
             , lines['harmonic3'].values
             , lines['harmonic4'].values
+            , lines['harmonic5'].values
                        ]
 
         x_values = plot_values[0]
@@ -70,8 +83,8 @@ class DeterministicFlowHarmonics:
                               , x_tick_main=params['x_tick_main']
                               , x_tick_auxiliary=params['x_tick_auxiliary']
                               , x_axis_order=params['x_axis_order']
-                              , y1_min=-2
-                              , y1_max=2
+                              , y1_min=-1
+                              , y1_max=1
                               , y_tick_main=params['y_tick_main']
                               , y_tick_auxiliary=params['y_tick_auxiliary']
                               , _fontsize=params['fontsize']
@@ -80,3 +93,13 @@ class DeterministicFlowHarmonics:
                               , _plot_line_width=params['plot_line_width']
                               , _grid_line_width=params['grid_line_width']
                               )
+
+    def read_fourier_coefficients(self):
+        """Read fourier coefficients from csv file
+        in panda data frame"""
+        path = ('../stochastic03/resultData/' +
+                self.sub_directory_name +
+                '/output/fourier_coefficients_gamma_d.csv')
+        return pd.read_csv(path, sep=';', index_col=0
+                           , dtype={'fourier coefficient': 'float64'}
+                           , decimal=',')

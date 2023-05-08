@@ -17,7 +17,8 @@ experiments = {
         , "plot_parameters": {
             "dpi": 1000
             , "d_flow_harmonics": {
-                "visual_line_set": {"0": 0, "1": 1, "2": 2, "3": 3, "4": 4, "5": 5}
+                "visual_line_set": {"1": 7, "2": 7, "3": 7, "4": 7, "5": 7, "6": 7,
+                                    "7": 7}
                 , "fontsize": 9
                 , "alpha_main": 1.0
                 , "alpha_grid": 1.0

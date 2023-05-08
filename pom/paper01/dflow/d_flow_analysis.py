@@ -24,8 +24,9 @@ class DeterministicFlowHarmonics:
         self.plot_name = 'd_flow_harmonics'
 
     def show(self):
+        """ Visualization of the deterministic flow harmonics"""
         path = (self.result_data
-                + self.experiment['file_name'] + '_'
+                + self.experiment['file_name'] + '/'
                 + self.sub_directory_name)
         file_util.make_dir_if_not(path)
         fourier_df = self.read_fourier_coefficients()
@@ -39,7 +40,7 @@ class DeterministicFlowHarmonics:
         lines['harmonic3'] = [0.0] * round(temp_size)
         lines['harmonic4'] = [0.0] * round(temp_size)
         lines['harmonic5'] = [0.0] * round(temp_size)
-
+        lines['summ'] = [0.0] * round(temp_size)
 
         for i in range(temp_size):
             tau = float(i) / self.size
@@ -55,7 +56,13 @@ class DeterministicFlowHarmonics:
                                      * math.cos(4 * math.pi * tau))
             lines['harmonic5'][i] = (fourier_df["fourier coefficient"][5]
                                      * math.cos(5 * math.pi * tau))
-
+        lines['summ'] = (lines['harmonic0']
+                         + lines['harmonic1']
+                         + lines['harmonic2']
+                         + lines['harmonic3']
+                         + lines['harmonic4']
+                         + lines['harmonic5']
+                         )
 
         plot_values = [lines['tau'].values
             , lines['harmonic0'].values
@@ -64,6 +71,7 @@ class DeterministicFlowHarmonics:
             , lines['harmonic3'].values
             , lines['harmonic4'].values
             , lines['harmonic5'].values
+            , lines['summ'].values
                        ]
 
         x_values = plot_values[0]
@@ -84,7 +92,7 @@ class DeterministicFlowHarmonics:
                               , x_tick_auxiliary=params['x_tick_auxiliary']
                               , x_axis_order=params['x_axis_order']
                               , y1_min=-1
-                              , y1_max=1
+                              , y1_max=2
                               , y_tick_main=params['y_tick_main']
                               , y_tick_auxiliary=params['y_tick_auxiliary']
                               , _fontsize=params['fontsize']

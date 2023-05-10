@@ -1,27 +1,32 @@
+"""Module for creating graph image of conveyor"""
+
+import datetime
 import graphviz
 from pom.stochastic03.InitData.initialize_routes import experiments
 
-
 param = experiments['default']
 
-filesCategory = 'routes_results/'
+files_category = 'routes_results/'
 graph_name = param['graph_name']
-fileName = graph_name + '.gv'
+dates = datetime.datetime.now()
+suffix = dates.strftime("%Y_%m_%d_%H_%M_%S")
+fileName = graph_name + '_' + suffix + '.gv'
 
-f = graphviz.Digraph(name=graph_name, filename=filesCategory + fileName,
+f = graphviz.Digraph(name=graph_name,
+                     filename=files_category + graph_name + '/' + fileName,
                      format=param['file_format'],
                      engine=param['engine'],
                      )
 
 graph_attr = param['graph_attr']
 f.attr(
-       rankdir=graph_attr['rankdir'],
-       ratio='fill',
-       size=graph_attr['size'],
-       dpi=graph_attr['dpi'],
-       bgcolor='white',
-       center='1'
-       )
+    rankdir=graph_attr['rankdir'],
+    ratio='fill',
+    size=graph_attr['size'],
+    dpi=graph_attr['dpi'],
+    bgcolor='white',
+    center='1'
+)
 
 node_attr = param['node_attr']
 f.attr('node',

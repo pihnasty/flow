@@ -13,3 +13,4 @@
 /.idea/*
 
 /.idea/pylint.xml
+/pom/stochastic03/.idea/*

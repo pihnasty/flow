@@ -7,7 +7,7 @@ import MechanicalCharacteristics.EngineMechanicalCharacteristics as emc
 import dflow.d_flow_analysis as dfh
 
 # universal .csv
-from InitData.inizialize_data import experiments
+from InitData.initialize_data import experiments
 
 
 def main_emc():

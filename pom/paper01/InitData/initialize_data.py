@@ -5,7 +5,7 @@ experiments = {
     "0002": {
         "file_name": "d_flow_harmonics"
         , "tau_correlation": 0.025
-        , "dataset_result_folder_name": "dataset_2021_DoKrWa.csv"
+        , "dataset_result_folder_name": "dataset_2019_Stadnyk_3b.csv"
         , "relative_sigma_correlation": 1.0
 
         , "period": 200
@@ -17,7 +17,7 @@ experiments = {
         , "plot_parameters": {
             "dpi": 1000
             , "d_flow_harmonics": {
-                "visual_line_set": {"1": 7, "2": 7, "3": 7, "4": 7, "5": 7, "6": 7,
+                "visual_line_set": {"1": 1, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6,
                                     "7": 7}
                 , "fontsize": 9
                 , "alpha_main": 1.0

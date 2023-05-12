@@ -16,6 +16,10 @@ def visual_lines(lines, experiment, plot_name):
         , lines[experiment["plot_parameters"][plot_name]["visual_line_set"]["3"]]
         , lines[experiment["plot_parameters"][plot_name]["visual_line_set"]["4"]]
         , lines[experiment["plot_parameters"][plot_name]["visual_line_set"]["5"]]
+        , lines[experiment["plot_parameters"][plot_name]["visual_line_set"]["6"]]
+        , lines[experiment["plot_parameters"][plot_name]["visual_line_set"]["7"]]
+        # , lines[experiment["plot_parameters"][plot_name]["visual_line_set"]["7"]]
+
     ]
 
 def mm_to_inch(mm_value):

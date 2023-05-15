@@ -3,6 +3,7 @@
 import datetime
 import graphviz
 from pom.stochastic03.InitData.initialize_routes import experiments
+from utils.change_dpi import change_dpi_tag
 
 param = experiments['default']
 
@@ -83,3 +84,8 @@ f.edge('5', '6',
        )
 
 f.view()
+
+# To change the DPI (dots per inch) metadata of the result image file:
+image_path = (files_category + graph_name + '/' +
+              fileName + '.' + param['file_format'])
+change_dpi_tag(image_path, int(graph_attr['dpi']))

@@ -2,19 +2,20 @@
 
 import datetime
 import graphviz
-from pom.stochastic03.InitData.initialize_routes import experiments
-from utils.change_dpi import change_dpi_tag
+import utils.utils
+from pom.routes.InitData.initialize_routes import experiments
+
 
 param = experiments['default']
 
-files_category = 'routes_results/'
+FILES_CATEGORY = 'routes_results/'
 graph_name = param['graph_name']
 dates = datetime.datetime.now()
 suffix = dates.strftime("%Y_%m_%d_%H_%M_%S")
 fileName = graph_name + '_' + suffix + '.gv'
 
 f = graphviz.Digraph(name=graph_name,
-                     filename=files_category + graph_name + '/' + fileName,
+                     filename=FILES_CATEGORY + graph_name + '/' + fileName,
                      format=param['file_format'],
                      engine=param['engine'],
                      )
@@ -23,7 +24,9 @@ graph_attr = param['graph_attr']
 f.attr(
     rankdir=graph_attr['rankdir'],
     ratio='fill',
-    size=graph_attr['size'],
+    # size=graph_attr['size'],
+    size=(str(utils.utils.mm_to_inch(graph_attr['x_size'])) +
+          str(utils.utils.mm_to_inch(graph_attr['y_size']))),
     dpi=graph_attr['dpi'],
     bgcolor='white',
     center='1'
@@ -86,6 +89,6 @@ f.edge('5', '6',
 f.view()
 
 # To change the DPI (dots per inch) metadata of the result image file:
-image_path = (files_category + graph_name + '/' +
+image_path = (FILES_CATEGORY + graph_name + '/' +
               fileName + '.' + param['file_format'])
-change_dpi_tag(image_path, int(graph_attr['dpi']))
+utils.utils.change_dpi_tag(image_path, int(graph_attr['dpi']))

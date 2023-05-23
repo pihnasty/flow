@@ -27,3 +27,15 @@ def mm_to_inch(mm_value):
     :return: size in inches.
     """
     return mm_value / 25.4
+
+
+def size_mm_to_inch(x_size, y_size, decimal_places):
+    """
+    Creates size of plot as string 'X,Y' converted form mm to inches
+    :param x_size:
+    :param y_size:
+    :param decimal_places:
+    :return: string 'X,Y'
+    """
+    return (format(mm_to_inch(x_size), f'.{decimal_places}f') +
+            format(mm_to_inch(y_size), f'.{decimal_places}f'))

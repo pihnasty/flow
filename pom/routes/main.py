@@ -2,11 +2,17 @@
 """
 import sys
 from pom.routes.InitData.initialize_routes import experiments
-from pom.routes.fig_1 import fig_1
+# from pom.routes.fig_1 import fig_1
+from pom.routes.route_2015_Co import route_2015_Co
 
 
 def main():
-    fig_1(experiments['default'])
+    """
+    Main function to create plots/graphs of conveyer routes
+    :return:
+    """
+    # fig_1(experiments['default'])
+    route_2015_Co(experiments['default'])
 
 
 if __name__ == "__main__":

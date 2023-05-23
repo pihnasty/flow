@@ -5,9 +5,9 @@ import graphviz
 from utils.utils import change_dpi_tag, size_mm_to_inch
 
 
-def fig_1(param):
-    """ This function creates pilot plot/graph of hypothetical
-    conveyor rout (pilot version)
+def route_2015_Co(param):
+    """ This function creates pilot plot/graph of 2015_Co
+    conveyor rout
     :param param: parameters for the plot from pom/routes/InitData/initialize_routes.py
     :return:
     """

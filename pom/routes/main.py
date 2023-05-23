@@ -3,7 +3,7 @@
 import sys
 from pom.routes.InitData.initialize_routes import experiments
 # from pom.routes.fig_1 import fig_1
-from pom.routes.route_2015_Co import route_2015_Co
+from pom.routes.route_2002_Co import route_2002_Co
 
 
 def main():
@@ -12,7 +12,7 @@ def main():
     :return:
     """
     # fig_1(experiments['default'])
-    route_2015_Co(experiments['default'])
+    route_2002_Co(experiments['default'])
 
 
 if __name__ == "__main__":

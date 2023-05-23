@@ -1,11 +1,11 @@
-"""Module for creating graph image of conveyor"""
+"""Module for creating graph image of conveyor from 2002_Co"""
 
 import datetime
 import graphviz
 from utils.utils import change_dpi_tag, size_mm_to_inch
 
 
-def route_2015_Co(param):
+def route_2002_Co(param):
     """ This function creates pilot plot/graph of 2015_Co
     conveyor rout
     :param param: parameters for the plot from pom/routes/InitData/initialize_routes.py
@@ -48,12 +48,11 @@ def route_2015_Co(param):
                )
     graph.node('1', pos='0, 0.3!', xlabel='<&gamma;<SUB>1</SUB>(&tau;)>')
     graph.node('2', pos='0.17, 0.3!', xlabel='<&gamma;<SUB>2</SUB>(&tau;)>')
-    graph.node('3', pos='0.27, 0.38!', xlabel='<&gamma;<SUB>m</SUB>(&tau;)>')
-    graph.node('4', pos='0.60, 0.38!')
-    graph.node('5', pos='0.90, 0.38!', xlabel='<&gamma;<SUB>M</SUB>(&tau;)>')
-    graph.node('6', pos='1, 0.44!',
-               # labelloc='c',
-               xlabel='<&gamma;<SUB>M+1</SUB>(&tau;)>')
+    graph.node('3', pos='0.27, 0.38!', xlabel='<&gamma;<SUB>3</SUB>(&tau;)>')
+    graph.node('4', pos='0.60, 0.38!', xlabel='<&gamma;<SUB>4</SUB>(&tau;)>')
+    graph.node('5', pos='0.90, 0.38!', xlabel='<&gamma;<SUB>5</SUB>(&tau;)>')
+    graph.node('6', pos='1, 0.44!',)
+
     edge_attr = param['edge_attr']
     graph.attr('edge',
                penwidth=edge_attr['penwidth'],
@@ -74,14 +73,19 @@ def route_2015_Co(param):
                labelangle='310'
                )
     graph.edge('3', '4',
-               taillabel='<&xi;<SUB>m</SUB>, g<SUB>m</SUB>(&tau;)>',
+               taillabel='<&xi;<SUB>3</SUB>, g<SUB>3</SUB>(&tau;)>',
                # label="",
                labeldistance='3.8',
                labelangle='340'
                )
-    graph.edge('4', '5')
+    graph.edge('4', '5',
+               taillabel='<&xi;<SUB>4</SUB>, g<SUB>4</SUB>(&tau;)>',
+               # label="",
+               labeldistance='3.8',
+               labelangle='340'
+               )
     graph.edge('5', '6',
-               taillabel='<&xi;<SUB>M</SUB>, g<SUB>M</SUB>(&tau;)>',
+               taillabel='<&xi;<SUB>5</SUB>, g<SUB>5</SUB>(&tau;)>',
                # label="",
                labeldistance='4.7',
                labelangle='310'

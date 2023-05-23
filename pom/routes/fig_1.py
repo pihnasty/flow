@@ -2,8 +2,7 @@
 
 import datetime
 import graphviz
-import utils.utils
-from pom.routes.InitData.initialize_routes import experiments
+from utils.utils import mm_to_inch, change_dpi_tag
 
 
 def fig_1(param):
@@ -13,10 +12,13 @@ def fig_1(param):
     :return:
     """
     files_category = param['files_category']
-    graph_name = param['graph_name']
+    # setting the name of the result image file:
+    function_name_parts = __name__.split('.')
+    graph_name = function_name_parts[-1]  # param['graph_name']
     dates = datetime.datetime.now()
     suffix = dates.strftime("%Y_%m_%d_%H_%M_%S")
     file_name = graph_name + '_' + suffix + '.gv'
+
     graph = graphviz.Digraph(name=graph_name,
                              filename=files_category + graph_name + '/' + file_name,
                              format=param['file_format'],
@@ -26,8 +28,8 @@ def fig_1(param):
     graph.attr(
         rankdir=graph_attr['rankdir'],
         ratio='fill',
-        size=(str(utils.utils.mm_to_inch(graph_attr['x_size'])) +
-              str(utils.utils.mm_to_inch(graph_attr['y_size']))),
+        size=(str(mm_to_inch(graph_attr['x_size'])) +
+              str(mm_to_inch(graph_attr['y_size']))),
         dpi=graph_attr['dpi'],
         bgcolor='white',
         center='1'
@@ -87,7 +89,6 @@ def fig_1(param):
     # To change the DPI (dots per inch) metadata of the result image file:
     image_path = (files_category + graph_name + '/' +
                   file_name + '.' + param['file_format'])
-    utils.utils.change_dpi_tag(image_path, int(graph_attr['dpi']))
-
+    change_dpi_tag(image_path, int(graph_attr['dpi']))
 
 # fig_1(experiments['default'])

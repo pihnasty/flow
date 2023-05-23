@@ -4,7 +4,7 @@ experiments = {
     },
     'default': {
         'files_category': 'routes_results/',
-        'graph_name': 'fig_1',
+        #'graph_name': 'fig_1',
         'file_format': 'jpeg',
         'engine': 'neato',
         # 'engine': 'dot'

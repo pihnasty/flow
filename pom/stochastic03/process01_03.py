@@ -15,7 +15,7 @@ from datetime import datetime
 # universal .csv
 from pom.stochastic03.InitData.inizialize_data import experiments
 
-experiment = experiments["dataset_2021_DoKrWa.csv"]
+experiment = experiments["2023_05_23_PiSo_Template"]
 
 RESULT_DATA = 'resultData/'
 FILES_CATEGORY = 'files/'

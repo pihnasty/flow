@@ -101,8 +101,10 @@ def linePlot2(fileName
 
     date_s = datetime.datetime.now()
     syffix = date_s.strftime("%Y_%m_%d_%H_%M_%S")
-    plt.grid(True, color=_color, alpha=_alpha / 2)
+    # plt.grid(True, color=_color, alpha=_alpha / 2)
+    plt.grid(True, color=_color, alpha=_alpha)
     # plt.rcParams["figure.figsize"] = [4.0, 3.0]
+    plt.rcParams["figure.figsize"] = [7.90/2.54, 6.00/2.54]
     # size of the figure 3.0*2.54 ~ 7.5 cm     # plt.figure(figsize=(12, 7))
     plt.xlabel(xlabelName, fontsize=_fontsize, loc='right')
     plt.xlim(min(x), max(x))  # set xMin, xMax
@@ -123,6 +125,8 @@ def linePlot2(fileName
     plt.title(title
               # , fontweight ="bold"
               , fontsize=_fontsize, loc='left')
+    # Reduce the plot border
+    plt.subplots_adjust(left=0.1, right=0.97, top=0.92, bottom=0.17)
     plt.savefig(fileName + syffix + ".jpeg", dpi=_dpi)
     plt.show()
 

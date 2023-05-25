@@ -24,6 +24,7 @@ df = pd.read_csv(FILES_CATEGORY + fileName, sep=";", decimal=',')
 numberExamples = df.shape[0]
 count_of_intervals_xi2 = experiment["number_of_intervals_xi2"]
 
+
 def densityExpectedValue(initialData, densityParameters):
     expectedData = copy.deepcopy(initialData)
     if densityParameters["lawDensity"] == "norm":
@@ -37,9 +38,10 @@ def densityExpectedValue(initialData, densityParameters):
     pSum = sum(expectedData[1]) * delta
 
     for i, val in enumerate(expectedData[1]):
-        expectedData[1][i] = expectedData[1][i]/pSum
+        expectedData[1][i] = expectedData[1][i] / pSum
 
     return expectedData
+
 
 def frequencyValue(data, frecuencyParameters):
     frecuencyData = copy.deepcopy(data)
@@ -47,10 +49,11 @@ def frequencyValue(data, frecuencyParameters):
         frecuencyData[1][i] = data[1][i] * frecuencyParameters["delta"] * frecuencyParameters["numberExamples"]
     return frecuencyData
 
+
 # ================================================ initial =================================================
 start_time = datetime.now()
 
-fontsize=14
+fontsize = 14
 
 extentions.c1_plot(fileName, fontsize)
 initial_dimension_flows = [df['time'].values, df['flow'].values]
@@ -59,48 +62,50 @@ show.initial_dimension_flow_line(experiment, '/initial', initial_dimension_flows
 path = RESULT_DATA + fileName + '/initial'
 file_util.make_dir_if_not(path)
 column_name = 'time'
-hist.histPlot(path + '/' + column_name, df, column_name, count_of_intervals_xi2, True, 'density', r'$t$', 0.7, 0.7, _dpi=600)
+hist.histPlot(path + '/' + column_name, df, column_name, count_of_intervals_xi2, True, 'density', r'$t$', 0.7, 0.7,
+              _dpi=600)
 column_name = 'flow'
-hist.histPlot(path + '/' + column_name, df, column_name, count_of_intervals_xi2, True, r'f($\lambda$)', r'$\lambda$', 0.7, 0.7,
+hist.histPlot(path + '/' + column_name, df, column_name, count_of_intervals_xi2, True, r'f($\lambda$)', r'$\lambda$',
+              0.7, 0.7,
               _dpi=600)
 
-averageColumn=df['flow'].mean()
-stdColumn=df['flow'].std()
+averageColumn = df['flow'].mean()
+stdColumn = df['flow'].std()
 
-d2=copy.copy(df)
-d2['flow']=(df['flow'])/averageColumn
+d2 = copy.copy(df)
+d2['flow'] = (df['flow']) / averageColumn
 
-averageColumnD2=d2.mean()
-stdColumnD2=d2.std()
+averageColumnD2 = d2.mean()
+stdColumnD2 = d2.std()
 
-tMin=df['time'].min()
-tMax=df['time'].max()
+tMin = df['time'].min()
+tMax = df['time'].max()
 d2['time'] = (df['time'] - tMin) / (tMax - tMin)
 #             * 2
 # ============================================= initial_dimensionless ======================================
 path = RESULT_DATA + fileName + '/initial_dimensionless'
 file_util.make_dir_if_not(path)
-column_name ='flow_line'
+column_name = 'flow_line'
 xlabelName = r'$\tau$'
 lineChart.linePlot(path + '/' + column_name, d2['time'].values
-         , d2['flow'].values, d2['flow'].values, xlabelName, r'$\gamma(\tau)$'
-         , 0.7, _dpi=600
-         , xMin = d2['time'].min(), xMax = d2['time'].max()
-         , y1Min= d2['flow'].min(), y1Max= d2['flow'].max(), _fontsize=8)
-column_name ='time'
+                   , d2['flow'].values, d2['flow'].values, xlabelName, r'$\gamma(\tau)$'
+                   , 0.7, _dpi=600
+                   , xMin=d2['time'].min(), xMax=d2['time'].max()
+                   , y1Min=d2['flow'].min(), y1Max=d2['flow'].max(), _fontsize=8)
+column_name = 'time'
 hist.histPlot(path + '/' + column_name, d2, column_name, count_of_intervals_xi2, True, 'density', r'$\tau$', 0.7, 0.7,
               _dpi=600)
-column_name ='flow'
+column_name = 'flow'
 hist.histPlot(path + '/' + column_name, d2, column_name, count_of_intervals_xi2, True, r'f($\gamma$)'
               , r'$\gamma$', 0.7, 0.7, _dpi=600)
 
 d3 = stat_func.density_values(d2['flow'].values, count_of_intervals_xi2)
 
-densityParameters= {"lawDensity" : "norm"
-    , "min" : d2['flow'].min()
-    , "max" : d2['flow'].max()
-    , "countOfIntervalsXi2" : count_of_intervals_xi2
-    , "average" : 0.0, "std" : 1.0}
+densityParameters = {"lawDensity": "norm"
+    , "min": d2['flow'].min()
+    , "max": d2['flow'].max()
+    , "countOfIntervalsXi2": count_of_intervals_xi2
+    , "average": 0.0, "std": 1.0}
 d3normal = densityExpectedValue(d3, densityParameters)
 # ================================================ check ==============================================================
 # x = d3[0]
@@ -134,15 +139,14 @@ show.frequency_plot_hist(
 # print('chisq-statistic=%.4f, p-value=%.4f, df=%i expected_frep=%s'%kf)
 
 
-
 # ================================================ autoKorelationCoeffitient ===========================================
-d_auto_korelation_centered_mass=copy.copy(d2)
+d_auto_korelation_centered_mass = copy.copy(d2)
 # !!!!!! is transformed the dimensionless flow into a centered dimensionless flow with an average constant in time
-d_auto_korelation_centered_mass['flow']=(d2['flow']) - d2['flow'].mean()
-period = 200   #  The variable [period] is introduced to reduce calculations.
+d_auto_korelation_centered_mass['flow'] = (d2['flow']) - d2['flow'].mean()
+period = 200  # The variable [period] is introduced to reduce calculations.
 # The variable specifies that only the point for which the ratio is valid [i % period == 0] is calculated for the plot.
 
-#===============================================================================
+# ===============================================================================
 if experiment["show_prepare_k"] == True:
     extentions.c0_show_k0(fileName, d_auto_korelation_centered_mass, period)
     extentions.c0_show_1_v(fileName, d_auto_korelation_centered_mass, period)
@@ -150,8 +154,6 @@ if experiment["show_prepare_k"] == True:
     extentions.c0_show_test_equals_0_5(fileName, d_auto_korelation_centered_mass, period)
     extentions.c0_show_var2(experiment, d_auto_korelation_centered_mass)
     extentions.c0_show_tau_tau_minus_v_tau_plus_v(experiment, d_auto_korelation_centered_mass)
-
-
 
 # dimensionless_flow=copy.copy(d2)
 # extentions.prediction_std(experiment["period"], experiment["tau_correlation"], dimensionless_flow)
@@ -211,12 +213,11 @@ extentions.approximated_gamma_show(
     , r'$\gamma_d$($\tau$)'
 )
 
-
 # ================================================ autoKorelationCoeffitient ===========================================
-d_auto_korelation_centered_mass2=copy.copy(d2)
+d_auto_korelation_centered_mass2 = copy.copy(d2)
 # !!!!!! is transformed the dimensionless flow into a centered dimensionless flow with an average constant in time
-d_auto_korelation_centered_mass2['flow']=(d2['flow']) - approximated_gamma_d
-PERIOD = 200   #  The variable [period] is introduced to reduce calculations.
+d_auto_korelation_centered_mass2['flow'] = (d2['flow']) - approximated_gamma_d
+PERIOD = 200  # The variable [period] is introduced to reduce calculations.
 # The variable specifies that only the point for which the ratio is valid [i % period == 0] is calculated for the plot.
 
 extentions.approximated_gamma_s_show(
@@ -227,9 +228,9 @@ extentions.approximated_gamma_s_show(
     , r'$\gamma_s$($\tau$)'
 )
 
-approximated_gamma_d2=copy.copy(d_auto_korelation_centered_mass2)
-approximated_gamma_d2["flow"]=approximated_gamma_d
-approximated_gamma_d2["time"]=dimensionless_flow["time"]
+approximated_gamma_d2 = copy.copy(d_auto_korelation_centered_mass2)
+approximated_gamma_d2["flow"] = approximated_gamma_d
+approximated_gamma_d2["time"] = dimensionless_flow["time"]
 extentions.approximated_gamma_s_show(
     experiment
     , dimensionless_flow
@@ -251,7 +252,7 @@ fourier_coefficients_gamma_d2['fourier coefficient'] = fourier_coefficients_gamm
 fourier_coefficients_gamma_d2.to_csv(RESULT_DATA_CATEDORY + 'fourier_coefficients_gamma_d.csv', sep=";", decimal=','
                                      , index=False)
 
-#===============================================================================
+# ===============================================================================
 if experiment["show_prepare_k"]:
     extentions.c0_show_k0(fileName, d_auto_korelation_centered_mass2, period)
     extentions.c0_show_1_v(fileName, d_auto_korelation_centered_mass2, period)

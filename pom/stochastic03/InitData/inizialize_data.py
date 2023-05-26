@@ -3,7 +3,7 @@ initial data
 """
 experiments = {
     "2023_05_23_PiSo_Template": {
-        "file_name": "dataset_2019_Stadnyk_3a.csv"
+        "file_name": "dataset_2016_SeStBeSeSt.csv"
         , "tau_correlation": 0.025
 
         , "relative_sigma_correlation": 1.0
@@ -22,9 +22,9 @@ experiments = {
                 , "alpha_main": 1.0
                 , "alpha_grid": 0.7
                 , "color": "black"
-                , "x_tick_main": 0.2
-                , "x_tick_auxiliary": 0.02
-                , "y_tick_main": 0.5
+                , "x_tick_main": 200
+                , "x_tick_auxiliary": 0
+                , "y_tick_main": 5
                 , "y_tick_auxiliary": 0
                 , "x_axis_order": "forward"  # "back" | "forward"
                 , "x_label_name": r'$t$'

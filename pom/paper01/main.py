@@ -24,7 +24,7 @@ def main_dfh():
     of the deterministic input flow
     :return:
     """
-    experiment = experiments["0002"]
+    experiment = experiments["2023_05_23_PiSo_Template"]
     engine = dfh.DeterministicFlowHarmonics(experiment)
     # print(engine.read_fourier_coefficients())
     engine.show()

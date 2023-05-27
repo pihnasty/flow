@@ -5,9 +5,8 @@ experiments = {
     "2023_05_23_PiSo_Template": {
         "file_name": "d_flow_harmonics"
         , "tau_correlation": 0.025
-        , "dataset_result_folder_name": "dataset_2021_DoKrWa.csv"
+        , "dataset_result_folder_name": "dataset_2019_Stadnyk_3b.csv"
         , "relative_sigma_correlation": 1.0
-
         , "period": 200
         , "c0_show_var2": {"0": 0, "1": 1, "2": 1, "3": 1, "4": 1, "5": 1}
         , "quality_criterion": {"0": 0, "1": 1, "2": 2, "3": 1, "4": 1, "5": 1}

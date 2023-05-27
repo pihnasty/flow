@@ -275,7 +275,8 @@ show.frequency_plot_hist(
     , '/check_after_Fourier_analysis'
     , density_values_lambda_s[0]
     , density_values_lambda_s[1]
-    , d_auto_korelation_centered_mass2['flow'], 'flow_frequency_hist', r'$\gamma_s$', r'f($\gamma_s$)', 0.7
+    , d_auto_korelation_centered_mass2['flow']
+    , 'flow_frequency_hist', r'$\gamma_s$', r'f($\gamma_s$)', 1 #0.7
 )
 
 # calculation of the quality criterion for the separation of a deterministic and stochastic flow

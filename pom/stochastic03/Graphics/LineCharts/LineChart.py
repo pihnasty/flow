@@ -101,11 +101,12 @@ def linePlot2(fileName
 
     date_s = datetime.datetime.now()
     syffix = date_s.strftime("%Y_%m_%d_%H_%M_%S")
+    plt.figure(figsize=(7.90/2.54, 6.00/2.54))
+    # plt.rcParams["figure.figsize"] = [4.0, 3.0]
+    #plt.rcParams["figure.figsize"] = [7.90/2.54, 6.00/2.54]
+    # size of the figure 3.0*2.54 ~ 7.5 cm     # plt.figure(figsize=(12, 7))
     # plt.grid(True, color=_color, alpha=_alpha / 2)
     plt.grid(True, color=_color, alpha=_alpha)
-    # plt.rcParams["figure.figsize"] = [4.0, 3.0]
-    plt.rcParams["figure.figsize"] = [7.90/2.54, 6.00/2.54]
-    # size of the figure 3.0*2.54 ~ 7.5 cm     # plt.figure(figsize=(12, 7))
     plt.xlabel(xlabelName, fontsize=_fontsize, loc='right')
     plt.xlim(min(x), max(x))  # set xMin, xMax
     plt.ylim(min(ys[0]), max(ys[0]))  # set yMin, yMax

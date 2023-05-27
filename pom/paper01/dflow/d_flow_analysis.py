@@ -100,6 +100,14 @@ class DeterministicFlowHarmonics:
                               , _y_size_plot=params['y_size_plot']
                               , _plot_line_width=params['plot_line_width']
                               , _grid_line_width=params['grid_line_width']
+                              , _adjust_left
+                              =params["border_adjustment"]["left"]
+                              , _adjust_right
+                              =params["border_adjustment"]["right"]
+                              , _adjust_top
+                              =params["border_adjustment"]["top"]
+                              , _adjust_bottom
+                              =params["border_adjustment"]["bottom"]
                               )
 
     def read_fourier_coefficients(self):

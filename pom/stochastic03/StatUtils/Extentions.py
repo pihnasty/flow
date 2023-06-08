@@ -888,11 +888,11 @@ def quality_criterion(experiment, flow_centered_mass):
                         , correlation_coefficients
                         , xlabel_name,
                         r'k($\vartheta$) ',
-                        0.7, _dpi=600
+                        1, _dpi=1000
                         , xMax=1.0
                         , y1Min=min(correlation_coefficient[1])
                         , y1Max=max(correlation_coefficient[1]),
-                        _fontsize=8)
+                        _fontsize=9)
 
     colum_name = 'delta_quality_criterion'
     xlabel_name = r'$\vartheta$'

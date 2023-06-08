@@ -112,7 +112,7 @@ def linePlot2(fileName
     plt.ylim(min(ys[0]), max(ys[0]))  # set yMin, yMax
     # https://devpractice.ru/matplotlib-lesson-4-1-viz-linear-chart/
     for y in ys:
-        plt.plot(x, y, 'k', alpha=0.7, lw=2)
+        plt.plot(x, y, 'k', alpha=1, lw=2)
     plt.xticks(fontsize=_fontsize)
     plt.ylim(0)
     if xMax > 0.0:
@@ -127,7 +127,7 @@ def linePlot2(fileName
               # , fontweight ="bold"
               , fontsize=_fontsize, loc='left')
     # Reduce the plot border
-    plt.subplots_adjust(left=0.1, right=0.97, top=0.92, bottom=0.17)
+    plt.subplots_adjust(left=0.15, right=0.97, top=0.92, bottom=0.17)
     plt.savefig(fileName + syffix + ".jpeg", dpi=_dpi)
     plt.show()
 

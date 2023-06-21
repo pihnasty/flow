@@ -719,11 +719,11 @@ def approximated_gamma_s_show(experiment
                         , approximated_gamma["time"]
                         , approximated_gamma_s
                         , xlabelName, title
-                        , 0.7
-                        , _dpi=600
+                        , 1.0
+                        , _dpi=1000
                         , xMin=min(approximated_gamma["time"]), xMax=max(approximated_gamma["time"])
                         , y1Min=min(approximated_gamma["flow"]), y1Max=max(approximated_gamma["flow"])
-                        , _fontsize=8)
+                        , _fontsize=9)
 
 def fourier_coefficients(period
                          , dimensionless_flow

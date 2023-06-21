@@ -157,4 +157,12 @@ def initial_dimension_flow_line(
                          =experiment["plot_parameters"]["initial_dimension_flow_line"]["plot_line_width"]
                          , _grid_line_width
                          =experiment["plot_parameters"]["initial_dimension_flow_line"]["grid_line_width"]
+                         , _adjust_left
+                         =experiment["plot_parameters"]["initial_dimension_flow_line"]["border_adjustment"]["left"]
+                         , _adjust_right
+                         =experiment["plot_parameters"]["initial_dimension_flow_line"]["border_adjustment"]["right"]
+                         , _adjust_top
+                         =experiment["plot_parameters"]["initial_dimension_flow_line"]["border_adjustment"]["top"]
+                         , _adjust_bottom
+                         =experiment["plot_parameters"]["initial_dimension_flow_line"]["border_adjustment"]["bottom"]
                          )

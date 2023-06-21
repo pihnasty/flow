@@ -22,13 +22,16 @@ def linePlotHist(fileName
 
     dateS = datetime.datetime.now()
     syffix=dateS.strftime("%Y_%m_%d_%H_%M_%S")
-    plt.grid(True, color =_color, alpha = _alpha/2)      #
-    plt.rcParams["figure.figsize"] = [4.0, 3.0]   # size of the figure 3.0*2.54 ~ 7.5 cm     # plt.figure(figsize=(12, 7))
+    #plt.rcParams["figure.figsize"] = [4.0, 3.0]   # size of the figure 3.0*2.54 ~ 7.5 cm     # plt.figure(figsize=(12, 7))
+    plt.figure(figsize=(7.90/2.54, 6.00/2.54))
+    #plt.grid(True, color =_color, alpha = _alpha/2)      #
+    plt.grid(True, color =_color, alpha = _alpha)      #
     plt.xlabel(xlabelName, fontsize=_fontsize, loc='right')
     plt.xlim(min(x), max(x))    # set xMin, xMax
     plt.xlim(min(y1), max(y1))    # set xMin, xMax
     # https://devpractice.ru/matplotlib-lesson-4-1-viz-linear-chart/
-    plt.plot(x, y1, 'k', alpha=0.7, lw=2)
+    # plt.plot(x, y1, 'k', alpha=0.7, lw=2)
+    plt.plot(x, y1, 'k', alpha=1, lw=2)
     # plt.hist(y2, 5, density=True, facecolor='g', alpha=0.75)
     plt.hist(y2, bins = countOfIntervalsXi2, bottom=False, density = _density, alpha = _alpha,  histtype='bar', align='mid', color =_color
              , rwidth = 0.8)
@@ -47,6 +50,8 @@ def linePlotHist(fileName
     plt.title(title
               # , fontweight ="bold"
               , fontsize=_fontsize, loc='left' )
+    # Reduce the plot border
+    plt.subplots_adjust(left=0.1, right=0.97, top=0.92, bottom=0.17)
     plt.savefig(fileName + syffix+"_"+str(countOfIntervalsXi2)+".jpeg", dpi=_dpi)
     plt.show()
 

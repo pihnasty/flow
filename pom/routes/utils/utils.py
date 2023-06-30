@@ -3,6 +3,34 @@
 from PIL import Image
 
 
+def change_canvas_size(image_path, new_width, new_height, dpi, background_color):
+    """The function changes the canvas size of an image
+    of the result image file
+    :param dpi:
+    :param new_height:in mm
+    :param new_width:in mm
+    :param image_path:
+    :param background_color:color in RGB, for ex. (255, 255, 255) = white
+    :return:
+    """
+    image = Image.open(image_path)
+    current_width, current_height = image.size
+
+    # Convert image size from mm into pixels
+    new_width = int(new_width * dpi / 25.4)
+    new_height = int(new_height * dpi / 25.4)
+
+    # Create a new image with the desired canvas size and background color
+    new_image = Image.new('RGB', (new_width, new_height), background_color)
+
+    # Paste the original image onto the new image, centered
+    paste_x = (new_width - current_width) // 2
+    paste_y = (new_height - current_height) // 2
+    new_image.paste(image, (paste_x, paste_y))
+
+    # Save the new image
+    new_image.save(image_path)
+
 def change_dpi_tag(image_path, dpi):
     """The function changes the DPI (dots per inch) metadata
     of the result image file

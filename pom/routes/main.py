@@ -4,6 +4,10 @@ import sys
 from pom.routes.InitData.initialize_routes import experiments
 # from pom.routes.fig_1 import fig_1
 from pom.routes.route_2002_Co import route_2002_Co
+from pom.routes.route_2002_Co_Ck import route_2002_Co_Ck
+from pom.routes.route_2017_KrKaGl import route_2017_KrKaGl
+from pom.routes.route_2019_WiBuKu import route_2019_WiBuKu
+from pom.routes.c_k import C_k
 
 
 def main():
@@ -12,7 +16,11 @@ def main():
     :return:
     """
     # fig_1(experiments['default'])
-    route_2002_Co(experiments['default'])
+    # route_2002_Co(experiments['default'])
+    # route_2002_Co_Ck(experiments['default'])
+    # route_2019_WiBuKu(experiments['2019_WiBuKu'])
+    route_2017_KrKaGl(experiments['default'])
+    # C_k(experiments['C_k'])
 
 
 if __name__ == "__main__":

@@ -41,11 +41,11 @@ experiments = {
             'penwidth': '0.5',
             'width': '0.15',
             'height': '0.15',
-            'fontsize': '16',  # Flow font size
+            'fontsize': '14',  # Flow font size
         },
         'edge_attr': {
             'penwidth': '0.5',
-            'fontsize': '16',  # Speed and Length of conveyer font size
+            'fontsize': '14',  # Speed and Length of conveyer font size
             'arrowsize': '0.4',
         }
     },

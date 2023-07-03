@@ -2,11 +2,11 @@
 
 import datetime
 import graphviz
-from utils.utils import change_dpi_tag, size_mm_to_inch
+import utils.utils
 
 
 def C_k(param):
-    """ This function creates sub plot/graph of universal
+    """ This function creates sub-plot/graph of universal
     conveyor rout Ck
     :param param: parameters for the plot from pom/routes/InitData/initialize_routes.py
     :return:
@@ -28,12 +28,12 @@ def C_k(param):
     graph.attr(
         rankdir=graph_attr['rankdir'],
         ratio='fill',
-        size=size_mm_to_inch(graph_attr['x_size'],
-                             graph_attr['y_size'],
-                             decimal_places=4),
+        size=utils.utils.size_mm_to_inch(graph_attr['x_size'],
+                                         graph_attr['y_size'],
+                                         decimal_places=4),
         dpi=graph_attr['dpi'],
         bgcolor='white',
-        center='1'
+        center='1',
     )
     node_attr = param['node_attr']
     graph.attr('node',
@@ -46,6 +46,7 @@ def C_k(param):
                fontsize=node_attr['fontsize'],  # Flow font size
                labelloc='b'
                )
+
     graph.node('1', shape='none')
     graph.node('2', label='<&gamma;<SUB>k-1</SUB>(&tau;)>')
     graph.node('3', label='<&gamma;<SUB>k</SUB>(&tau;)>')
@@ -76,11 +77,19 @@ def C_k(param):
                labelangle='320'
                )
 
-
     graph.view()
-    # To change the DPI (dots per inch) metadata of the result image file:
+
     image_path = (files_category + graph_name + '/' +
                   file_name + '.' + param['file_format'])
-    change_dpi_tag(image_path, int(graph_attr['dpi']))
-
-# fig_1(experiments['default'])
+    # To cut the canvas of the result image file:
+    utils.utils.cut_C_k_canvas(image_path,
+                               new_width=868,
+                               new_height=425,
+                               paste_x=-144,
+                               paste_y=-107)
+    # To draw a frame around the canvas of the result image file
+    utils.utils.draw_frame(image_path,
+                           frame_width=2,
+                           frame_color=(0, 0, 0))
+    # To change the DPI (dots per inch) metadata of the result image file:
+    utils.utils.change_dpi_tag(image_path, int(graph_attr['dpi']))

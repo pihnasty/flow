@@ -19,8 +19,8 @@ def main():
     # route_2002_Co(experiments['default'])
     # route_2002_Co_Ck(experiments['default'])
     # route_2019_WiBuKu(experiments['2019_WiBuKu'])
-    route_2017_KrKaGl(experiments['default'])
-    # C_k(experiments['C_k'])
+    # route_2017_KrKaGl(experiments['default'])
+    C_k(experiments['C_k'])
 
 
 if __name__ == "__main__":

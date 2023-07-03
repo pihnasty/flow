@@ -3,7 +3,8 @@
 import datetime
 import graphviz
 
-from pom.routes.utils.utils import size_mm_to_inch, change_canvas_size, change_dpi_tag
+from pom.routes.utils.utils import size_mm_to_inch, change_canvas_size, change_dpi_tag, paste_c_k_into_route
+
 
 def route_2017_KrKaGl(param):
     """ This function creates plot/graph for conveyor route
@@ -60,7 +61,6 @@ def route_2017_KrKaGl(param):
     graph.node('11', pos='0.85, 0.55!')
     graph.node('12', pos='1.1, 0.55!')
 
-
     edge_attr = param['edge_attr']
     graph.attr('edge',
                penwidth=edge_attr['penwidth'],
@@ -83,7 +83,6 @@ def route_2017_KrKaGl(param):
     graph.edge('11', '5', label='<C<SUB>7</SUB>>')
     graph.edge('12', '11', label='<C<SUB>6</SUB>>')
 
-
     graph.view()
 
     image_path = (files_category + graph_name + '/' +
@@ -92,8 +91,11 @@ def route_2017_KrKaGl(param):
     change_canvas_size(image_path,
                        new_width=int(graph_attr['x_size']),
                        new_height=int(graph_attr['y_size']),
-                       dpi=int(graph_attr['dpi']),
-                       background_color=(255, 255, 255))
+                       dpi=int(graph_attr['dpi']))
+
+    # To paste C_k image into the result route image:
+    c_k_path = (files_category + 'c_k/c_k.jpeg')
+    paste_c_k_into_route(image_path, c_k_path)
 
     # To change the DPI (dots per inch) metadata of the result image file:
     change_dpi_tag(image_path, int(graph_attr['dpi']))

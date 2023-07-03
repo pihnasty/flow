@@ -87,6 +87,19 @@ def draw_frame(image_path, frame_width, frame_color):
     new_image.save(image_path)
 
 
+def paste_c_k_into_route(route_path, c_k_path):
+    """The function pastes C_k image into the result route image
+    :param route_path:
+    :param c_k_path:
+    :return:
+    """
+    route_image = Image.open(route_path)
+    c_k_image = Image.open(c_k_path)
+    route_image.paste(c_k_image, (0, 0))
+
+    route_image.save(route_path)
+
+
 def change_dpi_tag(image_path, dpi):
     """The function changes the DPI (dots per inch) metadata
     of the result image file

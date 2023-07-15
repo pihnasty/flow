@@ -270,6 +270,10 @@ def line_plot4(file_name
                , _y_size_plot=75
                , _plot_line_width=2
                , _grid_line_width=1.5
+               , _adjust_left=0.12
+               , _adjust_right=0.98
+               , _adjust_top=0.92
+               , _adjust_bottom=0.17
                ):
     """
     Line plot visualization.
@@ -346,5 +350,7 @@ def line_plot4(file_name
         plt.gca().invert_xaxis()
     fig.set_figwidth(mm_to_inch(_x_size_plot))
     fig.set_figheight(mm_to_inch(_y_size_plot))
+    # Reduce the plot border
+    plt.subplots_adjust(left=_adjust_left, right=_adjust_right, top=_adjust_top, bottom=_adjust_bottom)
     plt.savefig(file_name + syffix + ".jpeg", dpi=_dpi)
     plt.show()

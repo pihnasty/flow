@@ -2,7 +2,6 @@
 # https://www.youtube.com/watch?v=khvO24NWZsc
 # https://www.youtube.com/watch?v=TVFOjP0FNVQ
 # https://www.youtube.com/watch?v=49hbIKRI5EE
-import math
 import sys
 import FlowNeuralNet as fnn
 # universal .csv

@@ -19,7 +19,9 @@ def main():
     # route_2002_Co(experiments['default'])
     # route_2002_Co_Ck(experiments['default'])
     # route_2019_WiBuKu(experiments['2019_WiBuKu'])
-    route_2017_KrKaGl(experiments['default'])
+    route_2017_KrKaGl(experiments['2017_KrKaGl'],
+                      change_canvas_size_=True,
+                      paste_c_k=True)
     # C_k(experiments['C_k'])
 
 

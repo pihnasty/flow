@@ -48,8 +48,8 @@ def C_k(param):
                )
 
     graph.node('1', shape='none')
-    graph.node('2', label='<&gamma;<SUB>k-1</SUB>(&tau;)>')
-    graph.node('3', label='<&gamma;<SUB>k</SUB>(&tau;)>')
+    graph.node('2', label='<&gamma;<SUB>k-1</SUB>(&tau;)         >')
+    graph.node('3', label='<&gamma;<SUB>k</SUB>(&tau;)         >')
     graph.node('4', shape='none')
     graph.node('5', shape='none', label='<C<SUB>k</SUB>(&tau;):'
                                         '                           >')

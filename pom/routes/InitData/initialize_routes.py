@@ -21,8 +21,8 @@ experiments = {
         },
         'edge_attr': {
             'penwidth': '0.5',
-            'fontsize': '8',  # Font size of conveyer name
-            'arrowsize': '0.4',
+            'fontsize': '10',  # Font size of conveyer name
+            'arrowsize': '0.5',
         }
     },
     '2019_WiBuKu': {
@@ -65,14 +65,14 @@ experiments = {
             # 'shape': 'invtriangle',
             'shape': 'none',
             'penwidth': '0.5',
-            'width': '0.',
-            'height': '0.',
-            'fontsize': '14',  # Flow font size
+            'width': '0',
+            'height': '0',
+            'fontsize': '8',  # Label font size
         },
         'edge_attr': {
             'penwidth': '0.5',
-            'fontsize': '14',  # Speed and Length of conveyer font size
-            'arrowsize': '0.4',
+            'fontsize': '8',  # Flow, Speed and Length of conveyer font size
+            'arrowsize': '0.5',
         }
     },
     'default': {

@@ -54,7 +54,8 @@ def route_2017_KrKaGl(param, change_canvas_size_, paste_c_k):
                fontcolor='black',
                fontsize=edge_attr['fontsize'],  # Font size of conveyer name
                arrowsize=edge_attr['arrowsize'],
-               labeldistance='1.8'
+               labeldistance='1.8',
+               arrowhead='open'
                )
 
     graph.node('lu', pos='0.0, 0.75!', label='')
@@ -89,7 +90,7 @@ def route_2017_KrKaGl(param, change_canvas_size_, paste_c_k):
     graph.edge('tP24', 'hP24', arrowhead='o')
     graph.node('hL52L621', pos='0.679, 0.15!')
     graph.node('tL52L621', pos='0.675, 0.15!')
-    graph.edge('tL52L621', 'hL52L621')
+    graph.edge('tL52L621', 'hL52L621', arrowhead='normal')
     graph.node('tL413', pos='0.78, 0.185!')
     graph.node('hL413', pos='0.68, 0.185!')
     graph.edge('tL413', 'hL413',
@@ -97,7 +98,7 @@ def route_2017_KrKaGl(param, change_canvas_size_, paste_c_k):
                labeldistance='1.8', labelangle='340')
     graph.node('hL413b', pos='0.679, 0.185!')
     graph.node('tL413b', pos='0.675, 0.185!')
-    graph.edge('tL413b', 'hL413b')
+    graph.edge('tL413b', 'hL413b', arrowhead='normal')
     graph.node('hP15', pos='0.76, 0.186!')
     graph.node('tP15', pos='0.76, 0.189!')
     graph.edge('tP15', 'hP15', arrowhead='o')
@@ -110,7 +111,7 @@ def route_2017_KrKaGl(param, change_canvas_size_, paste_c_k):
     graph.node('tL1031', pos='0.99, 0.53!')
     graph.node('hL1031', pos='0.79, 0.53!')
     graph.edge('tL1031', 'hL1031', taillabel='<C<SUB>5</SUB>>',
-               labeldistance='1.8', labelangle='340')
+               labeldistance='1.7', labelangle='335')
     graph.node('hP30', pos='0.98, 0.53!')
     graph.node('tP30', pos='0.98, 0.535!')
     graph.edge('tP30', 'hP30', arrowhead='o')
@@ -131,16 +132,18 @@ def route_2017_KrKaGl(param, change_canvas_size_, paste_c_k):
     graph.edge('tP11', 'hP11', arrowhead='o')
     graph.node('tP9c', pos='0.792, 0.3!')
     graph.node('hP9c', pos='0.62, 0.3!')
-    graph.edge('tP9c', 'hP9c', label='<C<SUB>7</SUB>>')
+    graph.edge('tP9c', 'hP9c', taillabel='<C<SUB>7</SUB>>',
+               labeldistance='1.7', labelangle='335')
     graph.node('tP83', pos='0.69, 0.305!')
     graph.node('hP83', pos='0.69, 0.3!')
     graph.edge('tP83', 'hP83', arrowhead='o')
     graph.node('tP8c', pos='0.625, 0.3!')
     graph.node('hP8c', pos='0.38, 0.3!')
-    graph.edge('tP8c', 'hP8c', label='<C<SUB>8</SUB>>')
+    graph.edge('tP8c', 'hP8c', taillabel='<C<SUB>8</SUB>>',
+               labeldistance='1.9', labelangle='340')
     graph.node('tP67', pos='0.615, 0.305!')
     graph.node('hP67', pos='0.615, 0.3!')
-    graph.edge('tP67', 'hP67')
+    graph.edge('tP67', 'hP67', arrowhead='normal')
     graph.node('tP66', pos='0.585, 0.305!')
     graph.node('hP66', pos='0.585, 0.3!')
     graph.edge('tP66', 'hP66', arrowhead='o')
@@ -152,10 +155,12 @@ def route_2017_KrKaGl(param, change_canvas_size_, paste_c_k):
     graph.edge('tP50', 'hP50', arrowhead='o')
     graph.node('tP7c', pos='0.383, 0.3!')
     graph.node('hP7c', pos='0.2, 0.3!')
-    graph.edge('tP7c', 'hP7c', label='<C<SUB>11</SUB>>')
+    graph.edge('tP7c', 'hP7c', taillabel='<C<SUB>11</SUB>>',
+               labeldistance='1.7', labelangle='335')
     graph.node('tP6c', pos='0.21, 0.3!')
     graph.node('hP6c', pos='0.03, 0.3!')
-    graph.edge('tP6c', 'hP6c', label='<C<SUB>12</SUB>>')
+    graph.edge('tP6c', 'hP6c', taillabel='<C<SUB>12</SUB>>',
+               labeldistance='1.7', labelangle='335')
     graph.node('tP15_3', pos='0.11, 0.305!')
     graph.node('hP15_3', pos='0.11, 0.3!')
     graph.edge('tP15_3', 'hP15_3', arrowhead='o')
@@ -164,7 +169,8 @@ def route_2017_KrKaGl(param, change_canvas_size_, paste_c_k):
     graph.edge('tP5ac', 'hP5ac', label='<C<SUB>13</SUB>>')
     graph.node('tL910b', pos='0.275, 0.48!')
     graph.node('hL910b', pos='0.42, 0.48!')
-    graph.edge('tL910b', 'hL910b', label='<C<SUB>9</SUB>>')
+    graph.edge('tL910b', 'hL910b', taillabel='<C<SUB>9</SUB>>',
+               labeldistance='1.7', labelangle='335')
     graph.node('hP14', pos='0.285, 0.48!')
     graph.node('tP14', pos='0.285, 0.486!')
     graph.edge('tP14', 'hP14', arrowhead='o')
@@ -173,7 +179,8 @@ def route_2017_KrKaGl(param, change_canvas_size_, paste_c_k):
     graph.edge('tP7', 'hP7', arrowhead='o')
     graph.node('tL142', pos='0.42, 0.515!')
     graph.node('hL142', pos='0.42, 0.3!')
-    graph.edge('tL142', 'hL142', label='<C<SUB>10</SUB>>')
+    graph.edge('tL142', 'hL142', taillabel='<C<SUB>10</SUB>>',
+               labeldistance='2.7', labelangle='25')
     graph.node('tP17', pos='0.414, 0.505!')
     graph.node('hP17', pos='0.42, 0.505!')
     graph.edge('tP17', 'hP17', arrowhead='o')
@@ -226,7 +233,7 @@ def route_2017_KrKaGl(param, change_canvas_size_, paste_c_k):
 
     # To paste C_k image into the result route image:
     if paste_c_k:
-        c_k_path = (files_category + 'c_k/c_k_2.jpeg')
+        c_k_path = (files_category + 'c_k/c_k_5.jpeg')
         paste_c_k_into_route(image_path, c_k_path)
 
     # To change the DPI (dots per inch) metadata of the result image file:

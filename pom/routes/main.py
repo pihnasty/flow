@@ -17,10 +17,12 @@ def main():
     """
     # fig_1(experiments['default'])
     # route_2002_Co(experiments['default'])
-    # route_2002_Co_Ck(experiments['default'])
-    route_2019_WiBuKu(experiments['2017_KrKaGl'],
+    route_2002_Co_Ck(experiments['2017_KrKaGl'],
                       change_canvas_size_=True,
                       paste_c_k=True)
+    # route_2019_WiBuKu(experiments['2017_KrKaGl'],
+    #                   change_canvas_size_=True,
+    #                   paste_c_k=True)
     # route_2017_KrKaGl(experiments['2017_KrKaGl'],
     #                   change_canvas_size_=True,
     #                   paste_c_k=True)

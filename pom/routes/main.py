@@ -12,6 +12,7 @@ from pom.routes.route_2016_KaKrZiJuJaPi_2 import route_2016_KaKrZiJuJaPi_2
 from pom.routes.route_2016_KaKrZiJuJaPi_3 import route_2016_KaKrZiJuJaPi_3
 from pom.routes.route_2016_KaKrZiJuJaPi_4 import route_2016_KaKrZiJuJaPi_4
 from pom.routes.route_2016_KaKrZiJuJaPi_5 import route_2016_KaKrZiJuJaPi_5
+from pom.routes.route_2016_KaKrZiJuJaPi_6 import route_2016_KaKrZiJuJaPi_6
 from pom.routes.route_2017_KrKaGl import route_2017_KrKaGl
 from pom.routes.route_2019_WiBuKu import route_2019_WiBuKu
 from pom.routes.c_k import C_k
@@ -52,7 +53,10 @@ def main():
     # route_2016_KaKrZiJuJaPi_4(experiments['2017_KrKaGl'],
     #                           change_canvas_size_=True,
     #                           paste_c_k=True)
-    route_2016_KaKrZiJuJaPi_5(experiments['2017_KrKaGl'],
+    # route_2016_KaKrZiJuJaPi_5(experiments['2017_KrKaGl'],
+    #                           change_canvas_size_=True,
+    #                           paste_c_k=True)
+    route_2016_KaKrZiJuJaPi_6(experiments['2017_KrKaGl'],
                               change_canvas_size_=True,
                               paste_c_k=True)
 

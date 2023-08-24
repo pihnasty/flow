@@ -6,6 +6,7 @@ from pom.routes.InitData.initialize_routes import experiments
 from pom.routes.route_2002_Co import route_2002_Co
 from pom.routes.route_2002_Co_Ck import route_2002_Co_Ck
 from pom.routes.route_2010_An import route_2010_An
+from pom.routes.route_2013_Ol import route_2013_Ol
 from pom.routes.route_2015_Pr import route_2015_Pr
 from pom.routes.route_2016_KaKrZiJuJaPi_1 import route_2016_KaKrZiJuJaPi_1
 from pom.routes.route_2016_KaKrZiJuJaPi_2 import route_2016_KaKrZiJuJaPi_2
@@ -64,9 +65,12 @@ def main():
     # route_2016_KaKrZiJuJaPi_7(experiments['2017_KrKaGl'],
     #                           change_canvas_size_=True,
     #                           paste_c_k=True)
-    route_2016_KaKrZiJuJaPi_8(experiments['2017_KrKaGl'],
-                              change_canvas_size_=True,
-                              paste_c_k=True)
+    # route_2016_KaKrZiJuJaPi_8(experiments['2017_KrKaGl'],
+    #                           change_canvas_size_=True,
+    #                           paste_c_k=True)
+    route_2013_Ol(experiments['2017_KrKaGl'],
+                  change_canvas_size_=True,
+                  paste_c_k=True)
 
 
 if __name__ == "__main__":

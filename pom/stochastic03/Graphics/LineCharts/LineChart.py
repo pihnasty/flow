@@ -17,8 +17,6 @@ def visual_lines(lines, experiment, plot_name):
         , lines[experiment["plot_parameters"][plot_name]["visual_line_set"]["3"]]
         , lines[experiment["plot_parameters"][plot_name]["visual_line_set"]["4"]]
         , lines[experiment["plot_parameters"][plot_name]["visual_line_set"]["5"]]
-        , lines[experiment["plot_parameters"][plot_name]["visual_line_set"]["6"]]
-        , lines[experiment["plot_parameters"][plot_name]["visual_line_set"]["7"]]
         # , lines[experiment["plot_parameters"][plot_name]["visual_line_set"]["7"]]
 
     ]
@@ -312,7 +310,7 @@ def line_plot4(file_name
     # https://newtechaudit.ru/vizualizacziya-v-python-matplotlib/    #убираем рамку справа
     fig, axis = plt.subplots()
     # https://devpractice.ru/matplotlib-lesson-4-1-viz-linear-chart/
-    i = 0
+    i = 1
     for y_values in ys_values:
         color = _y_colors[i]
         i = i + 1
@@ -354,3 +352,52 @@ def line_plot4(file_name
     plt.subplots_adjust(left=_adjust_left, right=_adjust_right, top=_adjust_top, bottom=_adjust_bottom)
     plt.savefig(file_name + syffix + ".jpeg", dpi=_dpi)
     plt.show()
+
+def bar_plot4(fileName
+              , x
+              , ys
+              , xlabel_name
+              , title
+              , _alpha_main  # яркость столбцов диаграммы
+              , _color='black'  # the column color of the diagram
+              , _dpi=1000
+              , x_min=0.0
+              , x_max=0.0
+              , y1_min=0.0
+              , y1_max=0.0
+              , _fontsize=10
+              ):
+    plt.close('all')
+# https://matplotlib.org/stable/gallery/lines_bars_and_markers/bar_colors.html
+    date_s = datetime.datetime.now()
+    syffix = date_s.strftime("%Y_%m_%d_%H_%M_%S")
+    plt.figure(figsize=(7.90/2.54, 6.00/2.54))
+    # plt.rcParams["figure.figsize"] = [4.0, 3.0]
+    #plt.rcParams["figure.figsize"] = [7.90/2.54, 6.00/2.54]
+    # size of the figure 3.0*2.54 ~ 7.5 cm     # plt.figure(figsize=(12, 7))
+    # plt.grid(True, color=_color, alpha=_alpha / 2)
+    plt.grid(True, color='black', alpha=_alpha_main)
+    plt.xlabel(xlabel_name, fontsize=_fontsize, loc='right')
+    plt.xlim(min(x), max(x))  # set xMin, xMax
+    plt.ylim(min(ys[0]), max(ys[0]))  # set yMin, yMax
+    # https://devpractice.ru/matplotlib-lesson-4-1-viz-linear-chart/
+    for y in ys:
+        plt.bar(x, y, alpha=_alpha_main, lw=2, color=_color, width = 0.75)
+    plt.xticks(fontsize=_fontsize)
+    plt.ylim(0)
+    if x_max > 0.0:
+        plt.xlim(x_min, x_max)
+    if y1_max > 0.0:
+        plt.ylim(y1_min, y1_max)
+    plt.yticks(fontsize=_fontsize)
+    plt.tight_layout(pad=1.5)  # tight_layout() can take keyword arguments of pad, w_pad and h_pad
+    plt.rcParams['axes.xmargin'] = 0  # offset of the axes from the origin, given by xMin, xMax, yMin, yMax
+    plt.rcParams['axes.ymargin'] = 0  # offset of the axes from the origin, given by xMin, xMax, yMin, yMax
+    plt.title(title
+              # , fontweight ="bold"
+              , fontsize=_fontsize, loc='left')
+    # Reduce the plot border
+    plt.subplots_adjust(left=0.1, right=0.97, top=0.92, bottom=0.17)
+    plt.savefig(fileName + syffix + ".jpeg", dpi=_dpi)
+    plt.show()
+

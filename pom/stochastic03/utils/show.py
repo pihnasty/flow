@@ -16,12 +16,15 @@ def visual_lines(lines, experiment, plot_name):
     :param plot_name: plot name.
     :return: visualization options.
     """
+    numbers = [1] * len(experiment["plot_parameters"][plot_name]["visual_line_set"])
+    for num in range(len(lines)):
+        numbers[num] = experiment["plot_parameters"][plot_name]["visual_line_set"][str(num)]
     return [
-        lines[experiment["plot_parameters"][plot_name]["visual_line_set"]["1"]]
-        , lines[experiment["plot_parameters"][plot_name]["visual_line_set"]["2"]]
-        , lines[experiment["plot_parameters"][plot_name]["visual_line_set"]["3"]]
-        , lines[experiment["plot_parameters"][plot_name]["visual_line_set"]["4"]]
-        , lines[experiment["plot_parameters"][plot_name]["visual_line_set"]["5"]]
+        lines[numbers[1]]
+        , lines[numbers[2]]
+        , lines[numbers[3]]
+        , lines[numbers[4]]
+        , lines[numbers[5]]
     ]
 
 def common_line(
@@ -121,3 +124,29 @@ def common_hist(
                    , _adjust_top=plot["border_adjustment"]["top"]
                    , _adjust_bottom=plot["border_adjustment"]["bottom"]
                    )
+
+def common_bar(
+        experiment
+        , path
+        , plot_values
+        , file_name_prefix
+        , plot_name
+):
+    file_util.make_dir_if_not(path)
+    x_values = plot_values[0]
+    y_values = visual_lines(plot_values, experiment, plot_name)
+    plot = experiment["plot_parameters"][plot_name]
+    lineChart.bar_plot4(path + '/' + file_name_prefix
+                        , x_values
+                        , y_values
+                        , xlabel_name=plot["x_label_name"]
+                        , title=plot["y_label_name"]
+                        , _alpha_main=plot["alpha_main"]  # яркость столбцов диаграммы
+                        , _color=plot["color"] #_color='black'  # the column color of the diagram
+                        , _dpi=experiment["plot_parameters"]["dpi"]
+                        , x_min=plot["x_min"]
+                        , x_max=experiment["number_of_harmonics"]
+                        , y1_min= plot["y_min"]
+                        , y1_max= plot["y_max"]
+                        , _fontsize=plot["fontsize"]
+                        )

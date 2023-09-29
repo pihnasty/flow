@@ -1,7 +1,8 @@
 import datetime
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
-
+import matplotlib as mpl
+mpl.rcParams['agg.path.chunksize'] =20_000
 
 def visual_lines(lines, experiment, plot_name):
     """
@@ -366,6 +367,10 @@ def bar_plot4(fileName
               , y1_min=0.0
               , y1_max=0.0
               , _fontsize=10
+              , _adjust_left=0.12
+              , _adjust_right=0.98
+              , _adjust_top=0.92
+              , _adjust_bottom=0.17
               ):
     plt.close('all')
 # https://matplotlib.org/stable/gallery/lines_bars_and_markers/bar_colors.html
@@ -397,7 +402,7 @@ def bar_plot4(fileName
               # , fontweight ="bold"
               , fontsize=_fontsize, loc='left')
     # Reduce the plot border
-    plt.subplots_adjust(left=0.1, right=0.97, top=0.92, bottom=0.17)
+    plt.subplots_adjust(left=_adjust_left, right=_adjust_right, top=_adjust_top, bottom=_adjust_bottom)
     plt.savefig(fileName + syffix + ".jpeg", dpi=_dpi)
     plt.show()
 

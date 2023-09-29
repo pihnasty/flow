@@ -149,4 +149,8 @@ def common_bar(
                         , y1_min= plot["y_min"]
                         , y1_max= plot["y_max"]
                         , _fontsize=plot["fontsize"]
+                        , _adjust_left=plot["border_adjustment"]["left"]
+                        , _adjust_right=plot["border_adjustment"]["right"]
+                        , _adjust_top=plot["border_adjustment"]["top"]
+                        , _adjust_bottom=plot["border_adjustment"]["bottom"]
                         )

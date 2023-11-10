@@ -11,7 +11,8 @@ input_flow = flow.InputFlow04(
     # "2023_05_23_dataset_2013_KoStBeCopyForGenerator"
     # "2023_05_23_dataset_2010_JeRiBeStJeMiRaCopyForGenerator"
 #    "2023_05_23_dataset_2021_BhAsHuHoEvCopyForGenerator"
-     "2023_05_23_dataset_2021_BhAsHuHoEvCopyForGenerator2"
+      "2023_05_23_dataset_2021_BhAsHuHoEvCopyForGenerator2"
+#      "2023_05_23_dataset_2021_BhAsHuHoEvCopyForGenerator3"
 )
 turn_on_test = True
 
@@ -30,11 +31,14 @@ input_flow.get_numeric_fourier_coefficients_by_correlation_function()
 input_flow.get_correlation_function_by_fourier_coefficients()
 input_flow.correlation_by_fourier_coefficients_show()
 
-input_flow.execute_generator_dimensionless_flow('A_gauss')
+input_flow.execute_generator_dimensionless_flow('A_gauss_T_exp')
 input_flow.generator_dimensionless_data_show()
 
 input_flow.execute_genetator_correlation()
 input_flow.genetator_correlation_show()
+
+input_flow.execute_long_genetator_correlation()
+input_flow.long_genetator_correlation_show()
 
 input_flow.gamma_optimum_spectrum_show()
 input_flow.paremeter_model_save()

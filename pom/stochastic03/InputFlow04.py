@@ -49,7 +49,7 @@ class InputFlow04:
         initial_dimension_flow_mean = self.initial_dimension_flow['flow'].mean()
         for n in range(len(self.initial_dimension_flow['flow'])):
             value = self.initial_dimension_flow['flow'][n]
-            if(value < initial_dimension_flow_mean * 0.2):
+            if(value < initial_dimension_flow_mean * 0.0):
                 self.initial_dimension_flow['flow'][n] = initial_dimension_flow_mean
 
     def transform_initial_dimension_to_dimensionless(self):
@@ -99,7 +99,8 @@ class InputFlow04:
     def execute_genetator_correlation(self):
         self.genetator_correlation = self.execute_initial_correlation_aproximate2(self.generator_dimensionless_flow)
 
-
+    def execute_long_genetator_correlation(self):
+        self.long_genetator_correlation = self.execute_initial_correlation_aproximate2(self.long_generator_dimensionless_flow)
 
 
 
@@ -133,36 +134,37 @@ class InputFlow04:
     #         progress(n_v, count_1, 'execute_initial_correlation_aproximate')
     #     progress(count_1, count_1, 'execute_initial_correlation_aproximate')
 
-    def execute_initial_correlation_aproximate2(self, initial_dimensionless_flow):
+    def execute_initial_correlation_aproximate2(self, dimensionless_flow):
+        size = len(dimensionless_flow['time'])
         period = self.experiment["period"]
-        initial_correlation = pd.DataFrame()
-        initial_correlation['time'] = [0.0] * round(self.numberExamples/period/2.0)
-        initial_correlation['correlation'] = [0.0] * round(self.numberExamples/period/2.0)
+        correlation = pd.DataFrame()
+        correlation['time'] = [0.0] * round(size/period/2.0)
+        correlation['correlation'] = [0.0] * round(size/period/2.0)
 
-        size = len(initial_dimensionless_flow['time'])
-        tau_max = initial_dimensionless_flow['time'].max()
-        tau_min = initial_dimensionless_flow['time'].min()
-        delta_tau = (tau_max - tau_min) / size
+        tau_max = dimensionless_flow['time'].max()
+        tau_min = dimensionless_flow['time'].min()
+        tau_max__tau_min = (tau_max - tau_min)
+        #delta_tau = (tau_max - tau_min) / size
+        delta_tau = self.initial_dimensionless_flow['time'][1]-self.initial_dimensionless_flow['time'][0]
+        dimensionless_flow_mean = dimensionless_flow["flow"].mean()
+        dimensionless_flow_std = dimensionless_flow["flow"].std()
 
-        initial_dimensionless_flow_mean = initial_dimensionless_flow["flow"].mean()
-        initial_dimensionless_flow_std = initial_dimensionless_flow["flow"].std()
-
-        count_1 = len(initial_correlation['time'])
+        count_1 = len(correlation['time'])
 
         for n_v in range(count_1):
             value = 0.0
             tau = n_v * period * delta_tau # self.initial_dimensionless_flow['time'][n_v * period]
-            count_2 = round(self.numberExamples - n_v * period)
+            count_2 = round(size - n_v * period)
             for n_tau in range(count_2):
-                g1 = initial_dimensionless_flow['flow'][n_tau] - initial_dimensionless_flow_mean
-                g2 = initial_dimensionless_flow['flow'][n_tau + n_v *period] - initial_dimensionless_flow_mean
+                g1 = dimensionless_flow['flow'][n_tau] - dimensionless_flow_mean
+                g2 = dimensionless_flow['flow'][n_tau + n_v *period] - dimensionless_flow_mean
                 value = value + g1 * g2 * delta_tau
-            initial_correlation['time'][n_v] = tau
-            initial_correlation['correlation'][n_v] = value / 2.0 * self.numberExamples / count_2 / initial_dimensionless_flow_std / initial_dimensionless_flow_std
+            correlation['time'][n_v] = tau
+            correlation['correlation'][n_v] = value / tau_max__tau_min * size / count_2 / dimensionless_flow_std / dimensionless_flow_std
 
             progress(n_v, count_1, 'execute_initial_correlation_aproximate2')
         progress(count_1, count_1, 'execute_initial_correlation_aproximate2\n')
-        return initial_correlation
+        return correlation
 
 
 
@@ -179,8 +181,15 @@ class InputFlow04:
         self.correlation_by_fourier_coefficients = cf.CorrelationFunctions.get_function_value_by_coefficients(self.initial_correlation['time'].size, self.coefficients, tau_first = 0.0, tau_end = 1.0)
         return self.correlation_by_fourier_coefficients
 
-    def execute_generator_dimensionless_flow(self):
-    # https://docs.python.org/3/library/random.html
+    def execute_generator_dimensionless_flow(self, type_generator):
+        # https://docs.python.org/3/library/random.html
+        if type_generator == 'A_gauss':
+            self.execute_a_gauss_generator_dimensionless_flow()
+        if type_generator == 'A_gauss_T_exp':
+            self.execute_a_gauss_t_exp_generator_dimensionless_flow()
+
+    def execute_a_gauss_generator_dimensionless_flow(self):
+        # https://docs.python.org/3/library/random.html
         self.generator_dimensionless_flow = pd.DataFrame()
         self.generator_dimensionless_flow['time'] = [0.0] * self.numberExamples
         self.generator_dimensionless_flow['flow'] = [0.0] * self.numberExamples
@@ -219,14 +228,85 @@ class InputFlow04:
             progress(tau_num, self.numberExamples, 'execute_generator_flow')
         progress(self.numberExamples, self.numberExamples, 'execute_generator_flow\n')
 
+    def execute_a_gauss_t_exp_generator_dimensionless_flow(self):
+        # https://docs.python.org/3/library/random.html
+        temp = pd.DataFrame()
+        temp['time'] = [0.0] * self.numberExamples
+        temp['flow'] = [0.0] * self.numberExamples
 
+        temp['flow'][0] = self.initial_dimensionless_flow['flow'][0]
+        temp['time'][0] = self.initial_dimensionless_flow['time'][0]
 
+        error = 0.01 * (self.initial_dimensionless_flow['flow'].max() - self.initial_dimensionless_flow['flow'].min())
+        temp_number = 0
 
+        for i in range(1,self.numberExamples):
+            if abs(self.initial_dimensionless_flow['flow'][i] - self.initial_dimensionless_flow['flow'][i - 1]) > error:
+                temp_number += 1
+                temp['flow'][temp_number] = self.initial_dimensionless_flow['flow'][i]
+                temp['time'][temp_number] = self.initial_dimensionless_flow['time'][i]
 
+        temp_number += 1
+        temp['flow'][temp_number] = self.initial_dimensionless_flow['flow'][self.numberExamples-1]
+        temp['time'][temp_number] = self.initial_dimensionless_flow['time'][self.numberExamples-1]
 
+        temp_dimensionless_flow = pd.DataFrame()
+        temp_dimensionless_flow['time'] = [0.0] * (temp_number)
+        temp_dimensionless_flow['flow'] = [0.0] * (temp_number)
 
+        for i in range(temp_number):
+            temp_dimensionless_flow['time'][i] = temp['time'][i+1] - temp['time'][i]
+            temp_dimensionless_flow['flow'][i] = temp['flow'][i]
 
+        tau_mean = temp_dimensionless_flow['time'].mean()
+        tau_std = temp_dimensionless_flow['time'].std()
 
+        flow_mean = temp_dimensionless_flow['flow'].mean()
+        flow_std = temp_dimensionless_flow['flow'].std()
+        flow_max = temp_dimensionless_flow['flow'].max()
+
+        random_flow = random
+        random_flow.seed(10)   #  (num_random.randint)
+        random_time = random
+        random_time.seed(10)   #  (num_random.randint)
+
+        self.generator_dimensionless_flow = pd.DataFrame()
+        self.generator_dimensionless_flow['time'] = [0.0] * self.numberExamples
+        self.generator_dimensionless_flow['flow'] = [0.0] * self.numberExamples
+
+        tau_generated_value = random_time.expovariate(1.0 / tau_mean)
+        tau_generated_sum = self.initial_dimensionless_flow['time'][0] + tau_generated_value
+        flow_generated_value =  random_flow.gauss(mu=flow_mean, sigma=flow_std)
+
+        long = 32
+        self.long_numberExamples =  long * self.numberExamples
+        self.long_generator_dimensionless_flow = pd.DataFrame()
+        self.long_generator_dimensionless_flow['time'] = [0.0] * self.long_numberExamples
+        self.long_generator_dimensionless_flow['flow'] = [0.0] * self.long_numberExamples
+        long_delta_tau = self.initial_dimensionless_flow['time'][1] - self.initial_dimensionless_flow['time'][0]
+        tau = -1.0
+
+        for tau_num in range(self.long_numberExamples):
+            if tau_num < self.numberExamples:
+                tau = self.initial_dimensionless_flow['time'][tau_num]
+            else:
+                tau += long_delta_tau
+
+            if tau > tau_generated_sum:
+                tau_generated_sum = tau_generated_sum + random_time.expovariate(1.0 / tau_mean)
+                flow_generated_value =  random_flow.gauss(mu=flow_mean, sigma=flow_std)
+                # if flow_generated_value > flow_max:
+                #     flow_generated_value = flow_max
+
+            if tau_num < self.numberExamples:
+                self.generator_dimensionless_flow['time'][tau_num] = tau
+                self.generator_dimensionless_flow['flow'][tau_num] = flow_generated_value
+
+            self.long_generator_dimensionless_flow['time'][tau_num] = tau
+            self.long_generator_dimensionless_flow['flow'][tau_num] = flow_generated_value
+
+            progress(tau_num, self.long_numberExamples, 'execute_generator_flow')
+        progress(self.long_numberExamples, self.long_numberExamples, 'execute_generator_flow\n')
 
     def gamma1_multiply_gamma2(self):
         print ("gamma1_multiply_gamma2 ")
@@ -747,7 +827,12 @@ class InputFlow04:
         generator_dimensionless_flows_for_hist = [self.generator_dimensionless_flow['time'].values, self.generator_dimensionless_flow['flow'].values]
         show.common_hist(self.experiment, path, generator_dimensionless_flows_for_hist, "generator_flow_hist_", "initial_dimensionless_flow_hist")
 
-    def genetator_correlation_show(self):
+        # long_generator_dimensionless_flows = [self.long_generator_dimensionless_flow['time'].values, self.long_generator_dimensionless_flow['flow'].values, self.initial_dimensionless_flow['flow'].values]
+        # show.common_line(self.experiment, path, long_generator_dimensionless_flows, "long_generator_flow_line_", "initial_dimensionless_flow_line")
+        long_generator_dimensionless_flows_for_hist = [self.long_generator_dimensionless_flow['time'].values, self.long_generator_dimensionless_flow['flow'].values]
+        show.common_hist(self.experiment, path, long_generator_dimensionless_flows_for_hist, "long_generator_flow_hist_", "initial_dimensionless_flow_hist")
+
+    def  genetator_correlation_show(self):
         result_data = self.result_data_structure["result_data"] + '/'
         initial_data_result = self.result_data_structure["g_g2_result"]
         path = result_data + self.file_name + '/' + initial_data_result
@@ -762,6 +847,22 @@ class InputFlow04:
         print('sum',sum)
         print(self.generator_dimensionless_flow['flow'].std())
         print(self.initial_dimensionless_flow['flow'].std())
+
+    def  long_genetator_correlation_show(self):
+        result_data = self.result_data_structure["result_data"] + '/'
+        initial_data_result = self.result_data_structure["g_g2_result"]
+        path = result_data + self.file_name + '/' + initial_data_result
+        long_genetator_correlation_s = [self.long_genetator_correlation['time'].values, self.long_genetator_correlation['correlation'].values, self.long_genetator_correlation['correlation'].values]
+        show.common_line(self.experiment, path, long_genetator_correlation_s, "long_genetator_correlation_", "initial_correlation_line")
+        sum = 0.0
+        for i in range(len(self.coefficients)):
+            if i==0:
+                sum = sum + self.coefficients[i]/2.0
+            else:
+                sum = sum + self.coefficients[i]
+        print('sum',sum)
+        print('long_generator_dimensionless_flow.std() ', self.long_generator_dimensionless_flow['flow'].std())
+        print('initial_dimensionless_flow.std()        ',self.initial_dimensionless_flow['flow'].std())
 
     def gamma_optimum_spectrum_show(self):
         result_data = self.result_data_structure["result_data"] + '/'

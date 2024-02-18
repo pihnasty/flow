@@ -1,6 +1,7 @@
 """
 Visual dataset.
 """
+import logging
 import math
 
 import pom.stochastic03.Graphics.LineCharts.LineChart as lineChart
@@ -46,9 +47,13 @@ def common_line(
     file_util.make_dir_if_not(path)
 
     x_values = plot_values[0]
-    y_values = visual_lines(plot_values, experiment, plot_name)
 
-    plot = experiment["plot_parameters"][plot_name]
+    try:
+        y_values = visual_lines(plot_values, experiment, plot_name)
+        plot = experiment["plot_parameters"][plot_name]
+    except KeyError:
+        logging.warning("The plot name {} are not defined", plot_name)
+        return
     lineChart.line_plot4(path + '/' + file_name_prefix
                          , x_values
                          , y_values

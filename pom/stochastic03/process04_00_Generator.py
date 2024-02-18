@@ -23,8 +23,8 @@ input_flow.check_outliers_for_initial_data()
 input_flow.transform_initial_dimension_to_dimensionless()
 input_flow.initial_dimensionless_data_show()
 
-input_flow.execute_initial_correlation_aproximate()
-input_flow.initial_correlation_aproximate_show()
+input_flow.execute_init_correlation()
+input_flow.initial_correlation_show()
 
 input_flow.get_numeric_fourier_coefficients_by_correlation_function()
 input_flow.get_correlation_function_by_fourier_coefficients()

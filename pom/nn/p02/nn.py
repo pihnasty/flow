@@ -21,7 +21,7 @@ def loss(pred, target):
     return squares.mean()
 
 
-experiment = experiments["0002"]
+experiment = experiments["0003"]
 
 RESULT_DATA = 'resultData/'
 DATA_CATEGORY = 'raw_data/'
@@ -55,10 +55,10 @@ for epoch_index in range(count_epochs):
 print(loss_values[i-1])
 
 
-output_flows = [df['   0.NN   '].values, df[' 7.output '].values, cu.tensor_to_array_transpose(y_pred)[0]]
-show.output_flow(experiment, '/output_flow', output_flows, 'output_7_')
-output_flows = [df['   0.NN   '].values, df[' 8.output '].values, cu.tensor_to_array_transpose(y_pred)[1]]
-show.output_flow(experiment, '/output_flow', output_flows, 'output_8_')
+# output_flows = [df['   0.NN   '].values, df[' 7.output '].values, cu.tensor_to_array_transpose(y_pred)[0]]
+# show.output_flow(experiment, '/output_flow', output_flows, 'output_7_')
+# output_flows = [df['   0.NN   '].values, df[' 8.output '].values, cu.tensor_to_array_transpose(y_pred)[1]]
+# show.output_flow(experiment, '/output_flow', output_flows, 'output_8_')
 
 output_flows = [epoch_values, loss_values, loss_values]
 show.loss(experiment, '/loss', output_flows, 'flow_line')

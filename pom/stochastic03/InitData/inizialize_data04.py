@@ -1,7 +1,9 @@
 from pom.stochastic03.utils.Constants import ERR_APPROX_INIT_DIMLESS_FLOW_LINE,\
     ERR_APPROX_INIT_DIMLESS_FLOW_HIST, TAU_SEQUENCE_HIST, \
     INITIAL_DATA_DIMENSIONLESS_RESULT, G_G2, \
-    INIT_DIMENSIONLESS_FLOW_LINE, INIT_DIMENSIONLESS_FLOW_HIST, INIT_CORRELATION_LINE, PERIOD
+    INIT_DIMENSIONLESS_FLOW_LINE, INIT_DIMENSIONLESS_FLOW_HIST, INIT_DIMENSIONLESS_FLOW_Q_Q,\
+    INIT_CORRELATION_LINE, PERIOD, \
+    PLOT_PARAMETERS, Y_LABEL_NAME
 
 """
 initial data
@@ -3039,7 +3041,7 @@ experiments = {
         , "number_of_harmonics": 30
         , "correlation_tau": 0.3
 
-        , "plot_parameters": {
+        , PLOT_PARAMETERS: {
             "dpi": 1000
             , "initial_flow_line": {
                 "visual_line_set": {"0": 0, "1": 1, "2": 1, "3": 1, "4": 1, "5": 1}
@@ -3082,7 +3084,7 @@ experiments = {
                 }
             }
 
-            , "initial_dimensionless_flow_line": {
+            , INIT_DIMENSIONLESS_FLOW_LINE: {
                 "visual_line_set": {"0": 0, "1": 1, "2": 2, "3": 1, "4": 1, "5": 1}
                 , "color_line_set": {0: 'k', 1: 'r', 2: 'b', 3: 'k', 4: 'k', 5: 'k'}
                 , "fontsize": 9
@@ -3099,7 +3101,33 @@ experiments = {
                 , "y_tick_auxiliary": 0
                 , "x_axis_order": "forward"  # "back" | "forward"
                 , "x_label_name": r'$\tau$'
-                , "y_label_name": r'$\gamma(\tau)$'
+                , Y_LABEL_NAME: r'$\gamma_f(\tau)$'
+                , "x_size_plot": 85.0  # 86.5  #160.5
+                , "y_size_plot": 60.0  # 72.0  #120.0
+                , "plot_line_width": 1.5
+                , "grid_line_width": 1.0
+                , "border_adjustment": {
+                    "left": 0.15, "right": 0.92, "top": 0.92, "bottom": 0.17
+                }
+            }
+            , INIT_DIMENSIONLESS_FLOW_Q_Q: {
+                "visual_line_set": {"0": 0, "1": 1, "2": 2, "3": 1, "4": 1, "5": 1}
+                , "color_line_set": {0: 'k', 1: 'k', 2: 'r', 3: 'k', 4: 'k', 5: 'k'}
+                , "fontsize": 16
+                , "alpha_main": 1.0
+                , "alpha_grid": 0.7
+                , "color": "black"
+                , "x_min": -3.0
+                , "x_max": 3.0
+                , "x_tick_main": 0.5
+                , "x_tick_auxiliary": 0.25
+                , "y_min": -3.0
+                , "y_max": 3.0
+                , "y_tick_main": 0.2
+                , "y_tick_auxiliary": 0
+                , "x_axis_order": "forward"  # "back" | "forward"
+                , "x_label_name": 'Theoretical quantiles'
+                , "y_label_name": 'Sample quantiles'
                 , "x_size_plot": 85.0  # 86.5  #160.5
                 , "y_size_plot": 60.0  # 72.0  #120.0
                 , "plot_line_width": 1.5
@@ -3216,8 +3244,8 @@ experiments = {
                 "visual_line_set": {"0": 0, "1": 1, "2": 1, "3": 1, "4": 1, "5": 1}
                 , "count_of_intervals_xi2": 51
                 , "fontsize": 9
-                , "x_label_name": r'$\gamma$'
-                , "y_label_name": r'f($\gamma$)'
+                , "x_label_name": r'$\gamma_f$'
+                , "y_label_name": r'f($\gamma_f$)'
                 , "alpha": 0.7
                 , "rwidth": 0.7
                 , "x_size_plot": 85.0  # 86.5  #160.5

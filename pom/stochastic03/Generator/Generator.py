@@ -41,7 +41,7 @@ class Generator:
         temp[FLOW] = [0.0] * self.long_number_examples
 
         random_time = random
-        random_time.seed(10)  # (num_random.randint)
+        random_time.seed(50)  # (num_random.randint)
 
         tau = self.dim[TIME][0]
         tau_generated_sum = tau + random_time.expovariate(1.0 / tau_mean)

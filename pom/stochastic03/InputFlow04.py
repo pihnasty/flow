@@ -1,16 +1,19 @@
 import logging
 import math
 import random
+from copy import copy, deepcopy
 
 from pom.stochastic03.CorrFunc.CorrelationFunction import CorrelationFunction
 from pom.stochastic03.Dimensionless.ApproximateDimension import ApproximateDimension
 from pom.stochastic03.Dimensionless.Dimensionless import Dimensionless
 from pom.stochastic03.Generator.Generator import Generator
 from pom.stochastic03.InitData.inizialize_data04 import experiments
-from pom.stochastic03.utils.Constants import CORRELATION, FLOW, TIME,\
+from pom.stochastic03.utils.Constants import CORRELATION, FLOW, TIME, \
     ERR_APPROX_INIT_DIMLESS_FLOW_LINE, ERR_APPROX_INIT_DIMLESS_FLOW_HIST, TAU_SEQUENCE_HIST, \
     INITIAL_DATA_DIMENSIONLESS_RESULT, G_G2, \
-    INIT_DIMENSIONLESS_FLOW_LINE, INIT_DIMENSIONLESS_FLOW_HIST, INIT_CORRELATION_LINE, PERIOD
+    INIT_DIMENSIONLESS_FLOW_LINE, INIT_DIMENSIONLESS_FLOW_HIST,INIT_DIMENSIONLESS_FLOW_Q_Q,\
+    INIT_CORRELATION_LINE, PLOT_PARAMETERS, PERIOD, \
+    Y_LABEL_NAME
 import pandas as pd
 import pom.stochastic03.utils.show as show
 import pom.stochastic03.utils.CorrelationFunctions as cf
@@ -788,6 +791,21 @@ class InputFlow04:
                          [self.long_generated_correlation[TIME].values, self.long_generated_correlation[CORRELATION].values],
                          "long_generated_correlation_",
                          INIT_CORRELATION_LINE)
+        show.common_line(self.experiment,
+                         self.path_to(G_G2),
+                         [self.initial_correlation[TIME].values,
+                          CorrelationFunction.cut_by_template(self.initial_correlation, self.long_generated_correlation)[CORRELATION].values,
+                          self.initial_correlation[CORRELATION].values],
+                         "long_generated_correlation_",
+                         INIT_CORRELATION_LINE)
+        show.common_line(self.experiment,
+                         self.path_to(G_G2),
+                         [self.initial_correlation[TIME].values,
+                          CorrelationFunction.cut_by_template(self.initial_correlation, self.long_generated_correlation)[CORRELATION].values,
+                          self.generated_correlation[CORRELATION].values,
+                          self.initial_correlation[CORRELATION].values],
+                         "combine_long_generated_correlation_",
+                         INIT_CORRELATION_LINE)
 
     def correlation_by_fourier_coefficients_show(self):
         result_data = self.result_data_structure["result_data"] + '/'
@@ -1390,60 +1408,68 @@ class InputFlow04:
         file.write("Load_period        :      %10d " % (self.experiment["load_period"]))
         file.write("\n\n")
 
-        file.write("Dimension parameters:               ")
-        file.write("\n")
-        file.write("tMin       : %10.7f" % (self.initial_dimension_flow['time'].min()))
-        file.write("\n")
-        file.write("tMax       : %10.7f" % (self.initial_dimension_flow['time'].max()))
-        file.write("\n")
-        file.write("flowMin    : %10.7f" % (self.initial_dimension_flow['flow'].min()))
-        file.write("\n")
-        file.write("flowMax    : %10.7f" % (self.initial_dimension_flow['flow'].max()))
-        file.write("\n")
-        file.write("flowMean   : %10.7f" % (self.initial_dimension_flow['flow'].mean()))
-        file.write("\n")
-        file.write("flowStd    : %10.7f" % (self.initial_dimension_flow['flow'].std()))
-        file.write("\n\n")
+        self.save_parameters("Dimension parameters:               ",
+                             self.initial_dimension_flow, file)
+        self.save_parameters("Dimensionless parameters:               ",
+                             self.initial_dimensionless_flow, file)
+        self.save_parameters("Dimensionless approximated parameters:               ",
+                             self.approximate_initial_dimensionless_flow, file)
+        self.save_parameters("Dimensionless generated parameters:               ",
+                             self.generated_dimensionless_flow, file)
 
-        file.write("Dimensionless parameters:               ")
-        file.write("\n")
-        file.write("tMin       : %10.7f" % (self.initial_dimensionless_flow['time'].min()))
-        file.write("\n")
-        file.write("tMax       : %10.7f" % (self.initial_dimensionless_flow['time'].max()))
-        file.write("\n")
-        file.write("flowMin    : %10.7f" % (self.initial_dimensionless_flow['flow'].min()))
-        file.write("\n")
-        file.write("flowMax    : %10.7f" % (self.initial_dimensionless_flow['flow'].max()))
-        file.write("\n")
-        file.write("flowMean   : %10.7f" % (self.initial_dimensionless_flow['flow'].mean()))
-        file.write("\n")
-        file.write("flowStd    : %10.7f" % (self.initial_dimensionless_flow['flow'].std()))
-        file.write("\n\n")
+        approximate_tau_sequence = pd.DataFrame()
+        approximate_tau_sequence[FLOW] = self.approximate_tau_sequence
+        approximate_tau_sequence[TIME] = self.approximate_tau_sequence
+        self.save_parameters("Approximate_tau_sequence        :               ",
+                             approximate_tau_sequence, file)
 
-        file.write("Dimensionless generated parameters:               ")
-        file.write("\n")
-        file.write("tMin       : %10.7f" % (self.long_generator_dimensionless_flow['time'].min()))
-        file.write("\n")
-        file.write("tMax       : %10.7f" % (self.long_generator_dimensionless_flow['time'].max()))
-        file.write("\n")
-        file.write("flowMin    : %10.7f" % (self.long_generator_dimensionless_flow['flow'].min()))
-        file.write("\n")
-        file.write("flowMax    : %10.7f" % (self.long_generator_dimensionless_flow['flow'].max()))
-        file.write("\n")
-        file.write("flowMean   : %10.7f" % (self.long_generator_dimensionless_flow['flow'].mean()))
-        file.write("\n")
-        file.write("flowStd    : %10.7f" % (self.long_generator_dimensionless_flow['flow'].std()))
-        file.write("\n\n")
+        generated_tau_sequence = pd.DataFrame()
+        generated_tau_sequence[FLOW] = self.generated_tau_sequence
+        generated_tau_sequence[TIME] = self.generated_tau_sequence
+        self.save_parameters("Generated_tau_sequence         :               ",
+                             generated_tau_sequence, file)
+
+        long_generated_tau_sequence = pd.DataFrame()
+        long_generated_tau_sequence[FLOW] = self.long_generated_tau_sequence
+        long_generated_tau_sequence[TIME] = self.long_generated_tau_sequence
+        self.save_parameters("Long_generated_tau_sequence         :               ",
+                             long_generated_tau_sequence, file)
 
         file.write("Optimal parameters:               ")
         file.write("Fourier coefficients               :")
         file.write("\n")
-        for n in range(len(self.coefficients)):
-            file.write("  n: %2d  " % n)
-            file.write("%10.5f" % self.coefficients[n])
+        if hasattr(self, 'coefficients'):
+            for n in range(len(self.coefficients)):
+                file.write("  n: %2d  " % n)
+                file.write("%10.5f" % self.coefficients[n])
         file.write("\n")
 
+        from sklearn.metrics import mean_squared_error
+        mean_squared_error_appr_init = mean_squared_error(self.initial_dimensionless_flow[FLOW], self.approximate_initial_dimensionless_flow[FLOW])
+        file.write("MSE appr-init               :      %10.5f " % mean_squared_error_appr_init)
+        file.write("\n\n")
+        mean_squared_error_appr_init_to_mean = mean_squared_error_appr_init / self.initial_dimensionless_flow[FLOW].mean()
+        file.write("MSE appr-init / init_mean   :      %10.5f " % mean_squared_error_appr_init_to_mean)
+        file.write("\n\n")
+
+
         file.close()
+
+    def save_parameters(self, description, data, file):
+        file.write(description)
+        file.write("\n")
+        file.write("tMin       : %10.7f" % (data[TIME].min()))
+        file.write("\n")
+        file.write("tMax       : %10.7f" % (data[TIME].max()))
+        file.write("\n")
+        file.write("flowMin    : %10.7f" % (data[FLOW].min()))
+        file.write("\n")
+        file.write("flowMax    : %10.7f" % (data[FLOW].max()))
+        file.write("\n")
+        file.write("flowMean   : %10.7f" % (data[FLOW].mean()))
+        file.write("\n")
+        file.write("flowStd    : %10.7f" % (data[FLOW].std()))
+        file.write("\n\n")
 
     def initial_dimensionless_data_show(self):
         """
@@ -1452,9 +1478,9 @@ class InputFlow04:
         common_data_show(self.experiment,
                          self.path_to("initial_data_dimensionless_result"),
                          "flow_line_",
-                         "initial_dimensionless_flow_line",
+                         INIT_DIMENSIONLESS_FLOW_LINE,
                          "flow_hist_",
-                         "initial_dimensionless_flow_hist",
+                         INIT_DIMENSIONLESS_FLOW_HIST,
                          [self.initial_dimensionless_flow[TIME].values,
                           self.initial_dimensionless_flow[FLOW].values]
                          )
@@ -1463,20 +1489,26 @@ class InputFlow04:
         """
         The approximation of the initial dimensionless data plot.
         """
-        #
-        # # imports
-        #
-        # import numpy as np
-        # import statsmodels.api as sm
-        # import pylab as plt
-        #
-        # # define distributions   https://www.theaidream.com/post/advanced-statistical-concepts-in-data-science
-        # # plots for standard distribution
-        # sm.qqplot(self.initial_dimensionless_flow[FLOW]- self.initial_dimensionless_flow[FLOW].mean(), line='45')
-        # plt.xlim(-3.0, 3.0)
-        # plt.ylim(-3.0, 3.0)
-        # plt.show()
-        common_data_show(self.experiment,
+
+        q_q_data_show(self.experiment,
+                      self.path_to("initial_data_dimensionless_result"),
+                      "flow_q_q_error",
+                      INIT_DIMENSIONLESS_FLOW_Q_Q,
+                      [self.error_approximate_initial_dimensionless_flow[FLOW],
+                       self.error_approximate_initial_dimensionless_flow[FLOW]]
+                      )
+        q_q_data_show(self.experiment,
+                      self.path_to("initial_data_dimensionless_result"),
+                      "flow_q_q_lambda",
+                      INIT_DIMENSIONLESS_FLOW_Q_Q,
+                      [self.initial_dimensionless_flow[FLOW]- self.initial_dimensionless_flow[FLOW].mean(),
+                       self.initial_dimensionless_flow[FLOW]- self.initial_dimensionless_flow[FLOW].mean()]
+                      )
+
+        experiment_gamma_f_gamma_a = deepcopy(self.experiment)
+        experiment_gamma_f_gamma_a[PLOT_PARAMETERS][INIT_DIMENSIONLESS_FLOW_LINE][Y_LABEL_NAME]\
+            = r'$\gamma_f(\tau), \gamma_a(\tau)$'
+        common_data_show(experiment_gamma_f_gamma_a,
                          self.path_to("initial_data_dimensionless_result"),
                          "flow_line_",
                          "initial_dimensionless_flow_line",
@@ -1486,7 +1518,10 @@ class InputFlow04:
                           self.approximate_initial_dimensionless_flow[FLOW].values,
                           self.initial_dimensionless_flow[FLOW].values]
                          )
-        common_data_show(self.experiment,
+
+        experiment_gamma_a = deepcopy(self.experiment)
+        experiment_gamma_a[PLOT_PARAMETERS][INIT_DIMENSIONLESS_FLOW_LINE][Y_LABEL_NAME] = r'$\gamma_a(\tau)$'
+        common_data_show(experiment_gamma_a,
                          self.path_to("initial_data_dimensionless_result"),
                          "flow_line_",
                          "initial_dimensionless_flow_line",
@@ -1495,6 +1530,7 @@ class InputFlow04:
                          [self.approximate_initial_dimensionless_flow[TIME].values,
                           self.approximate_initial_dimensionless_flow[FLOW].values]
                          )
+
         common_data_show(self.experiment,
                          self.path_to("initial_data_dimensionless_result"),
                          "err_flow_line_",
@@ -1504,7 +1540,22 @@ class InputFlow04:
                          [self.error_approximate_initial_dimensionless_flow[TIME].values,
                           self.error_approximate_initial_dimensionless_flow[FLOW].values]
                          )
-        common_data_show(self.experiment,
+
+        experiment_gamma = deepcopy(self.experiment)
+        experiment_gamma[PLOT_PARAMETERS][ERR_APPROX_INIT_DIMLESS_FLOW_LINE][Y_LABEL_NAME] = r'$\gamma(\tau)$'
+        common_data_show(experiment_gamma,
+                         self.path_to("initial_data_dimensionless_result"),
+                         "err_flow_line_conbinate_with_central_init",
+                         ERR_APPROX_INIT_DIMLESS_FLOW_LINE,
+                         "err_flow_hist_conbinate_with_central_init",
+                         ERR_APPROX_INIT_DIMLESS_FLOW_HIST,
+                         [self.error_approximate_initial_dimensionless_flow[TIME].values,
+                          # self.error_approximate_initial_dimensionless_flow[FLOW].values,
+                          self.initial_dimensionless_flow[FLOW].values - self.initial_dimensionless_flow[FLOW].values.mean()]
+                         )
+        experiment_gamma_eps = deepcopy(self.experiment)
+        experiment_gamma_eps[PLOT_PARAMETERS][ERR_APPROX_INIT_DIMLESS_FLOW_LINE][Y_LABEL_NAME] = r'$\gamma(\tau), \epsilon(\tau)$'
+        common_data_show(experiment_gamma_eps,
                          self.path_to("initial_data_dimensionless_result"),
                          "err_flow_line_conbinate_with_central_init",
                          ERR_APPROX_INIT_DIMLESS_FLOW_LINE,
@@ -1526,6 +1577,13 @@ class InputFlow04:
         """
         The generation of the initial dimensionless data plot.
         """
+        q_q_data_show(self.experiment,
+                      self.path_to("initial_data_dimensionless_result"),
+                      "generated_flow_q_q_lambda",
+                      INIT_DIMENSIONLESS_FLOW_Q_Q,
+                      [ self.generated_dimensionless_flow[FLOW].values,
+                        self.generated_dimensionless_flow[FLOW].values]
+                      )
         common_data_show(self.experiment,
                          self.path_to(INITIAL_DATA_DIMENSIONLESS_RESULT),
                          "compere_init_generated_flow_line_",
@@ -1536,14 +1594,17 @@ class InputFlow04:
                           self.generated_dimensionless_flow[FLOW].values,
                           self.initial_dimensionless_flow[FLOW].values]
                          )
-        common_data_show(self.experiment,
+
+        experiment = deepcopy(self.experiment)
+        experiment[PLOT_PARAMETERS][INIT_DIMENSIONLESS_FLOW_LINE][Y_LABEL_NAME] = r'$\gamma(\tau)$'
+        common_data_show(experiment,
                          self.path_to(INITIAL_DATA_DIMENSIONLESS_RESULT),
                          "generated_flow_line_",
                          INIT_DIMENSIONLESS_FLOW_LINE,
                          "generated_flow_hist_",
                          INIT_DIMENSIONLESS_FLOW_HIST,
                          [self.generated_dimensionless_flow[TIME].values,
-                          self.generated_dimensionless_flow[FLOW].values]
+                          self.generated_dimensionless_flow[FLOW].values + self.initial_dimensionless_flow[FLOW].mean()]
                          )
         show.common_hist(self.experiment,
                          self.result_data_structure["result_data"] + '/' + self.file_name + '/' + self.result_data_structure["initial_data_dimensionless_result"],
@@ -1587,3 +1648,19 @@ def common_data_show(experiment,
     """
     show.common_line(experiment, path, values, line_file_name_prefix, line_plot_name)
     show.common_hist(experiment, path, values, hist_file_name_prefix, hist_plot_name)
+
+
+def q_q_data_show(experiment,
+                  path,
+                  line_file_name_prefix,
+                  line_plot_name,
+                  values):
+    """
+    Method to construct two graphs from one given data set
+    :param experiment: experiment conditions.
+    :param path: the path to the folder with research.
+    :param line_file_name_prefix: file name prefix for the line plot.
+    :param line_plot_name: the line plot name with parameters from experiment set.
+    :param values: set of plot-values sequence for the building plot.
+    """
+    show.common_q_q(experiment, path, values, line_file_name_prefix, line_plot_name)

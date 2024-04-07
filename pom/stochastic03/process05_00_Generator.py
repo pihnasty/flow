@@ -19,7 +19,7 @@ input_flow = flow.InputFlow04(
       "2023_05_23_dataset_2018_Buy_first_flow"
 )
 turn_on_test = True
-NUMBER_OF_INITIAL_INTERVALS_TO_GENERATE = 16
+NUMBER_OF_INITIAL_INTERVALS_TO_GENERATE = 8
 
 input_flow.initial_load_dimension_data()
 input_flow.initial_dimension_data_show()
@@ -51,7 +51,7 @@ input_flow.initial_correlation_show()
 # input_flow.long_genetator_correlation_show()
 #
 # input_flow.gamma_optimum_spectrum_show()
-# input_flow.paremeter_model_save()
+input_flow.paremeter_model_save()
 
 print()
 #input_flow.test_theory_cor_function_exp_show()

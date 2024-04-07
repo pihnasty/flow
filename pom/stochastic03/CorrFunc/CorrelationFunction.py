@@ -1,3 +1,5 @@
+import copy
+
 import pandas as pd
 
 from pom.stochastic03.utils.Constants import CORRELATION, FLOW, TIME
@@ -60,3 +62,15 @@ class CorrelationFunction:
 
     def get_correlation(self):
         return self.correlation;
+
+    @staticmethod
+    def cut_by_template(template_dim, dim):
+        """
+        Equalizes the size of time intervals.
+
+        :return: correlation function with size of template_dim.
+        """
+        temp_dim = copy.copy(template_dim)
+        for i in range(len(template_dim[TIME])):
+            temp_dim[CORRELATION][i] = dim[CORRELATION][i]
+        return temp_dim

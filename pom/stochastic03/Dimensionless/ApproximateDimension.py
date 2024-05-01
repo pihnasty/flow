@@ -1,12 +1,14 @@
 import copy
 
 from pom.stochastic03.Dimensionless.ApproximateType import ApproximateType
+from pom.stochastic03.Dimensionless.approximate_model.StochasticTelegraphWaveFixedSeparatedIntervalApproximate import \
+    StochasticTelegraphWaveFixedSeparatedIntervalApproximate
 from pom.stochastic03.utils.Constants import FLOW, TIME
 
 
 class ApproximateDimension:
 
-    def __init__(self, dim, approximate_type):
+    def __init__(self, dim, approximate_type, number_of_interval=None):
         self.dim = dim
         self.dim_flow_mean = dim[FLOW].mean()
         self.dim_flow_std = dim[FLOW].std()
@@ -14,11 +16,15 @@ class ApproximateDimension:
         if approximate_type == ApproximateType.STOCHASTIC_TELEGRAPH_WAVE:
             self.approximate_dim, self.approximate_dim_mean, self.approximate_dim_std\
                 = self.approximate_stochastic_telegraph_wave()
+        elif approximate_type == ApproximateType.STOCHASTIC_TELEGRAPH_WAVE_FIXED_SEPARATED_INTERVAL:
+            self.approximate_dim, self.approximate_dim_mean, self.approximate_dim_std\
+                = StochasticTelegraphWaveFixedSeparatedIntervalApproximate(dim, number_of_interval).get_param()
         elif approximate_type == ApproximateType.NONE:
             self.approximate_dim, self.approximate_dim_mean, self.approximate_dim_std= self.approximate_none()
 
         self.error_approximate_dim, self.error_approximate_dim_mean, self.error_approximate_dim_std = self.error_approximate()
         self.tau_sequence = self.create_tau_sequence_for_discrete_flow()
+
     def approximate_stochastic_telegraph_wave(self):
         """
         Approximates the dimension flow by rule stochastic telegraph wave.
@@ -31,6 +37,27 @@ class ApproximateDimension:
             else:
                 approximate_dim[FLOW][i] = self.dim_flow_mean - self.dim_flow_std
         return approximate_dim, approximate_dim[FLOW].mean(), approximate_dim[FLOW].std()
+
+    # def approximate_stochastic_telegraph_wave_fixed_separated_interval(self, number_of_interval):
+    #     """
+    #     Approximates the dimension flow by rule stochastic telegraph wave with fixed separated interval
+    #     (as example, minute interval).
+    #     :return: dimensionless flow
+    #     """
+    #     approximate_temp_dim = copy.copy(self.dim)
+    #     approximate_result_dim = copy.copy(self.dim)
+    #     dim_size = len(self.dim[FLOW])
+    #
+    #     approximate_temp_dim['TIME_bins'] = pd.cut(approximate_temp_dim[TIME], bins=number_of_interval, labels=False)
+    #
+    #     # Group by TIME_bins and calculate mean FLOW for each group
+    #     result = approximate_temp_dim.groupby('TIME_bins').agg({FLOW: 'mean'}).reset_index()
+    #     result.rename(columns={FLOW: 'Mean_FLOW'}, inplace=True)
+    #
+    #     for i in range(dim_size):
+    #         approximate_result_dim[FLOW][i] = result['Mean_FLOW'][approximate_temp_dim['TIME_bins'][i]]
+    #
+    #     return approximate_result_dim, approximate_result_dim[FLOW].mean(), approximate_result_dim[FLOW].std()
 
     def approximate_none(self):
         """

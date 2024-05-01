@@ -6,13 +6,24 @@ import random
 
 from pom.stochastic03.Dimensionless.ApproximateDimension import ApproximateDimension
 from pom.stochastic03.Dimensionless.ApproximateType import ApproximateType
+from pom.stochastic03.Generator.geterate_model.StochasticTelegraphWaveFixedSeparatedIntervalGenerator import \
+    StochasticTelegraphWaveFixedSeparatedIntervalGenerator
 from pom.stochastic03.utils.Constants import FLOW, TIME
 from pom.stochastic03.utils.progress import progress
 
 
 class Generator:
 
-    def __init__(self, dim: object, approximate_type: object, number_of_initial_intervals_to_generate):
+    def __init__(self, dim: object, approximate_type: object, number_of_initial_intervals_to_generate,
+                 approximate_number_of_intervals):
+        """
+
+        :param dim:
+        :param approximate_type:
+        :param number_of_initial_intervals_to_generate:
+        :param approximate_number_of_intervals: number of approximation intervals.
+         Used if the time for the flow is fixed. For example, for the minute measurement input flow.
+        """
         self.dim = dim
         self.dim_flow_mean = dim[FLOW].mean()
         self.dim_flow_std = dim[FLOW].std()
@@ -20,8 +31,13 @@ class Generator:
         self.long_number_examples = number_of_initial_intervals_to_generate * self.dim_number_examples
 
         if approximate_type == ApproximateType.STOCHASTIC_TELEGRAPH_WAVE:
-            self.generated_dim, self.generated_dim_mean, self.generated_dim_std\
+            self.generated_dim, self.generated_dim_mean, self.generated_dim_std \
                 = self.generate_stochastic_telegraph_wave()
+        elif approximate_type == ApproximateType.STOCHASTIC_TELEGRAPH_WAVE_FIXED_SEPARATED_INTERVAL:
+            generator: StochasticTelegraphWaveFixedSeparatedIntervalGenerator \
+                = StochasticTelegraphWaveFixedSeparatedIntervalGenerator(
+                dim, self.long_number_examples, approximate_number_of_intervals)
+            self.generated_dim, self.generated_dim_mean, self.generated_dim_std = generator.get_param()
         elif approximate_type == ApproximateType.NONE:
             self.generated_dim, self.generated_dim_mean, self.generated_dim_std = self.generate_none()
 

@@ -16,7 +16,8 @@ input_flow = flow.InputFlow04(
 #    "2023_05_23_dataset_2021_BhAsHuHoEvCopyForGenerator"
 #       "2023_05_23_dataset_2021_BhAsHuHoEvCopyForGenerator2"
 #       "2023_05_23_dataset_2021_BhAsHuHoEvCopyForGenerator3"
-      "2023_05_23_dataset_2018_Buy_first_flow"
+#      "2023_05_23_dataset_2018_Buy_first_flow"      for article AIS_1
+    "dataset_2021_KaKr"
 )
 turn_on_test = True
 NUMBER_OF_INITIAL_INTERVALS_TO_GENERATE = 8
@@ -25,13 +26,13 @@ input_flow.initial_load_dimension_data()
 input_flow.initial_dimension_data_show()
 input_flow.check_outliers_for_initial_data()
 
-input_flow.transform_initial_dimension_to_dimensionless(DimensionlessType.STD_TIME_M1_1)
+input_flow.transform_initial_dimension_to_dimensionless()
 input_flow.initial_dimensionless_data_show()
 
-input_flow.approximate_dimensionless(ApproximateType.STOCHASTIC_TELEGRAPH_WAVE)
+input_flow.approximate_dimensionless()
 input_flow.approximate_initial_dimensionless_data_show()
-
-input_flow.generate_dimensionless(ApproximateType.STOCHASTIC_TELEGRAPH_WAVE, NUMBER_OF_INITIAL_INTERVALS_TO_GENERATE)
+#===========================================================
+input_flow.generate_dimensionless()
 input_flow.generated_dimensionless_data_show()
 
 input_flow.execute_init_correlation()

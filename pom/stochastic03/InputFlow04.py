@@ -10,10 +10,11 @@ from pom.stochastic03.Generator.Generator import Generator
 from pom.stochastic03.InitData.inizialize_data04 import experiments
 from pom.stochastic03.utils.Constants import CORRELATION, FLOW, TIME, \
     ERR_APPROX_INIT_DIMLESS_FLOW_LINE, ERR_APPROX_INIT_DIMLESS_FLOW_HIST, TAU_SEQUENCE_HIST, \
-    INITIAL_DATA_DIMENSIONLESS_RESULT, G_G2, \
-    INIT_DIMENSIONLESS_FLOW_LINE, INIT_DIMENSIONLESS_FLOW_HIST,INIT_DIMENSIONLESS_FLOW_Q_Q,\
+    INIT_DATA_DIMENSIONLESS_RESULT, G_G2, \
+    INIT_DIMENSIONLESS_FLOW_LINE, INIT_DIMENSIONLESS_FLOW_HIST, INIT_DIMENSIONLESS_FLOW_Q_Q, \
     INIT_CORRELATION_LINE, PLOT_PARAMETERS, PERIOD, \
-    Y_LABEL_NAME
+    Y_LABEL_NAME, MODEL_PARAMETERS, APPROXIMATE_TYPE, NUMBER_OF_INTERVALS, INIT_FLOW_LINE, DIMENSIONLESS_TYPE, \
+    INIT_DATA_DIMENSIONLESS_RESULT__ERROR_ESTIMATE, NUMBER_OF_INITIAL_INTERVALS_TO_GENERATE
 import pandas as pd
 import pom.stochastic03.utils.show as show
 import pom.stochastic03.utils.CorrelationFunctions as cf
@@ -55,33 +56,46 @@ class InputFlow04:
             print("Initial data doesn't upload.")
             return
 
-        initial_dimension_flow_mean = self.initial_dimension_flow['flow'].mean()
-        for n in range(len(self.initial_dimension_flow['flow'])):
-            value = self.initial_dimension_flow['flow'][n]
+        initial_dimension_flow_mean = self.initial_dimension_flow[FLOW].mean()
+        for n in range(len(self.initial_dimension_flow[FLOW])):
+            value = self.initial_dimension_flow[FLOW][n]
             if (value < initial_dimension_flow_mean * 0.0):
-                self.initial_dimension_flow['flow'][n] = initial_dimension_flow_mean
+                self.initial_dimension_flow[FLOW][n] = initial_dimension_flow_mean
 
-    def transform_initial_dimension_to_dimensionless(self, dim_type):
+    def transform_initial_dimension_to_dimensionless(self):
+        dim_type = self.experiment[MODEL_PARAMETERS][DIMENSIONLESS_TYPE]
         self.initial_dimensionless_flow = Dimensionless(self.initial_dimension_flow, dim_type).get_dim_less()
 
-    def approximate_dimensionless(self, approximate_type):
-        approximate_dimension = ApproximateDimension(self.initial_dimensionless_flow, approximate_type)
+    def approximate_dimensionless(self):
+        approximate_type = self.experiment[MODEL_PARAMETERS][APPROXIMATE_TYPE]
+        number_of_intervals: int = self.experiment[MODEL_PARAMETERS].get(NUMBER_OF_INTERVALS, 100)
+        approximate_dimension\
+            = ApproximateDimension(self.initial_dimensionless_flow, approximate_type, number_of_intervals)
         self.approximate_initial_dimensionless_flow = approximate_dimension.get_approximate_dim()
         self.error_approximate_initial_dimensionless_flow = approximate_dimension.get_error_approximate_dim()
         self.approximate_tau_sequence = approximate_dimension.get_tau_sequence()
 
-    def generate_dimensionless(self, approximate_type, long_generate):
-        generated_dimensionless = Generator(self.initial_dimensionless_flow, approximate_type, 1)
+    def generate_dimensionless(self):
+        approximate_type = self.experiment[MODEL_PARAMETERS][APPROXIMATE_TYPE]
+        number_of_initial_intervals_to_generate = self.experiment[MODEL_PARAMETERS][NUMBER_OF_INITIAL_INTERVALS_TO_GENERATE]
+        approximate_number_of_intervals: int = self.experiment[MODEL_PARAMETERS].get(NUMBER_OF_INTERVALS, 100)
+
+        generated_dimensionless\
+            = Generator(self.initial_dimensionless_flow, approximate_type, 1, approximate_number_of_intervals)
         self.generated_dimensionless_flow = generated_dimensionless.get_generated_dim()
         self.generated_tau_sequence = generated_dimensionless.get_tau_sequence()
 
-        long_generated_dimensionless = Generator(self.initial_dimensionless_flow, approximate_type, long_generate)
+        long_generated_dimensionless\
+            = Generator(self.initial_dimensionless_flow,
+                        approximate_type,
+                        number_of_initial_intervals_to_generate,
+                        approximate_number_of_intervals)
         self.long_generated_dimensionless_flow = long_generated_dimensionless.get_generated_dim()
         self.long_generated_tau_sequence = long_generated_dimensionless.get_tau_sequence()
 
     def execute_init_correlation(self):
         self.initial_correlation\
-            = CorrelationFunction(self.initial_dimensionless_flow, self.experiment["period"]).get_correlation()
+            = CorrelationFunction(self.initial_dimensionless_flow, self.experiment[PERIOD]).get_correlation()
         self.approximate_initial_correlation \
             = CorrelationFunction(self.approximate_initial_dimensionless_flow, self.experiment[PERIOD]).get_correlation()
         self.generated_correlation \
@@ -756,11 +770,11 @@ class InputFlow04:
         initial_data_result = self.result_data_structure["initial_data_result"]
         path = result_data + self.file_name + '/' + initial_data_result
 
-        initial_dimension_flows = [self.initial_dimension_flow['time'].values,
-                                   self.initial_dimension_flow['flow'].values]
-        show.common_line(self.experiment, path, initial_dimension_flows, "flow_line_", "initial_flow_line")
-        initial_dimension_flows_for_hist = [self.initial_dimension_flow['time'].values,
-                                            self.initial_dimension_flow['flow'].values]
+        initial_dimension_flows = [self.initial_dimension_flow[TIME].values,
+                                   self.initial_dimension_flow[FLOW].values]
+        show.common_line(self.experiment, path, initial_dimension_flows, "flow_line_", INIT_FLOW_LINE)
+        initial_dimension_flows_for_hist = [self.initial_dimension_flow[TIME].values,
+                                            self.initial_dimension_flow[FLOW].values]
         show.common_hist(self.experiment, path, initial_dimension_flows_for_hist, "flow_hist_", "initial_flow_hist")
 
     def initial_correlation_show(self):
@@ -1489,17 +1503,16 @@ class InputFlow04:
         """
         The approximation of the initial dimensionless data plot.
         """
-
         q_q_data_show(self.experiment,
-                      self.path_to("initial_data_dimensionless_result"),
-                      "flow_q_q_error",
+                      self.path_to(INIT_DATA_DIMENSIONLESS_RESULT),
+                      "q_q_err_flow_",
                       INIT_DIMENSIONLESS_FLOW_Q_Q,
                       [self.error_approximate_initial_dimensionless_flow[FLOW],
                        self.error_approximate_initial_dimensionless_flow[FLOW]]
                       )
         q_q_data_show(self.experiment,
-                      self.path_to("initial_data_dimensionless_result"),
-                      "flow_q_q_lambda",
+                      self.path_to(INIT_DATA_DIMENSIONLESS_RESULT),
+                      "q_q_lambda_flow_",
                       INIT_DIMENSIONLESS_FLOW_Q_Q,
                       [self.initial_dimensionless_flow[FLOW]- self.initial_dimensionless_flow[FLOW].mean(),
                        self.initial_dimensionless_flow[FLOW]- self.initial_dimensionless_flow[FLOW].mean()]
@@ -1509,11 +1522,11 @@ class InputFlow04:
         experiment_gamma_f_gamma_a[PLOT_PARAMETERS][INIT_DIMENSIONLESS_FLOW_LINE][Y_LABEL_NAME]\
             = r'$\gamma_f(\tau), \gamma_a(\tau)$'
         common_data_show(experiment_gamma_f_gamma_a,
-                         self.path_to("initial_data_dimensionless_result"),
-                         "flow_line_",
-                         "initial_dimensionless_flow_line",
-                         "flow_hist_",
-                         "initial_dimensionless_flow_hist",
+                         self.path_to(INIT_DATA_DIMENSIONLESS_RESULT),
+                         "compare_approx_flow_line_",
+                         INIT_DIMENSIONLESS_FLOW_LINE,
+                         "approx_flow_hist_",
+                         INIT_DIMENSIONLESS_FLOW_HIST,
                          [self.approximate_initial_dimensionless_flow[TIME].values,
                           self.approximate_initial_dimensionless_flow[FLOW].values,
                           self.initial_dimensionless_flow[FLOW].values]
@@ -1522,17 +1535,17 @@ class InputFlow04:
         experiment_gamma_a = deepcopy(self.experiment)
         experiment_gamma_a[PLOT_PARAMETERS][INIT_DIMENSIONLESS_FLOW_LINE][Y_LABEL_NAME] = r'$\gamma_a(\tau)$'
         common_data_show(experiment_gamma_a,
-                         self.path_to("initial_data_dimensionless_result"),
-                         "flow_line_",
-                         "initial_dimensionless_flow_line",
-                         "flow_hist_",
-                         "initial_dimensionless_flow_hist",
+                         self.path_to(INIT_DATA_DIMENSIONLESS_RESULT),
+                         "approx_flow_line_",
+                         INIT_DIMENSIONLESS_FLOW_LINE,
+                         "approx_flow_hist_",
+                         INIT_DIMENSIONLESS_FLOW_HIST,  # it don't show
                          [self.approximate_initial_dimensionless_flow[TIME].values,
                           self.approximate_initial_dimensionless_flow[FLOW].values]
                          )
 
         common_data_show(self.experiment,
-                         self.path_to("initial_data_dimensionless_result"),
+                         self.path_to(INIT_DATA_DIMENSIONLESS_RESULT),
                          "err_flow_line_",
                          ERR_APPROX_INIT_DIMLESS_FLOW_LINE,
                          "err_flow_hist_",
@@ -1544,7 +1557,7 @@ class InputFlow04:
         experiment_gamma = deepcopy(self.experiment)
         experiment_gamma[PLOT_PARAMETERS][ERR_APPROX_INIT_DIMLESS_FLOW_LINE][Y_LABEL_NAME] = r'$\gamma(\tau)$'
         common_data_show(experiment_gamma,
-                         self.path_to("initial_data_dimensionless_result"),
+                         self.path_to(INIT_DATA_DIMENSIONLESS_RESULT),
                          "err_flow_line_conbinate_with_central_init",
                          ERR_APPROX_INIT_DIMLESS_FLOW_LINE,
                          "err_flow_hist_conbinate_with_central_init",
@@ -1556,7 +1569,7 @@ class InputFlow04:
         experiment_gamma_eps = deepcopy(self.experiment)
         experiment_gamma_eps[PLOT_PARAMETERS][ERR_APPROX_INIT_DIMLESS_FLOW_LINE][Y_LABEL_NAME] = r'$\gamma(\tau), \epsilon(\tau)$'
         common_data_show(experiment_gamma_eps,
-                         self.path_to("initial_data_dimensionless_result"),
+                         self.path_to(INIT_DATA_DIMENSIONLESS_RESULT__ERROR_ESTIMATE),
                          "err_flow_line_conbinate_with_central_init",
                          ERR_APPROX_INIT_DIMLESS_FLOW_LINE,
                          "err_flow_hist_conbinate_with_central_init",
@@ -1585,7 +1598,7 @@ class InputFlow04:
                         self.generated_dimensionless_flow[FLOW].values]
                       )
         common_data_show(self.experiment,
-                         self.path_to(INITIAL_DATA_DIMENSIONLESS_RESULT),
+                         self.path_to(INIT_DATA_DIMENSIONLESS_RESULT),
                          "compere_init_generated_flow_line_",
                          INIT_DIMENSIONLESS_FLOW_LINE,
                          "compere_init_generated_flow_hist_",
@@ -1598,13 +1611,13 @@ class InputFlow04:
         experiment = deepcopy(self.experiment)
         experiment[PLOT_PARAMETERS][INIT_DIMENSIONLESS_FLOW_LINE][Y_LABEL_NAME] = r'$\gamma(\tau)$'
         common_data_show(experiment,
-                         self.path_to(INITIAL_DATA_DIMENSIONLESS_RESULT),
+                         self.path_to(INIT_DATA_DIMENSIONLESS_RESULT),
                          "generated_flow_line_",
                          INIT_DIMENSIONLESS_FLOW_LINE,
                          "generated_flow_hist_",
                          INIT_DIMENSIONLESS_FLOW_HIST,
                          [self.generated_dimensionless_flow[TIME].values,
-                          self.generated_dimensionless_flow[FLOW].values + self.initial_dimensionless_flow[FLOW].mean()]
+                          self.generated_dimensionless_flow[FLOW].values]
                          )
         show.common_hist(self.experiment,
                          self.result_data_structure["result_data"] + '/' + self.file_name + '/' + self.result_data_structure["initial_data_dimensionless_result"],

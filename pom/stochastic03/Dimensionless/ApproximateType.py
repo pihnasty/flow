@@ -8,4 +8,5 @@ class ApproximateType(Enum):
     """
     NONE = 1
     STOCHASTIC_TELEGRAPH_WAVE = 2
+    STOCHASTIC_TELEGRAPH_WAVE_FIXED_SEPARATED_INTERVAL = 3
 

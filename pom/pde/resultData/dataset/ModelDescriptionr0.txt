@@ -1,0 +1,8 @@
+Dimensionless parameters:               
+tMin       :  0.0000000
+tMax       : 818.0000000
+flowMin    : 14.8649371
+flowMax    : 14.8650571
+flowMean   : 14.8649996
+flowStd    :  0.0000181
+

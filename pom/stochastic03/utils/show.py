@@ -18,16 +18,12 @@ def visual_lines(lines, experiment, plot_name):
     :param plot_name: plot name.
     :return: visualization options.
     """
+    lines_set = []
     numbers = [1] * len(experiment["plot_parameters"][plot_name]["visual_line_set"])
-    for num in range(len(lines)):
+    for num in range(1, len(lines)):
         numbers[num] = experiment["plot_parameters"][plot_name]["visual_line_set"][str(num)]
-    return [
-        lines[numbers[1]]
-        , lines[numbers[2]]
-        , lines[numbers[3]]
-        , lines[numbers[4]]
-        , lines[numbers[5]]
-    ]
+        lines_set.append(lines[numbers[num]])
+    return lines_set
 
 def common_line(
         experiment

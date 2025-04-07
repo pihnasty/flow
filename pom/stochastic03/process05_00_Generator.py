@@ -17,7 +17,8 @@ input_flow = flow.InputFlow04(
 #       "2023_05_23_dataset_2021_BhAsHuHoEvCopyForGenerator2"
 #       "2023_05_23_dataset_2021_BhAsHuHoEvCopyForGenerator3"
 #      "2023_05_23_dataset_2018_Buy_first_flow"      for article AIS_1
-    "dataset_2021_KaKr"
+#       "2023_06_29_dataset_2021_KaKr"                for article AIS_2
+       "2023_07_29_dataset_2020_ZeYaWuWa"                # for article AIS_3
 )
 turn_on_test = True
 NUMBER_OF_INITIAL_INTERVALS_TO_GENERATE = 8
@@ -32,11 +33,11 @@ input_flow.initial_dimensionless_data_show()
 input_flow.approximate_dimensionless()
 input_flow.approximate_initial_dimensionless_data_show()
 #===========================================================
-input_flow.generate_dimensionless()
-input_flow.generated_dimensionless_data_show()
-
-input_flow.execute_init_correlation()
-input_flow.initial_correlation_show()
+# input_flow.generate_dimensionless()
+# input_flow.generated_dimensionless_data_show()
+#
+# input_flow.execute_init_correlation()
+# input_flow.initial_correlation_show()
 
 # input_flow.get_numeric_fourier_coefficients_by_correlation_function()
 # input_flow.get_correlation_function_by_fourier_coefficients()

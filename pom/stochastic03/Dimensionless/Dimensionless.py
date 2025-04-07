@@ -5,12 +5,12 @@ from pom.stochastic03.utils.Constants import FLOW, TIME
 
 class Dimensionless:
 
-    def __init__(self, dim, dim_type):
+    def __init__(self, dim, dim_type, std_for_more_realizations=None):
         self.dim = dim
         self.dim_time_min = dim[TIME].min()
         self.dim_time_max = dim[TIME].max()
         self.dim_flow_mean = dim[FLOW].mean()
-        self.dim_flow_std = dim[FLOW].std()
+        self.dim_flow_std = std_for_more_realizations if std_for_more_realizations is not None else dim[FLOW].std()
 
         if dim_type == DimensionlessType.STD_TIME_M1_1:
             self.dim_less, self.dim_less_mean, self.dim_less_std = self.transform_dim_to_dim_less_by_sdt()

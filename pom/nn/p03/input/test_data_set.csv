@@ -1,0 +1,17 @@
+column_name;domain_name
+customerPhone                ;phone
+LizaPhone                ;phone
+PhoneLiza                ;phone
+PHONE_NUMBERS                ;phone
+WorkPhone                    ;phone
+EMPLOYEE_ID                  ;personal_id
+SUPPLIER_ID                  ;personal_id
+Biometric_ID                 ;personal_id
+customer_id                  ;personal_id
+cust                         ;personal_id
+Password                     ;Other
+Security_Answer              ;Other
+Is_Deleted                   ;Other
+Modified_Date                ;Other
+Time_Stamp                   ;Other
+

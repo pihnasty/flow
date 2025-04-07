@@ -40,7 +40,7 @@ def common_line(
     :param file_name_prefix: file name prefix.
     :param plot_name: the plot name with parameters.
     """
-
+    'E:\\A\\TransportSystem\\src\\main\\resources\\initData/inputFlow'
     file_util.make_dir_if_not(path)
 
     x_values = plot_values[0]

@@ -1,0 +1,16 @@
+column_name;domain_name
+PhoneLiza                ;100
+PHONE_NUMBERS                ;100
+PhoneWorkPlase                   ;100
+EMPLOYEE_ID                  ;010
+SUPPLIER_ID                  ;010
+Biometric_ID                 ;010
+customer_id                  ;010
+cust                         ;010
+Password                     ;001
+Security_Answer              ;001
+Is_Deleted                   ;001
+Modified_Date                ;001
+Time_Stamp                   ;001
+
+

@@ -1,11 +1,7 @@
 import datetime
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
-import matplotlib as mpl
-mpl.rcParams['agg.path.chunksize'] =20_000
-import numpy as np
-import statsmodels.api as sm
-import pylab as plt
+
 
 def visual_lines(lines, experiment, plot_name):
     """
@@ -21,6 +17,8 @@ def visual_lines(lines, experiment, plot_name):
         , lines[experiment["plot_parameters"][plot_name]["visual_line_set"]["3"]]
         , lines[experiment["plot_parameters"][plot_name]["visual_line_set"]["4"]]
         , lines[experiment["plot_parameters"][plot_name]["visual_line_set"]["5"]]
+        , lines[experiment["plot_parameters"][plot_name]["visual_line_set"]["6"]]
+        , lines[experiment["plot_parameters"][plot_name]["visual_line_set"]["7"]]
         # , lines[experiment["plot_parameters"][plot_name]["visual_line_set"]["7"]]
 
     ]
@@ -34,7 +32,7 @@ def mm_to_inch(mm_value):
     """
     return mm_value / 25.4
 
-def q_q_plot(file_name
+def line_plot4(file_name
                , x_values
                , ys_values
                , xlabel_name
@@ -58,10 +56,6 @@ def q_q_plot(file_name
                , _y_size_plot=75
                , _plot_line_width=2
                , _grid_line_width=1.5
-               , _adjust_left=0.12
-               , _adjust_right=0.98
-               , _adjust_top=0.92
-               , _adjust_bottom=0.17
                ):
     """
     Line plot visualization.
@@ -92,7 +86,7 @@ def q_q_plot(file_name
     plt.close('all')
     dates = datetime.datetime.now()
     syffix = dates.strftime("%Y_%m_%d_%H_%M_%S")
-    plt.figure(figsize=(7.90/2.54, 6.00/2.54))
+
     # ==================================================================================================================
     # https://pyprog.pro/mpl/mpl_axis_ticks.html
     # https://www.inp.nsk.su/~grozin/python/python6.html
@@ -100,33 +94,43 @@ def q_q_plot(file_name
     # https://newtechaudit.ru/vizualizacziya-v-python-matplotlib/    #убираем рамку справа
     fig, axis = plt.subplots()
     # https://devpractice.ru/matplotlib-lesson-4-1-viz-linear-chart/
-    i = 1
-
-    # sm.qqplot(ys_values[1], line='45')
-
-    pp = sm.ProbPlot(ys_values[0], fit=True)
-    qq = pp.qqplot(marker='.', markerfacecolor=_y_colors[1], markeredgecolor=_y_colors[1], alpha=0.3)
-    sm.qqline(qq.axes[0], line='45', fmt='k--')
-
-
-    plt.xlim(x_min, x_max)
-    plt.ylim(y1_min, y1_max)
-
+    i = 0
+    for y_values in ys_values:
+        color = _y_colors[i]
+        i = i + 1
+        axis.plot(x_values, y_values, color, alpha=_alpha_main, lw=_plot_line_width)
+    if x_tick_auxiliary > 0:  # Set the interval of the auxiliary ticks:
+        axis.xaxis.set_minor_locator(ticker.MultipleLocator(x_tick_auxiliary))
+    if y_tick_auxiliary > 0:
+        axis.yaxis.set_minor_locator(ticker.MultipleLocator(y_tick_auxiliary))
+    #  Set the interval of the main ticks:
+    if x_tick_main > 0:
+        axis.xaxis.set_major_locator(ticker.MultipleLocator(x_tick_main))
+    if y_tick_main > 0:
+        axis.yaxis.set_major_locator(ticker.MultipleLocator(y_tick_main))
     # ==================================================================================================================
-    plt.grid(True, color='black', alpha=_alpha_main)
+    plt.grid(True, color=_color, alpha=_alpha_grid, lw=_grid_line_width)
     plt.xlabel(xlabel_name, fontsize=_fontsize, loc='right')
-    plt.ylabel(title, fontsize=_fontsize, loc='top')
-    # plt.title(title
-    #           # , fontweight ="bold"
-    #           , fontsize=_fontsize, loc='left')
+    plt.xlim(min(x_values), max(x_values))  # set xMin, xMax
+    plt.ylim(min(ys_values[0]), max(ys_values[0]))  # set yMin, yMax
 
     plt.xticks(fontsize=_fontsize)
+    plt.ylim(0)
+    if x_max > 0.0:
+        plt.xlim(x_min, x_max)
+    if y1_max > 0.0:
+        plt.ylim(y1_min, y1_max)
+    # plt.yticks(np.linspace(0, 0.0006, 11))
     plt.yticks(fontsize=_fontsize)
-    plt.tight_layout(pad=1.5)  # tight_layout() can take keyword arguments of pad, w_pad and h_pad
+    plt.tight_layout(pad=3.0)  # tight_layout() can take keyword arguments of pad, w_pad and h_pad
     plt.rcParams['axes.xmargin'] = 0  # offset of the axes from the origin, given by xMin, xMax, yMin, yMax
     plt.rcParams['axes.ymargin'] = 0  # offset of the axes from the origin, given by xMin, xMax, yMin, yMax
-
-    # Reduce the plot border
-    plt.subplots_adjust(left=_adjust_left, right=_adjust_right, top=_adjust_top, bottom=_adjust_bottom)
+    plt.title(title
+              # , fontweight ="bold"
+              , fontsize=_fontsize, loc='left')
+    if x_axis_order == "back":
+        plt.gca().invert_xaxis()
+    fig.set_figwidth(mm_to_inch(_x_size_plot))
+    fig.set_figheight(mm_to_inch(_y_size_plot))
     plt.savefig(file_name + syffix + ".jpeg", dpi=_dpi)
     plt.show()

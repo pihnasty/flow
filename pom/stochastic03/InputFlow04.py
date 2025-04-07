@@ -1,20 +1,30 @@
 import logging
 import math
 import random
-from copy import copy, deepcopy
+import time
+
+from numpy import mean, std
+
+from copy import deepcopy
+
+
 
 from pom.stochastic03.CorrFunc.CorrelationFunction import CorrelationFunction
 from pom.stochastic03.Dimensionless.ApproximateDimension import ApproximateDimension
+from pom.stochastic03.Dimensionless.ApproximateType import ApproximateType
 from pom.stochastic03.Dimensionless.Dimensionless import Dimensionless
+from pom.stochastic03.Dimensionless.approximate_model.SpectrumWithMoreRealizationApproximate import \
+    SpectrumWithMoreRealizationApproximate
 from pom.stochastic03.Generator.Generator import Generator
 from pom.stochastic03.InitData.inizialize_data04 import experiments
 from pom.stochastic03.utils.Constants import CORRELATION, FLOW, TIME, \
     ERR_APPROX_INIT_DIMLESS_FLOW_LINE, ERR_APPROX_INIT_DIMLESS_FLOW_HIST, TAU_SEQUENCE_HIST, \
-    INIT_DATA_DIMENSIONLESS_RESULT, G_G2, \
+    INIT_DATA_DIMENSIONLESS_RESULT, G_G2, RESULT_DATA, \
     INIT_DIMENSIONLESS_FLOW_LINE, INIT_DIMENSIONLESS_FLOW_HIST, INIT_DIMENSIONLESS_FLOW_Q_Q, \
     INIT_CORRELATION_LINE, PLOT_PARAMETERS, PERIOD, \
     Y_LABEL_NAME, MODEL_PARAMETERS, APPROXIMATE_TYPE, NUMBER_OF_INTERVALS, INIT_FLOW_LINE, DIMENSIONLESS_TYPE, \
-    INIT_DATA_DIMENSIONLESS_RESULT__ERROR_ESTIMATE, NUMBER_OF_INITIAL_INTERVALS_TO_GENERATE
+    INIT_DATA_DIMENSIONLESS_RESULT__ERROR_ESTIMATE, NUMBER_OF_INITIAL_INTERVALS_TO_GENERATE, \
+    NUMBER_OF_HARMONICS, HARMONIC_VALUES_HIST
 import pandas as pd
 import pom.stochastic03.utils.show as show
 import pom.stochastic03.utils.CorrelationFunctions as cf
@@ -29,6 +39,7 @@ class InputFlow04:
         self.initial_dimensionless_flow = None
         self.initial_dimension_flow = None
         self.experiment = experiments[experiment_name]  # experiment: experiment conditions.
+        self.model_parameters = self.experiment[MODEL_PARAMETERS]
         self.create_project_structure()
         self.correlation_addition_time = self.experiment["correlation_addition_time"]
         self.numberExamples = 0
@@ -63,17 +74,24 @@ class InputFlow04:
                 self.initial_dimension_flow[FLOW][n] = initial_dimension_flow_mean
 
     def transform_initial_dimension_to_dimensionless(self):
-        dim_type = self.experiment[MODEL_PARAMETERS][DIMENSIONLESS_TYPE]
-        self.initial_dimensionless_flow = Dimensionless(self.initial_dimension_flow, dim_type).get_dim_less()
+        dim_type = self.model_parameters[DIMENSIONLESS_TYPE]
+        if self.model_parameters[APPROXIMATE_TYPE] == ApproximateType.SPECTRUM_WITH_MORE_REALIZATION:
+            dim, mean, std = SpectrumWithMoreRealizationApproximate(self.initial_dimension_flow,
+                                                          self.model_parameters[NUMBER_OF_INTERVALS],
+                                                          self.model_parameters[NUMBER_OF_HARMONICS]).get_param()
+            self.initial_dimensionless_flow\
+                = Dimensionless(self.initial_dimension_flow, dim_type,std).get_dim_less()
+        else:
+            self.initial_dimensionless_flow = Dimensionless(self.initial_dimension_flow, dim_type).get_dim_less()
 
     def approximate_dimensionless(self):
-        approximate_type = self.experiment[MODEL_PARAMETERS][APPROXIMATE_TYPE]
-        number_of_intervals: int = self.experiment[MODEL_PARAMETERS].get(NUMBER_OF_INTERVALS, 100)
-        approximate_dimension\
-            = ApproximateDimension(self.initial_dimensionless_flow, approximate_type, number_of_intervals)
-        self.approximate_initial_dimensionless_flow = approximate_dimension.get_approximate_dim()
-        self.error_approximate_initial_dimensionless_flow = approximate_dimension.get_error_approximate_dim()
-        self.approximate_tau_sequence = approximate_dimension.get_tau_sequence()
+        self.approximate_dimension = ApproximateDimension(self.initial_dimensionless_flow,
+                                                     self.model_parameters[APPROXIMATE_TYPE],
+                                                     self.model_parameters.get(NUMBER_OF_INTERVALS, 100),
+                                                     self.model_parameters.get(NUMBER_OF_HARMONICS, 10))
+        self.approximate_initial_dimensionless_flow = self.approximate_dimension.get_approximate_dim()
+        self.error_approximate_initial_dimensionless_flow = self.approximate_dimension.get_error_approximate_dim()
+        self.approximate_tau_sequence = self.approximate_dimension.get_tau_sequence()
 
     def generate_dimensionless(self):
         approximate_type = self.experiment[MODEL_PARAMETERS][APPROXIMATE_TYPE]
@@ -764,7 +782,7 @@ class InputFlow04:
 
     # =======================================================================================================================
     def initial_dimension_data_show(self):
-        result_data = self.result_data_structure["result_data"] + '/'
+        result_data = self.result_data_structure[RESULT_DATA] + '/'
 
         # :param sub_directory_name: the name of the directory where the visualization data is located.
         initial_data_result = self.result_data_structure["initial_data_result"]
@@ -822,7 +840,7 @@ class InputFlow04:
                          INIT_CORRELATION_LINE)
 
     def correlation_by_fourier_coefficients_show(self):
-        result_data = self.result_data_structure["result_data"] + '/'
+        result_data = self.result_data_structure[RESULT_DATA] + '/'
         initial_data_result = self.result_data_structure["g_g2_result"]
         path = result_data + self.file_name + '/' + initial_data_result
         correlation_by_fourier_s = [self.correlation_by_fourier_coefficients['time'].values,
@@ -832,7 +850,7 @@ class InputFlow04:
                          "initial_correlation_line")
 
     def generator_dimensionless_data_show(self):
-        result_data = self.result_data_structure["result_data"] + '/'
+        result_data = self.result_data_structure[RESULT_DATA] + '/'
 
         # :param sub_directory_name: the name of the directory where the visualization data is located.
         initial_data_result = self.result_data_structure["initial_data_dimensionless_result"]
@@ -856,7 +874,7 @@ class InputFlow04:
                          "long_generator_flow_hist_", "initial_dimensionless_flow_hist")
 
     def genetator_correlation_show(self):
-        result_data = self.result_data_structure["result_data"] + '/'
+        result_data = self.result_data_structure[RESULT_DATA] + '/'
         initial_data_result = self.result_data_structure["g_g2_result"]
         path = result_data + self.file_name + '/' + initial_data_result
         genetator_correlation_s = [self.genetator_correlation['time'].values,
@@ -875,7 +893,7 @@ class InputFlow04:
         print(self.initial_dimensionless_flow['flow'].std())
 
     def long_genetator_correlation_show(self):
-        result_data = self.result_data_structure["result_data"] + '/'
+        result_data = self.result_data_structure[RESULT_DATA] + '/'
         initial_data_result = self.result_data_structure["g_g2_result"]
         path = result_data + self.file_name + '/' + initial_data_result
         long_genetator_correlation_s = [self.long_genetator_correlation['time'].values,
@@ -894,7 +912,7 @@ class InputFlow04:
         print('initial_dimensionless_flow.std()        ', self.initial_dimensionless_flow['flow'].std())
 
     def gamma_optimum_spectrum_show(self):
-        result_data = self.result_data_structure["result_data"] + '/'
+        result_data = self.result_data_structure[RESULT_DATA] + '/'
         initial_data_result = self.result_data_structure["gamma_optimal_s"]
         path = result_data + self.file_name + '/' + initial_data_result
 
@@ -911,7 +929,7 @@ class InputFlow04:
                         "gamma_optimum_s_bar")
 
     def gamma_optimum_s_show(self):
-        result_data = self.result_data_structure["result_data"] + '/'
+        result_data = self.result_data_structure[RESULT_DATA] + '/'
         initial_data_result = self.result_data_structure["gamma_optimal_s"]
         path = result_data + self.file_name + '/' + initial_data_result
 
@@ -922,7 +940,7 @@ class InputFlow04:
                          "gamma_optimum_s_hist")
 
     def gamma_optimum_d_show(self):
-        result_data = self.result_data_structure["result_data"] + '/'
+        result_data = self.result_data_structure[RESULT_DATA] + '/'
         initial_data_result = self.result_data_structure["gamma_optimal_s"]
         path = result_data + self.file_name + '/' + initial_data_result
 
@@ -930,21 +948,21 @@ class InputFlow04:
         show.common_line(self.experiment, path, gamma_optimum_d_s, "gamma_optimum_d_line_", "gamma_optimum_d_line")
 
     def g_g2_show(self):
-        result_data = self.result_data_structure["result_data"] + '/'
+        result_data = self.result_data_structure[RESULT_DATA] + '/'
         initial_data_result = self.result_data_structure["g_g2_result"]
         path = result_data + self.file_name + '/' + initial_data_result
         gamma1_gamma2s = [self.gamma1_gamma2['time'].values, self.gamma1_gamma2['gg1'].values]
         show.common_line(self.experiment, path, gamma1_gamma2s, "gamma1_gamma2_", "g_g2_line")
 
     def initial_correlation_ideal_show(self):
-        result_data = self.result_data_structure["result_data"] + '/'
+        result_data = self.result_data_structure[RESULT_DATA] + '/'
         initial_data_result = self.result_data_structure["g_g2_result"]
         path = result_data + self.file_name + '/' + initial_data_result
         initial_correlation = [self.initial_correlation['time'].values, self.initial_correlation['correlation'].values]
         show.common_line(self.experiment, path, initial_correlation, "initial_correlation_", "initial_correlation_line")
 
     def optimal_correlation_aproximate_show(self):
-        result_data = self.result_data_structure["result_data"] + '/'
+        result_data = self.result_data_structure[RESULT_DATA] + '/'
         initial_data_result = self.result_data_structure["g_g2_result"]
         path = result_data + self.file_name + '/' + initial_data_result
         optimal_correlation_aproximate_s = [self.optimal_correlation_aproximate['time'].values,
@@ -953,7 +971,7 @@ class InputFlow04:
                          "initial_correlation_line")
 
     def optimal_correlation_ideal_show(self):
-        result_data = self.result_data_structure["result_data"] + '/'
+        result_data = self.result_data_structure[RESULT_DATA] + '/'
         initial_data_result = self.result_data_structure["g_g2_result"]
         path = result_data + self.file_name + '/' + initial_data_result
         optimal_correlation_ideal_s = [self.optimal_correlation_ideal['time'].values,
@@ -962,7 +980,7 @@ class InputFlow04:
                          "initial_correlation_line")
 
     def test_theory_cor_function_exp_show(self):
-        result_data = self.result_data_structure["result_data"] + '/'
+        result_data = self.result_data_structure[RESULT_DATA] + '/'
         initial_data_result = self.result_data_structure["test_theory_cor_function_exp"]
         path = result_data + self.file_name + '/' + initial_data_result
         theory_cor_function_exp = [self.theory_cor_function_exp['time'].values,
@@ -1035,7 +1053,7 @@ class InputFlow04:
                          "fourier_series_delta_continuous_cor_func_", "test_theory_delta_cor_function_exp_line")
 
     def test_theory_cor_function_exp_1_plus_tau_show(self):
-        result_data = self.result_data_structure["result_data"] + '/'
+        result_data = self.result_data_structure[RESULT_DATA] + '/'
         initial_data_result = self.result_data_structure["test_theory_cor_function_exp_1_plus_tau"]
         path = result_data + self.file_name + '/' + initial_data_result
         theory_cor_function_exp_1_plus_tau = [self.theory_cor_function_exp_1_plus_tau['time'].values,
@@ -1092,7 +1110,7 @@ class InputFlow04:
                          "fourier_series_delta_numeric_cor_func_1_plus_tau_", "test_theory_delta_cor_function_exp_line")
 
     def test_theory_cor_function_exp_1_minus_tau_show(self):
-        result_data = self.result_data_structure["result_data"] + '/'
+        result_data = self.result_data_structure[RESULT_DATA] + '/'
         initial_data_result = self.result_data_structure["test_theory_cor_function_exp_1_minus_tau"]
         path = result_data + self.file_name + '/' + initial_data_result
         theory_cor_function_exp_1_minus_tau = [self.theory_cor_function_exp_1_minus_tau['time'].values,
@@ -1151,7 +1169,7 @@ class InputFlow04:
                          "test_theory_delta_cor_function_exp_line")
 
     def test_theory_cor_function_exp_cos_betta_tau_show(self):
-        result_data = self.result_data_structure["result_data"] + '/'
+        result_data = self.result_data_structure[RESULT_DATA] + '/'
         initial_data_result = self.result_data_structure["test_theory_cor_function_exp_cos_betta_tau"]
         path = result_data + self.file_name + '/' + initial_data_result
         theory_cor_function_exp_cos_betta_tau = [self.theory_cor_function_exp_cos_betta_tau['time'].values,
@@ -1347,7 +1365,7 @@ class InputFlow04:
 
     def initial_dimensionless_data_correct_show2(self):
         print("\ninitial_dimensionless_data_correct_show2 ")
-        result_data = self.result_data_structure["result_data"] + '/'
+        result_data = self.result_data_structure[RESULT_DATA] + '/'
 
         # :param sub_directory_name: the name of the directory where the visualization data is located.
         initial_data_result = self.result_data_structure["initial_data_dimensionless_result2"]
@@ -1363,14 +1381,14 @@ class InputFlow04:
                          "initial_dimensionless_flow_hist2")
 
     def g_g2_correct_show(self):
-        result_data = self.result_data_structure["result_data"] + '/'
+        result_data = self.result_data_structure[RESULT_DATA] + '/'
         initial_data_result = self.result_data_structure["g_g2_result"]
         path = result_data + self.file_name + '/' + initial_data_result
         gamma1_gamma2s_correct = [self.gamma1_gamma2_correct['time'].values, self.gamma1_gamma2_correct['gg1'].values]
         show.common_line(self.experiment, path, gamma1_gamma2s_correct, "gamma1_gamma2_correct_", "g_g2_line")
 
     def initial_correlation_part_first_show(self):
-        result_data = self.result_data_structure["result_data"] + '/'
+        result_data = self.result_data_structure[RESULT_DATA] + '/'
         initial_data_result = self.result_data_structure["g_g2_result"]
         path = result_data + self.file_name + '/' + initial_data_result
         initial_correlation_part_firsts = [self.initial_correlation_part_first['time'].values,
@@ -1379,7 +1397,7 @@ class InputFlow04:
                          "initial_correlation_part_first_line")
 
     def initial_correlation_part_first_correct_show(self):
-        result_data = self.result_data_structure["result_data"] + '/'
+        result_data = self.result_data_structure[RESULT_DATA] + '/'
         initial_data_result = self.result_data_structure["g_g2_result"]
         path = result_data + self.file_name + '/' + initial_data_result
         initial_correlation_part_firsts_correct = [self.initial_correlation_part_first_correct['time'].values,
@@ -1389,7 +1407,7 @@ class InputFlow04:
                          "initial_correlation_part_first_correct_", "initial_correlation_part_first_line")
 
     def initial_correlation_part_second_show(self):
-        result_data = self.result_data_structure["result_data"] + '/'
+        result_data = self.result_data_structure[RESULT_DATA] + '/'
         initial_data_result = self.result_data_structure["g_g2_result"]
         path = result_data + self.file_name + '/' + initial_data_result
         initial_correlation_part_seconds = [self.initial_correlation_part_second['time'].values,
@@ -1398,7 +1416,7 @@ class InputFlow04:
                          "initial_correlation_part_first_line")
 
     def initial_correlation_part_second_correct_show(self):
-        result_data = self.result_data_structure["result_data"] + '/'
+        result_data = self.result_data_structure[RESULT_DATA] + '/'
         initial_data_result = self.result_data_structure["g_g2_result"]
         path = result_data + self.file_name + '/' + initial_data_result
         initial_correlation_part_seconds_correct = [self.initial_correlation_part_second_correct['time'].values,
@@ -1408,7 +1426,7 @@ class InputFlow04:
                          "initial_correlation_part_second_correct_", "initial_correlation_part_first_line")
 
     def paremeter_model_save(self):
-        result_data = self.result_data_structure["result_data"] + '/'
+        result_data = self.result_data_structure[RESULT_DATA] + '/'
         initial_data_result = self.result_data_structure["g_g2_result"]
         path_file = result_data + self.file_name + "\ModelDescription.txt"
 
@@ -1508,6 +1526,7 @@ class InputFlow04:
                       "q_q_err_flow_",
                       INIT_DIMENSIONLESS_FLOW_Q_Q,
                       [self.error_approximate_initial_dimensionless_flow[FLOW],
+                       self.error_approximate_initial_dimensionless_flow[FLOW],
                        self.error_approximate_initial_dimensionless_flow[FLOW]]
                       )
         q_q_data_show(self.experiment,
@@ -1580,11 +1599,62 @@ class InputFlow04:
                          )
 
         show.common_hist(self.experiment,
-                         self.result_data_structure["result_data"] + '/' + self.file_name + '/' + self.result_data_structure["initial_data_dimensionless_result"],
+                         self.result_data_structure[RESULT_DATA] + '/' + self.file_name + '/' + self.result_data_structure["initial_data_dimensionless_result"],
                          [self.approximate_tau_sequence, self.approximate_tau_sequence],
                          "tau_sequence_approximate_hist_",
                          TAU_SEQUENCE_HIST,
                          )
+
+        if self.model_parameters[APPROXIMATE_TYPE] == ApproximateType.SPECTRUM_WITH_MORE_REALIZATION:
+            approximate_dimension = ApproximateDimension(self.initial_dimensionless_flow,
+                                                              self.model_parameters[APPROXIMATE_TYPE],
+                                                              20,
+                                                              10)
+
+            mean_approximate_dimension = approximate_dimension.get_mean_approximate_dim()
+
+            experiment_gamma_a = deepcopy(self.experiment)
+            experiment_gamma_a[PLOT_PARAMETERS][INIT_DIMENSIONLESS_FLOW_LINE][Y_LABEL_NAME] = r'$\gamma_a(\tau)$'
+            # experiment_gamma_a[PLOT_PARAMETERS][INIT_DIMENSIONLESS_FLOW_LINE]["x_min"] = -0.1
+            # experiment_gamma_a[PLOT_PARAMETERS][INIT_DIMENSIONLESS_FLOW_LINE]["x_max"] = 0.1
+            # experiment_gamma_a[PLOT_PARAMETERS][INIT_DIMENSIONLESS_FLOW_LINE]["x_tick_main"] = 0.05
+            common_data_show(experiment_gamma_a,
+                             self.path_to(INIT_DATA_DIMENSIONLESS_RESULT),
+                             "mean_approx_flow_line_",
+                             INIT_DIMENSIONLESS_FLOW_LINE,
+                             "mean_approx_flow_hist_",
+                             INIT_DIMENSIONLESS_FLOW_HIST,  # it don't show
+                             [mean_approximate_dimension[TIME].values,
+                              mean_approximate_dimension[FLOW].values]
+                             )
+
+
+
+
+            transposed_matrix_cos, transposed_matrix_sin = approximate_dimension.get_transposed_matrix()
+            path = (self.result_data_structure[RESULT_DATA] + '/' + self.file_name + '/'
+                    + self.result_data_structure[INIT_DATA_DIMENSIONLESS_RESULT]) + '/' + HARMONIC_VALUES_HIST
+            for num in range(len(transposed_matrix_cos)):
+                # m1 = mean(transposed_matrix_sin[num])
+                # m2 = std(transposed_matrix_sin[num])
+                # m3 = min(transposed_matrix_sin[num])
+                # m4 = max(transposed_matrix_sin[num])
+                time.sleep(20)
+                show.common_hist(self.experiment,
+                                 path,
+                                 [transposed_matrix_cos[num], transposed_matrix_cos[num]],
+                                 "transposed_matrix_cos_" + str(num) + "_",
+                                 HARMONIC_VALUES_HIST,
+                                 )
+            for num in range(1, len(transposed_matrix_sin)):
+                time.sleep(20)
+                show.common_hist(self.experiment,
+                                 path,
+                                 [transposed_matrix_sin[num], transposed_matrix_sin[num]],
+                                 "transposed_matrix_sin_" + str(num) + "_",
+                                 HARMONIC_VALUES_HIST,
+                                 )
+
 
     def generated_dimensionless_data_show(self):
         """
@@ -1620,13 +1690,13 @@ class InputFlow04:
                           self.generated_dimensionless_flow[FLOW].values]
                          )
         show.common_hist(self.experiment,
-                         self.result_data_structure["result_data"] + '/' + self.file_name + '/' + self.result_data_structure["initial_data_dimensionless_result"],
+                         self.result_data_structure[RESULT_DATA] + '/' + self.file_name + '/' + self.result_data_structure["initial_data_dimensionless_result"],
                          [self.generated_tau_sequence, self.generated_tau_sequence],
                          "tau_sequence_genarated_hist_",
                          TAU_SEQUENCE_HIST,
                          )
         show.common_hist(self.experiment,
-                         self.result_data_structure["result_data"] + '/' + self.file_name + '/' + self.result_data_structure["initial_data_dimensionless_result"],
+                         self.result_data_structure[RESULT_DATA] + '/' + self.file_name + '/' + self.result_data_structure["initial_data_dimensionless_result"],
                          [self.long_generated_tau_sequence, self.long_generated_tau_sequence],
                          "tau_sequence_long_genarated_hist_",
                          TAU_SEQUENCE_HIST,
@@ -1638,7 +1708,7 @@ class InputFlow04:
         :param source_folder: the folder with research.
         :return: the path to the folder with research.
         """
-        return self.result_data_structure["result_data"] + '/' + self.file_name + '/' + self.result_data_structure[
+        return self.result_data_structure[RESULT_DATA] + '/' + self.file_name + '/' + self.result_data_structure[
             source_folder]
 
 

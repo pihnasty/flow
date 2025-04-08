@@ -2,7 +2,8 @@ import copy
 
 import pandas as pd
 
-from pom.stochastic03.utils.Constants import CORRELATION, FLOW, TIME
+from common_utils.flow_constants import TIME, FLOW
+from pom.stochastic03.utils.Constants import CORRELATION
 from pom.stochastic03.utils.progress import progress
 
 class CorrelationFunction:

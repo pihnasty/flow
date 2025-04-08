@@ -1,7 +1,7 @@
 import math
 from copy import deepcopy
 
-from pom.stochastic03.utils.Constants import TIME, FLOW
+from common_utils.flow_constants import TIME, FLOW
 
 
 def search(f, f_value, i_left, i_reight):

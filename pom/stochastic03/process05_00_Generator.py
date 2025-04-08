@@ -2,9 +2,6 @@ import sys
 import InputFlow04 as flow
 from datetime import datetime
 
-from pom.stochastic03.Dimensionless.ApproximateType import ApproximateType
-from pom.stochastic03.Dimensionless.DimensionlessType import DimensionlessType
-
 start_time = datetime.now()
 
 input_flow = flow.InputFlow04(

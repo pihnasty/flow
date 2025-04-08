@@ -1,30 +1,28 @@
-import logging
 import math
 import random
 import time
 
-from numpy import mean, std
-
 from copy import deepcopy
 
-
-
+from common_utils.dim_less.dimensionless import Dimensionless
+from common_utils.flow_constants import CUSTOM_FLOW_VALUE, CUSTOM_TIME_VALUE, FLOW, DIMENSIONLESS_TYPE, \
+    APPROXIMATE_TYPE, NUMBER_OF_INTERVALS, NUMBER_OF_HARMONICS, MODEL_PARAMETERS, \
+    NUMBER_OF_INITIAL_INTERVALS_TO_GENERATE, TIME, STD
 from pom.stochastic03.CorrFunc.CorrelationFunction import CorrelationFunction
-from pom.stochastic03.Dimensionless.ApproximateDimension import ApproximateDimension
-from pom.stochastic03.Dimensionless.ApproximateType import ApproximateType
-from pom.stochastic03.Dimensionless.Dimensionless import Dimensionless
-from pom.stochastic03.Dimensionless.approximate_model.SpectrumWithMoreRealizationApproximate import \
+from common_utils.approximate_model import ApproximateDimension
+from common_utils.approximate_model.approximate_type import ApproximateType
+from common_utils.approximate_model.SpectrumWithMoreRealizationApproximate import \
     SpectrumWithMoreRealizationApproximate
 from pom.stochastic03.Generator.Generator import Generator
 from pom.stochastic03.InitData.inizialize_data04 import experiments
-from pom.stochastic03.utils.Constants import CORRELATION, FLOW, TIME, \
+from pom.stochastic03.utils.Constants import CORRELATION, \
     ERR_APPROX_INIT_DIMLESS_FLOW_LINE, ERR_APPROX_INIT_DIMLESS_FLOW_HIST, TAU_SEQUENCE_HIST, \
     INIT_DATA_DIMENSIONLESS_RESULT, G_G2, RESULT_DATA, \
     INIT_DIMENSIONLESS_FLOW_LINE, INIT_DIMENSIONLESS_FLOW_HIST, INIT_DIMENSIONLESS_FLOW_Q_Q, \
     INIT_CORRELATION_LINE, PLOT_PARAMETERS, PERIOD, \
-    Y_LABEL_NAME, MODEL_PARAMETERS, APPROXIMATE_TYPE, NUMBER_OF_INTERVALS, INIT_FLOW_LINE, DIMENSIONLESS_TYPE, \
-    INIT_DATA_DIMENSIONLESS_RESULT__ERROR_ESTIMATE, NUMBER_OF_INITIAL_INTERVALS_TO_GENERATE, \
-    NUMBER_OF_HARMONICS, HARMONIC_VALUES_HIST
+    Y_LABEL_NAME, INIT_FLOW_LINE, \
+    INIT_DATA_DIMENSIONLESS_RESULT__ERROR_ESTIMATE, \
+    HARMONIC_VALUES_HIST
 import pandas as pd
 import pom.stochastic03.utils.show as show
 import pom.stochastic03.utils.CorrelationFunctions as cf
@@ -75,14 +73,28 @@ class InputFlow04:
 
     def transform_initial_dimension_to_dimensionless(self):
         dim_type = self.model_parameters[DIMENSIONLESS_TYPE]
+        custom_flow_value = self.model_parameters[CUSTOM_FLOW_VALUE]
+        custom_time_value = self.model_parameters[CUSTOM_TIME_VALUE]
         if self.model_parameters[APPROXIMATE_TYPE] == ApproximateType.SPECTRUM_WITH_MORE_REALIZATION:
             dim, mean, std = SpectrumWithMoreRealizationApproximate(self.initial_dimension_flow,
                                                           self.model_parameters[NUMBER_OF_INTERVALS],
                                                           self.model_parameters[NUMBER_OF_HARMONICS]).get_param()
-            self.initial_dimensionless_flow\
-                = Dimensionless(self.initial_dimension_flow, dim_type,std).get_dim_less()
+            self.initial_dimensionless_flow = Dimensionless(
+                self.initial_dimension_flow,
+                dim_type,
+                {
+                    STD: std,
+                    CUSTOM_FLOW_VALUE: custom_flow_value,
+                    CUSTOM_TIME_VALUE: custom_time_value}
+            ).get_dim_less()
         else:
-            self.initial_dimensionless_flow = Dimensionless(self.initial_dimension_flow, dim_type).get_dim_less()
+            self.initial_dimensionless_flow = Dimensionless(
+                self.initial_dimension_flow,
+                dim_type,
+                {
+                    CUSTOM_FLOW_VALUE: custom_flow_value,
+                    CUSTOM_TIME_VALUE: custom_time_value}
+            ).get_dim_less()
 
     def approximate_dimensionless(self):
         self.approximate_dimension = ApproximateDimension(self.initial_dimensionless_flow,

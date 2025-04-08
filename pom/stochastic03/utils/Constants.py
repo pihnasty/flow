@@ -1,19 +1,8 @@
 CORRELATION = "correlation"
-FLOW = "flow"
 PERIOD = "period"
-TIME = "time"
 
 ERR_APPROX_INIT_DIMLESS_FLOW_LINE = "err_approximate_init_dimless_flow_line"
 ERR_APPROX_INIT_DIMLESS_FLOW_HIST = "err_approximate_init_dimless_flow_hist"
-
-# model template
-MODEL_PARAMETERS = "model_parameters"
-APPROXIMATE_TYPE = "approximate_type"
-DIMENSIONLESS_TYPE = "dimensionless_type"
-NUMBER_OF_INTERVALS = "number_of_intervals"
-NUMBER_OF_INITIAL_INTERVALS_TO_GENERATE = "number_of_initial_intervals_to_generate"
-NUMBER_OF_SPECTRUM_SPLIT_PARTS = "number_of_spectrum_split_parts"
-NUMBER_OF_HARMONICS = "number_of_harmonics"
 
 # plot template
 INIT_DIMENSIONLESS_FLOW_LINE = "initial_dimensionless_flow_line"

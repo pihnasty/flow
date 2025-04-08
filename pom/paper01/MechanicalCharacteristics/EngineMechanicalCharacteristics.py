@@ -1,7 +1,7 @@
 import math
 
 import pom.stochastic03.utils.FileUtil as file_util
-import pom.stochastic03.Graphics.LineCharts.LineChart as line_chart
+import common_utils.Graphics.LineCharts.LineChart as line_chart
 import pandas as pd
 class EngineMechanicalCharacteristics:
     """

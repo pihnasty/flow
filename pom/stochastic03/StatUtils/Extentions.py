@@ -1,5 +1,4 @@
 import math
-import pom.stochastic03.Graphics.LineCharts.LineChart as lineChart
 import pom.stochastic03.utils.FileUtil as fileUtil
 from pom.stochastic03.utils.progress import progress
 import numpy as np
@@ -58,7 +57,7 @@ def c1_plot(fileName, fontsize):
     fileUtil.make_dir_if_not(path)
     columName ='flow_c1_tau'
 
-    lineChart.linePlot(path + '/' + columName
+    LineChart.linePlot(path + '/' + columName
                        , c1_tau[0]
                        , c1_tau[1]
                        , c1_tau[1]
@@ -374,11 +373,11 @@ def c0_show_k0(fileName
     fileUtil.make_dir_if_not(path)
     columName ='flow_autoKorelation_k0_'
     xlabelName = r'$\vartheta$'
-    lineChart.linePlot(path + '/' + columName, autoKorelationCoeffitient[0]
+    LineChart.linePlot(path + '/' + columName, autoKorelationCoeffitient[0]
                        # , autoKorelationCoeffitient[1], autoKorelationCoeffitient[2], xlabelName, r'k($\vartheta$) ', 0.7, _dpi=600
                        , autoKorelationCoeffitient[1], autoKorelationCoeffitient[1], xlabelName, r'k($\vartheta$) ',
                        0.7, _dpi=600
-                       , xMax=1.0 # d_auto_korelation_centered_mass['time'].max()
+                       , xMax=1.0  # d_auto_korelation_centered_mass['time'].max()
                        , y1Min=min(autoKorelationCoeffitient[1]), y1Max=max(autoKorelationCoeffitient[1]), _fontsize=8)
 
 
@@ -419,7 +418,7 @@ def c0_show_1_v(fileName
     fileUtil.make_dir_if_not(path)
     columName = 'flow_autoKorelation_C0_1_v_'
     xlabelName = r'$\vartheta$'
-    lineChart.linePlot(path + '/' + columName, autoKorelationCoeffitient_C0[0]
+    LineChart.linePlot(path + '/' + columName, autoKorelationCoeffitient_C0[0]
                        # , autoKorelationCoeffitient[1], autoKorelationCoeffitient[2], xlabelName, r'k($\vartheta$) ', 0.7, _dpi=600
                        , autoKorelationCoeffitient_C0[1], autoKorelationCoeffitient_C0[1], xlabelName,
                        r'k($\vartheta$) ',
@@ -472,7 +471,7 @@ def c0_show_work_equals_0_5(fileName
     fileUtil.make_dir_if_not(path)
     columName = 'flow_autoKorelation_C0_work_equals_0_05_'
     xlabelName = r'$\vartheta$'
-    lineChart.linePlot(path + '/' + columName, autoKorelationCoeffitient_C0[0]
+    LineChart.linePlot(path + '/' + columName, autoKorelationCoeffitient_C0[0]
                        # , autoKorelationCoeffitient[1], autoKorelationCoeffitient[2], xlabelName, r'k($\vartheta$) ', 0.7, _dpi=600
                        , autoKorelationCoeffitient_C0[1], autoKorelationCoeffitient_C0[1], xlabelName,
                        r'k($\vartheta$) ',
@@ -524,7 +523,7 @@ def c0_show_test_equals_0_5(fileName
     fileUtil.make_dir_if_not(path)
     columName = 'flow_autoKorelation_C0_test_equals_05_1_'
     xlabelName = r'$\vartheta$'
-    lineChart.linePlot(path + '/' + columName, autoKorelationCoeffitient_C0[0]
+    LineChart.linePlot(path + '/' + columName, autoKorelationCoeffitient_C0[0]
                        # , autoKorelationCoeffitient[1], autoKorelationCoeffitient[2], xlabelName, r'k($\vartheta$) ', 0.7, _dpi=600
                        , autoKorelationCoeffitient_C0[1], autoKorelationCoeffitient_C0[1], xlabelName,
                        r'k($\vartheta$) ',
@@ -576,17 +575,17 @@ def c0_show_var2(experiment
         , autoKorelationCoeffitient_C0[experiment["c0_show_var2"]["4"]]
         , autoKorelationCoeffitient_C0[experiment["c0_show_var2"]["5"]]
     ]
-    lineChart.linePlot2(path + '/' + columName, autoKorelationCoeffitient_C0[0]
-                       # , autoKorelationCoeffitient[1], autoKorelationCoeffitient[2], xlabelName, r'k($\vartheta$) ', 0.7, _dpi=600
-                       , autoKorelationCoeffitient_C0s
-                       , xlabelName,
+    LineChart.linePlot2(path + '/' + columName, autoKorelationCoeffitient_C0[0]
+                        # , autoKorelationCoeffitient[1], autoKorelationCoeffitient[2], xlabelName, r'k($\vartheta$) ', 0.7, _dpi=600
+                        , autoKorelationCoeffitient_C0s
+                        , xlabelName,
                        r'k($\vartheta$) ',
-                       0.7, _dpi=600
-                       , xMax=1.0
-                       , y1Min=-0.5
-                       # , y1Min=min(autoKorelationCoeffitient_C0[1])
-                       , y1Max=max(autoKorelationCoeffitient_C0[1]),
-                       _fontsize=8)
+                        0.7, _dpi=600
+                        , xMax=1.0
+                        , y1Min=-0.5
+                        # , y1Min=min(autoKorelationCoeffitient_C0[1])
+                        , y1Max=max(autoKorelationCoeffitient_C0[1]),
+                        _fontsize=8)
 
 
 # ===================================== c0_show_tau_tau_minus_v_tau_plus_v =============================================
@@ -623,7 +622,7 @@ def c0_show_tau_tau_minus_v_tau_plus_v(experiment, d_auto_korelation_centered_ma
         , auto_korelation_coeffitient_c0[experiment["c0_show_var2"]["2"]]
         , auto_korelation_coeffitient_c0[experiment["c0_show_var2"]["3"]]
     ]
-    lineChart.linePlot2(path + '/' + colum_name, auto_korelation_coeffitient_c0[0]
+    LineChart.linePlot2(path + '/' + colum_name, auto_korelation_coeffitient_c0[0]
                         # , autoKorelationCoeffitient[1], autoKorelationCoeffitient[2],
                         # xlabelName, r'k($\vartheta$) ', 0.7, _dpi=600
                         , auto_korelation_coeffitient_c0s
@@ -645,7 +644,7 @@ def c0_show_tau_tau_minus_v_tau_plus_v2(experiment
     columName = 'flow_autoKorelation_C0_tau_tau_minus_v_tau_plus_v2_'
     xlabelName = r'$\vartheta$'
     autoKorelationCoeffitient_C0s = [y]
-    lineChart.linePlot2(
+    LineChart.linePlot2(
         path + '/' + columName
         , x
         , autoKorelationCoeffitient_C0s
@@ -669,7 +668,7 @@ def c0_show_tau_tau_minus_v_tau_plus_v_tau_plus_1(experiment
     columName = 'flow_autoKorelation_C0_tau_tau_minus_v_tau_plus_v2'
     xlabelName = r'$\tau$'
     autoKorelationCoeffitient_C0s = [y]
-    lineChart.linePlot2(path + '/' + columName, x
+    LineChart.linePlot2(path + '/' + columName, x
                         , autoKorelationCoeffitient_C0s
                         , xlabelName,
                         r'C($\tau$) '
@@ -690,7 +689,7 @@ def approximated_gamma_show(experiment
     fileUtil.make_dir_if_not(path)
     xlabelName = r'$\tau$'
 
-    lineChart.linePlot(path + '/' + columName
+    LineChart.linePlot(path + '/' + columName
                        , dimensionless_flow["time"]
                        , dimensionless_flow["flow"]
                        , approximated_gamma
@@ -715,7 +714,7 @@ def approximated_gamma_s_show(experiment
         approximated_gamma["flow"]
     ]
 
-    lineChart.linePlot2(path + '/' + columName
+    LineChart.linePlot2(path + '/' + columName
                         , approximated_gamma["time"]
                         , approximated_gamma_s
                         , xlabelName, title
@@ -884,7 +883,7 @@ def quality_criterion(experiment, flow_centered_mass):
         , correlation_coefficient[experiment["quality_criterion"]["2"]]
         , correlation_coefficient[experiment["quality_criterion"]["3"]]
     ]
-    lineChart.linePlot2(path + '/' + colum_name, correlation_coefficient[0]
+    LineChart.linePlot2(path + '/' + colum_name, correlation_coefficient[0]
                         , correlation_coefficients
                         , xlabel_name,
                         r'k($\vartheta$) ',
@@ -899,7 +898,7 @@ def quality_criterion(experiment, flow_centered_mass):
     correlation_coefficients2 = [
         correlation_coefficient[experiment["quality_criterion"]["3"]]
     ]
-    lineChart.linePlot2(path + '/' + colum_name, correlation_coefficient[0]
+    LineChart.linePlot2(path + '/' + colum_name, correlation_coefficient[0]
                         , correlation_coefficients2
                         , xlabel_name,
                         r'$\Delta$k($\vartheta$) ',

@@ -1,9 +1,7 @@
 """
 Visual dataset.
 """
-import math
 
-import pom.stochastic03.Graphics.LineCharts.LineChart as lineChart
 import pom.stochastic03.utils.FileUtil as file_util
 
 RESULT_DATA = 'resultData/'
@@ -45,7 +43,7 @@ def output_flow(
     y_values = visual_lines(plot_values, experiment, "output_flow")
 
     plot = experiment["plot_parameters"]["output_flow"]
-    lineChart.line_plot4(path + '/' + file_name_prefix
+    LineChart.line_plot4(path + '/' + file_name_prefix
                          , x_values
                          , y_values
                          , xlabel_name=plot["x_label_name"]
@@ -61,7 +59,7 @@ def output_flow(
                          , x_tick_auxiliary =plot["x_tick_auxiliary"]
                          , x_axis_order =plot["x_axis_order"]
                          , y1_min=min(y_values[0])
-                         , y1_max= 5 # max(y_values[0])
+                         , y1_max= 5  # max(y_values[0])
                          , y_tick_main =plot["y_tick_main"]
                          , y_tick_auxiliary =plot["y_tick_auxiliary"]
                          , _fontsize=plot["fontsize"]
@@ -94,7 +92,7 @@ def loss(
     y_values = visual_lines(plot_values, experiment, plot_name)
 
     plot = experiment["plot_parameters"][plot_name]
-    lineChart.line_plot4(path + '/' + file_name_prefix
+    LineChart.line_plot4(path + '/' + file_name_prefix
                          , x_values
                          , y_values
                          , xlabel_name=plot["x_label_name"]
@@ -106,12 +104,12 @@ def loss(
                          , _dpi=experiment["plot_parameters"]["dpi"]
                          , x_min=0
                          , x_max= experiment["learning"]["count_epochs"]
-                            # math.log10(experiment["learning"]["count_epochs"])
+                         # math.log10(experiment["learning"]["count_epochs"])
                          , x_tick_main =plot["x_tick_main"]
                          , x_tick_auxiliary =plot["x_tick_auxiliary"]
                          , x_axis_order =plot["x_axis_order"]
-                         , y1_min= 0 # min(y_values[0])
-                         , y1_max= 0.5 # max(y_values[0])
+                         , y1_min= 0  # min(y_values[0])
+                         , y1_max= 0.5  # max(y_values[0])
                          , y_tick_main =plot["y_tick_main"]
                          , y_tick_auxiliary =plot["y_tick_auxiliary"]
                          , _fontsize=plot["fontsize"]
@@ -143,7 +141,7 @@ def common_line(
     y_values = visual_lines(plot_values, experiment, plot_name)
 
     plot = experiment["plot_parameters"][plot_name]
-    lineChart.line_plot4(path + '/' + file_name_prefix
+    LineChart.line_plot4(path + '/' + file_name_prefix
                          , x_values
                          , y_values
                          , xlabel_name=plot["x_label_name"]
@@ -159,8 +157,8 @@ def common_line(
                          , x_tick_main =plot["x_tick_main"]
                          , x_tick_auxiliary =plot["x_tick_auxiliary"]
                          , x_axis_order =plot["x_axis_order"]
-                         , y1_min= 0 # min(y_values[0])
-                         , y1_max= 0.5 # max(y_values[0])
+                         , y1_min= 0  # min(y_values[0])
+                         , y1_max= 0.5  # max(y_values[0])
                          , y_tick_main =plot["y_tick_main"]
                          , y_tick_auxiliary =plot["y_tick_auxiliary"]
                          , _fontsize=plot["fontsize"]

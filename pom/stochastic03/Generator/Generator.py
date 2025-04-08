@@ -4,11 +4,10 @@ from statistics import mean
 import pandas as pd
 import random
 
-from pom.stochastic03.Dimensionless.ApproximateDimension import ApproximateDimension
-from pom.stochastic03.Dimensionless.ApproximateType import ApproximateType
+from common_utils.approximate_model import ApproximateDimension
+from common_utils.approximate_model.approximate_type import ApproximateType
 from pom.stochastic03.Generator.geterate_model.StochasticTelegraphWaveFixedSeparatedIntervalGenerator import \
     StochasticTelegraphWaveFixedSeparatedIntervalGenerator
-from pom.stochastic03.utils.Constants import FLOW, TIME
 from pom.stochastic03.utils.progress import progress
 
 

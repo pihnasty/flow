@@ -1,10 +1,11 @@
 """
 Visual dataset.
 """
-import pom.stochastic03.Graphics.LineCharts.LineChart as lineChart
-import pom.stochastic03.Graphics.CombinedCharts.LineHistChart as lineHistChart
+
 import pom.stochastic03.utils.FileUtil as file_util
 import pom.stochastic03.StatUtils.stat_func as stat_func
+from common_utils.Graphics.CombinedCharts import LineHistChart
+from common_utils.Graphics.LineCharts import LineChart
 
 RESULT_DATA = 'resultData/'
 def visual_lines(lines, experiment, plot_name):
@@ -46,7 +47,7 @@ def flow_density(
     file_util.make_dir_if_not(path)
     xvalues = flow_densities[0]
     yvalues = visual_lines(flow_densities, experiment, "show_flow_density")
-    lineChart.linePlot2(path + '/' + file_name_prefix
+    LineChart.linePlot2(path + '/' + file_name_prefix
                         , xvalues
                         , yvalues
                         , xlabel_name
@@ -90,7 +91,7 @@ def frequency_plot_hist(
     values = visual_lines([x_values, plot_values, hist_values], experiment, "frequency_plot_hist")
     density_values = stat_func.density_values(hist_values, experiment["number_of_intervals_xi2"])
 
-    lineHistChart.linePlotHist(
+    LineHistChart.linePlotHist(
         path + '/' + file_name_prefix
         , x_values  # x_values
         , values[0]  # plot
@@ -129,7 +130,7 @@ def initial_dimension_flow_line(
     x_values = plot_values[0]
     y_values = visual_lines(plot_values, experiment, "initial_dimension_flow_line")
 
-    lineChart.line_plot3(path + '/' + file_name_prefix
+    LineChart.line_plot3(path + '/' + file_name_prefix
                          , x_values
                          , y_values
                          , xlabel_name=experiment["plot_parameters"]["initial_dimension_flow_line"]["x_label_name"]

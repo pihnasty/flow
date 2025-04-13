@@ -1,9 +1,12 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='flow',
     version='1.1',
-    packages=[''],
+    packages=find_packages(),
+    install_requires=[
+        "common_utils @ git+https://github.com/pihnasty/common_utils.git@main",
+    ],
     url='http://example.com',
     license='MIT',
     author='Oleh',

@@ -1,6 +1,6 @@
 import math
 import pom.stochastic03.utils.FileUtil as fileUtil
-from pom.stochastic03.utils.progress import progress
+from io.console.progress import progress
 import numpy as np
 
 RESULT_DATA = 'resultData/'

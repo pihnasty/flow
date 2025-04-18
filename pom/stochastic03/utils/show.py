@@ -4,9 +4,9 @@ Visual dataset.
 import logging
 
 import pom.stochastic03.utils.FileUtil as file_util
-from common_utils.Graphics.Histograms import Hist
-from common_utils.Graphics.LineCharts import LineChart
-from common_utils.Graphics.Q_Q_Charts import Q_Q_Chart
+from Graph.Graphics.Histograms import Hist
+from Graph.Graphics.LineCharts import LineChart
+from Graph.Graphics.Q_Q_Charts import Q_Q_Chart
 
 RESULT_DATA = 'resultData/'
 def visual_lines(lines, experiment, plot_name):

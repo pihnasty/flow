@@ -8,7 +8,7 @@ from common_utils.approximate_model import ApproximateDimension
 from common_utils.approximate_model.approximate_type import ApproximateType
 from pom.stochastic03.Generator.geterate_model.StochasticTelegraphWaveFixedSeparatedIntervalGenerator import \
     StochasticTelegraphWaveFixedSeparatedIntervalGenerator
-from pom.stochastic03.utils.progress import progress
+from io.console.progress import progress
 
 
 class Generator:

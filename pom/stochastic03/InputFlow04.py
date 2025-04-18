@@ -5,13 +5,13 @@ import time
 from copy import deepcopy
 
 from common_utils.dim_less.dimensionless import Dimensionless
-from common_utils.flow_constants import CUSTOM_FLOW_VALUE, CUSTOM_TIME_VALUE, FLOW, DIMENSIONLESS_TYPE, \
+from constants.flow_constants import CUSTOM_FLOW_VALUE, CUSTOM_TIME_VALUE, FLOW, DIMENSIONLESS_TYPE, \
     APPROXIMATE_TYPE, NUMBER_OF_INTERVALS, NUMBER_OF_HARMONICS, MODEL_PARAMETERS, \
     NUMBER_OF_INITIAL_INTERVALS_TO_GENERATE, TIME, STD
-from pom.stochastic03.CorrFunc.CorrelationFunction import CorrelationFunction
+from corr_func.correlation_function import CorrelationFunction
 from common_utils.approximate_model import ApproximateDimension
 from common_utils.approximate_model.approximate_type import ApproximateType
-from common_utils.approximate_model.SpectrumWithMoreRealizationApproximate import \
+from common_utils.approximate_model.spectrum_approximation import \
     SpectrumWithMoreRealizationApproximate
 from pom.stochastic03.Generator.Generator import Generator
 from pom.stochastic03.InitData.inizialize_data04 import experiments
@@ -26,7 +26,7 @@ from pom.stochastic03.utils.Constants import CORRELATION, \
 import pandas as pd
 import pom.stochastic03.utils.show as show
 import pom.stochastic03.utils.CorrelationFunctions as cf
-from pom.stochastic03.utils.progress import progress
+from io.console.progress import progress
 
 
 class InputFlow04:

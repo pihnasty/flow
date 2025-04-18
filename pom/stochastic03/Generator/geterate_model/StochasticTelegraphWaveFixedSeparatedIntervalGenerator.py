@@ -2,8 +2,8 @@ import random
 
 import pandas as pd
 
-from common_utils.flow_constants import FLOW, TIME
-from pom.stochastic03.utils.progress import progress
+from constants.flow_constants import FLOW, TIME
+from io.console.progress import progress
 
 
 class StochasticTelegraphWaveFixedSeparatedIntervalGenerator:

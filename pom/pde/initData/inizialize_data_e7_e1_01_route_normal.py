@@ -46,7 +46,7 @@ experiments = {
             "dpi": 1000
             , DISTRIBUTION_DENSITY_LINE: {
                 VISUAL_LINE_SET: {"0": 0, "1": 1, "2": 2, "3": 1, "4": 1, "5": 1}
-                , COLOR_LINE_SET: { 0:'k',  1:'r',  2:'k',  3:'k',  4:'k',  5:'k'}
+                , COLOR_LINE_SET: { "0":'k',  "1":'r',  '2':'k',  '3':'k',  '4':'k',  '5':'k'}
                 , "fontsize": 9
                 , "alpha_main": 1.0
                 , "alpha_grid": 0.7
@@ -72,7 +72,7 @@ experiments = {
             }
             , BATCH_TIME_DENSITY_LINE: {
                 VISUAL_LINE_SET: {"0": 0, "1": 1, "2": 2, "3": 1, "4": 1, "5": 1}
-                , COLOR_LINE_SET: {0: 'k', 1: 'k', 2: 'k', 3: 'k', 4: 'k', 5: 'k'}
+                , COLOR_LINE_SET: {'0': 'k', '1': 'k', '2': 'k', '3': 'k', '4': 'k', '5': 'k'}
                 , "fontsize": 9
                 , "alpha_main": 1.0
                 , "alpha_grid": 0.7
@@ -98,7 +98,7 @@ experiments = {
             }
             , PROBABILITY_LINE: {
                 VISUAL_LINE_SET: {"0": 0, "1": 1, "2": 2, "3": 1, "4": 1, "5": 1}
-                , COLOR_LINE_SET: {0: 'k', 1: 'k', 2: 'k', 3: 'k', 4: 'k', 5: 'k'}
+                , COLOR_LINE_SET: {'0': 'k', '1': 'k', '2': 'k', '3': 'k', '4': 'k', '5': 'k'}
                 , "fontsize": 9
                 , "alpha_main": 1.0
                 , "alpha_grid": 0.7
@@ -124,7 +124,7 @@ experiments = {
             }
             , TECHNOLOGICAL_PATHS_LINE: {
                 VISUAL_LINE_SET: {"0": 0, "1": 1, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "10": 10}
-                , "color_line_set": {0: 'k', 1: 'r', 2: 'k', 3: 'k', 4: 'k', 5: 'k', 6: 'k', 7: 'k', 8: 'k', 9: 'k', 10: 'k'}
+                , "color_line_set": {"0": 'k', "1": 'r', "2": 'k', "3": 'k', "4": 'k', "5": 'k', "6": 'k', "7": 'k', "8": 'k', "9": 'k', "10": 'k'}
                 , "fontsize": 9
                 , "alpha_main": 1.0
                 , "alpha_grid": 0.7
@@ -150,7 +150,7 @@ experiments = {
             }
             , N_TECHNOLOGICAL_PATHS_LINE: {
                 VISUAL_LINE_SET: {"0": 0, "1": 1, "2": 2, "3": 1, "4": 1, "5": 1}
-                , COLOR_LINE_SET: { 0:'k',  1:'r',  2:'k',  3:'k',  4:'k',  5:'k'}
+                , COLOR_LINE_SET: {"0": 'k', "1": 'r', "2": 'k', "3": 'k', "4": 'k', "5": 'k'}
                 , "fontsize": 9
                 , "alpha_main": 1.0
                 , "alpha_grid": 0.7
@@ -176,7 +176,7 @@ experiments = {
             }
             , N_MIDDLE_TECHNOLOGICAL_PATHS_LINE: {
                 VISUAL_LINE_SET: {"0": 0, "1": 1, "2": 2, "3": 1, "4": 1, "5": 1}
-                , COLOR_LINE_SET: {0: 'k', 1: 'r', 2: 'k', 3: 'k', 4: 'k', 5: 'k'}
+                , COLOR_LINE_SET: {"0": 'k', "1": 'r', "2": 'k', "3": 'k', "4": 'k', "5": 'k'}
                 , "fontsize": 9
                 , "alpha_main": 1.0
                 , "alpha_grid": 0.7
@@ -202,7 +202,7 @@ experiments = {
             }
             , N_LAST_TECHNOLOGICAL_PATHS_LINE: {
                 VISUAL_LINE_SET: {"0": 0, "1": 1, "2": 2, "3": 1, "4": 1, "5": 1}
-                , COLOR_LINE_SET: {0: 'k', 1: 'r', 2: 'k', 3: 'k', 4: 'k', 5: 'k'}
+                , COLOR_LINE_SET: {"0": 'k', "1": 'r', "2": 'k', "3": 'k', "4": 'k', "5": 'k'}
                 , "fontsize": 9
                 , "alpha_main": 1.0
                 , "alpha_grid": 0.7

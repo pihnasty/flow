@@ -1,17 +1,18 @@
+from constants.flow_constants import FLOW
+from io_utils.console.progress import progress
 from pom.pde.Constants import TECHNOLOGICAL_ROUTE, \
     MAX_OPERATION_TIME, NUMBER_DISTRIBUTION_DENSITY_INTERVALS, X, Y, DISTRIBUTION_DENSITY_LINE, INITIAL_DATA, \
     RESULT_DATA, X_LABEL_NAME, NUMBER_OPERATION_TIME, SEED, ORDER_SIZE, TECHNOLOGICAL_PATHS_LINE, VISUAL_LINE_SET, \
-    COLOR_LINE_SET, Y_MAX, N_TECHNOLOGICAL_PATHS_LINE, N_MIDDLE_TECHNOLOGICAL_PATHS_LINE, \
+    COLOR_LINE_SET, N_TECHNOLOGICAL_PATHS_LINE, N_MIDDLE_TECHNOLOGICAL_PATHS_LINE, \
     N_LAST_TECHNOLOGICAL_PATHS_LINE, RANDOM_STEP, BATCH_TIME_HIST, BATCH_TIME_DENSITY_LINE, \
     NUMBER_BATCH_DENSITY_INTERVALS, PROBABILITY_LINE, X_MIN, X_MAX
 from pom.pde.TechnologicalRoute import TechnologicalRoute
 from pom.pde.initData.inizialize_data_e7_e1_01_route_normal import experiments
 
 
-from pom.stochastic03.utils.Constants import FLOW, PLOT_PARAMETERS, Y_LABEL_NAME
+from pom.stochastic03.utils.Constants import PLOT_PARAMETERS, Y_LABEL_NAME
 import pandas as pd
 import pom.stochastic03.utils.show as show
-from pom.stochastic03.utils.progress import progress
 
 
 class PdeFlow:
@@ -280,7 +281,7 @@ class PdeFlow:
     def create_color_line_set(number_line):
         color_line_set = {}
         for i in range(number_line):
-            color_line_set[i] = 'k'
+            color_line_set[str(i)] = 'k'
         return color_line_set
 
 

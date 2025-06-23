@@ -78,17 +78,27 @@ class TechnologicalRoute:
         for n in range(self.order_size):
             technological_path = self.initialization_technological_path()
             tau_m = 0.0
+            k=5
             for m in range(len(self.technological_route) + 1):
-                if m==0:
+                if m == 0:
                     technological_path[Y][m] = 0
-                    if n==0:
-                        technological_path[X][m] = 0.0
+                    if n<=k:
+                        if n == 0:
+                            technological_path[X][m] = 0.0
+                        else:
+                            technological_path[X][m] = technological_paths[n -1][X][m + 1]
                     else:
-                        technological_path[X][m] =  technological_paths[n -1][X][m + 1]
 
+                        technological_path[X][m] = max(technological_paths[n -1 - k][X][m + 2], technological_paths[n -1][X][m + 1])
                 else:
                     tau_m += self.route_operations_times[m][Y][n + random_step]
                     technological_path[Y][m] = m
+                    if n > k and m < len(self.technological_route) - 1:
+                        try:
+                            if tau_m < technological_paths[n -1 -k][X][m + 2]:
+                                tau_m = technological_paths[n -1 - k][X][m + 2]
+                        except KeyError:
+                            raise KeyError(f"Missing key in route_operations_times for indices: m={m}, Y={Y}, n={n}, random_step={random_step}")
                     if n > 0 and m < len(self.technological_route):
                         if tau_m < technological_paths[n -1][X][m + 1]:
                             tau_m = technological_paths[n -1][X][m + 1]

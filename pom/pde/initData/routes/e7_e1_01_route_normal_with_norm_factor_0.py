@@ -1,10 +1,10 @@
 from pom.pde.Constants import DISTRIBUTION_DENSITY, NORMAL_DISTRIBUTION, MEAN, STD, MIN, \
     MAX, NORMALIZATION_FACTOR
 
-HALF_WIDTH_DELTA_FUNCTION = 0.00001
-STD0_KOEF = 0.00001
+HALF_WIDTH_DELTA_FUNCTION = 0.1
+STD0_KOEF = 0.2
 
-e7_e1_01_route_norma_determinition = {
+e7_e1_01_route_normal = {
     1: {
         0: {
             DISTRIBUTION_DENSITY : NORMAL_DISTRIBUTION,

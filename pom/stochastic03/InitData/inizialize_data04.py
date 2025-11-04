@@ -1,5 +1,5 @@
 from dim_less.dimensionless_type import DimensionlessType
-from flow_constants import CUSTOM_FLOW_VALUE, CUSTOM_TIME_VALUE, MODEL_PARAMETERS, APPROXIMATE_TYPE, \
+from constants.flow_constants import CUSTOM_FLOW_VALUE, CUSTOM_TIME_VALUE, MODEL_PARAMETERS, APPROXIMATE_TYPE, \
     NUMBER_OF_INITIAL_INTERVALS_TO_GENERATE, NUMBER_OF_INTERVALS, DIMENSIONLESS_TYPE, NUMBER_OF_HARMONICS
 from common_utils.approximate_model.approximate_type import ApproximateType
 from pom.stochastic03.utils.Constants import ERR_APPROX_INIT_DIMLESS_FLOW_LINE, \
@@ -17,7 +17,7 @@ initial data
 experiments = {
     "2023_07_29_dataset_2020_ZeYaWuWa": {
         "project_structure": {
-            "file_name": "dataset_2020_ZeYaWuWa.csv"
+            "file_name": "_dataset_2020_ZeYaWuWa.csv"
             , "files_category": "files"
             , "result_data_structure": {
                 RESULT_DATA: "resultData"

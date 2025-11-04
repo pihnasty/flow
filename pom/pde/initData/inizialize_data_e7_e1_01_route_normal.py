@@ -2,10 +2,8 @@ from pom.pde.Constants import TECHNOLOGICAL_ROUTE, MAX_OPERATION_TIME, NUMBER_DI
     DISTRIBUTION_DENSITY_LINE, INITIAL_DATA, RESULT_DATA, X_LABEL_NAME, NUMBER_OPERATION_TIME, SEED, ORDER_SIZE, \
     TECHNOLOGICAL_PATHS_LINE, VISUAL_LINE_SET, COLOR_LINE_SET, Y_MAX, N_TECHNOLOGICAL_PATHS_LINE, \
     N_MIDDLE_TECHNOLOGICAL_PATHS_LINE, N_LAST_TECHNOLOGICAL_PATHS_LINE, RANDOM_STEP, BATCH_TIME_HIST, \
-    BATCH_TIME_DENSITY_LINE, NUMBER_BATCH_DENSITY_INTERVALS, PROBABILITY_LINE, X_MIN, X_MAX
-from pom.pde.initData.routes.e7_e1_01_route_norma_determinition import e7_e1_01_route_norma_determinition
-from pom.pde.initData.routes.e7_e1_01_route_norma_determinition_only_r0 import \
-    e7_e1_01_route_norma_determinition_only_r0
+    BATCH_TIME_DENSITY_LINE, NUMBER_BATCH_DENSITY_INTERVALS, PROBABILITY_LINE, X_MIN, X_MAX, SIZE_PACKAGE, SHOWED_LINE, \
+    EACH_N, BACKLOGS_SIZE, X_TICK_MAIN, X_TICK_AUXILIARY
 from pom.pde.initData.routes.e7_e1_01_route_normal import e7_e1_01_route_normal
 from pom.stochastic03.utils.Constants import PLOT_PARAMETERS, Y_LABEL_NAME
 
@@ -34,19 +32,26 @@ experiments = {
         , MAX_OPERATION_TIME: 2.0
         , NUMBER_DISTRIBUTION_DENSITY_INTERVALS: 200
         , NUMBER_BATCH_DENSITY_INTERVALS: 50
-        , NUMBER_OPERATION_TIME: 100000
-        , ORDER_SIZE: 60
+        , NUMBER_OPERATION_TIME: 10000  # 1000->100000
+        , ORDER_SIZE: 1024    # number of parts into batch
+        , BACKLOGS_SIZE: 1,  # accumulate bunker size
+        SHOWED_LINE : {
+            EACH_N: 4,
+            SIZE_PACKAGE: 128    # size of the package with shows in plot. For instance:
+            # first - from 0 to SIZE_PACKAGE;
+            # middle - from middle to middle+SIZE_PACKAGE;
+            # middle - from end - SIZE_PACKAGE to end;
+        }
+
+
         , SEED: 1
-        , RANDOM_STEP : 61
-
-
 
 
         , PLOT_PARAMETERS: {
             "dpi": 1000
             , DISTRIBUTION_DENSITY_LINE: {
                 VISUAL_LINE_SET: {"0": 0, "1": 1, "2": 2, "3": 1, "4": 1, "5": 1}
-                , COLOR_LINE_SET: { "0":'k',  "1":'r',  '2':'k',  '3':'k',  '4':'k',  '5':'k'}
+                , COLOR_LINE_SET: { "0":'k',  "1":'k',  '2':'k',  '3':'k',  '4':'k',  '5':'k'}
                 , "fontsize": 9
                 , "alpha_main": 1.0
                 , "alpha_grid": 0.7
@@ -103,10 +108,10 @@ experiments = {
                 , "alpha_main": 1.0
                 , "alpha_grid": 0.7
                 , "color": "black"
-                , X_MIN: 18
+                , X_MIN: 10
                 , X_MAX: 38
-                , "x_tick_main": 2
-                , "x_tick_auxiliary": 1.0
+                , X_TICK_MAIN: 2
+                , X_TICK_AUXILIARY: 1.0
                 , "y_min": 0
                 , "y_max": 1.0
                 , "y_tick_main": 0.1
@@ -134,7 +139,7 @@ experiments = {
                 , "x_tick_main": 1
                 , "x_tick_auxiliary": 0.5
                 , "y_min": 0
-                , Y_MAX: 25.0
+                , Y_MAX: 30.0
                 , "y_tick_main": 5.0
                 , "y_tick_auxiliary": 2.5
                 , "x_axis_order": "forward"  # "back" | "forward"

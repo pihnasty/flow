@@ -11,7 +11,7 @@ from pom.pde.utils.math_util import normal_distribution, uniform_distribution
 class TechnologicalRoute:
 
     def __init__(self, technological_route, max_operation_time, number_distribution_density_intervals,
-                 number_operation_time, order_size, seed):
+                 number_operation_time, order_size, seed, backlogs_size):
         self.technological_route = technological_route
         self.max_operation_time = max_operation_time
         self.number_distribution_density_intervals = number_distribution_density_intervals
@@ -19,6 +19,7 @@ class TechnologicalRoute:
         self.order_size = order_size
         self.seed = seed
         self.route_operations_times = {}
+        self.backlogs_size = backlogs_size
 
     def fill_normalization_factor(self):
         """
@@ -75,10 +76,68 @@ class TechnologicalRoute:
 
     def calculate_technological_paths(self, random_step):
         technological_paths = {}
+        k=self.backlogs_size  # number details into backlogs
+        for n in range(self.order_size):
+            technological_path = self.initialization_technological_path()
+            for m in range(len(self.technological_route) + 1):
+                if m == 0:
+                    technological_path[Y][m] = 0
+                    technological_path["Xmin"][m] = 0.0
+                    if n<=k:
+                        if n == 0:
+                            technological_path[X][m] = 0.0
+                        else:
+                            technological_path[X][m] = technological_paths[n -1]["Xmin"][m + 1]
+                    else:
+                        technological_path[X][m] = max(technological_paths[n -1 - k]["Xmin"][m + 2], technological_paths[n -1]["Xmin"][m + 1])
+                else:
+                    technological_path[Y][m] = m
+                    tau_m = self.route_operations_times[m][Y][n + random_step]
+                    if n<=k:
+                        if n == 0:
+                            try:
+                                technological_path["Xmin"][m] = technological_path[X][m - 1] + tau_m
+                                technological_path[X][m] = technological_path["Xmin"][m]
+                            except KeyError:
+                                pass
+                        else:
+                            if m < len(self.technological_route):
+                                technological_path["Xmin"][m] = technological_path[X][m - 1]  + tau_m
+                                technological_path[X][m] = max(
+                                    technological_path["Xmin"][m],
+                                    technological_paths[n -1]["Xmin"][m + 1]
+                                )
+                            if m == len(self.technological_route):
+                                technological_path["Xmin"][m] = technological_path[X][m - 1]  + tau_m
+                                technological_path[X][m] = technological_path["Xmin"][m]
+                    else:
+                        if m < len(self.technological_route)-1:
+                            technological_path["Xmin"][m] = technological_path[X][m - 1]  + tau_m
+                            technological_path[X][m] = max(
+                                technological_path["Xmin"][m],
+                                technological_paths[n -1]["Xmin"][m + 1],
+                                technological_paths[n -1 - k]["Xmin"][m + 2]
+                            )
+                        if m == len(self.technological_route)-1:
+                            technological_path["Xmin"][m] = technological_path[X][m - 1]  + tau_m
+                            technological_path[X][m] = max(
+                                technological_path["Xmin"][m],
+                                technological_paths[n -1]["Xmin"][m + 1]
+                            )
+
+                        if m == len(self.technological_route):
+                            technological_path["Xmin"][m] = technological_path[X][m - 1]  + tau_m
+                            technological_path[X][m] = technological_path["Xmin"][m]
+            technological_paths[n] =  technological_path
+        return technological_paths
+
+
+    def calculate_technological_paths1(self, random_step):
+        technological_paths = {}
         for n in range(self.order_size):
             technological_path = self.initialization_technological_path()
             tau_m = 0.0
-            k=5
+            k=1
             for m in range(len(self.technological_route) + 1):
                 if m == 0:
                     technological_path[Y][m] = 0
@@ -105,6 +164,7 @@ class TechnologicalRoute:
                     technological_path[X][m] = tau_m
             technological_paths[n] =  technological_path
         return technological_paths
+
 
     def initialize_ramdoms(self):
         randoms = [random.Random()] * len(self.technological_route)
@@ -195,6 +255,7 @@ class TechnologicalRoute:
         technological_path = pd.DataFrame()
         size = len(self.technological_route) + 1
         technological_path[X] = [0.0] * size
+        technological_path["Xmin"] = [0.0] * size
         technological_path[Y] = [0.0] * size
         return technological_path
 

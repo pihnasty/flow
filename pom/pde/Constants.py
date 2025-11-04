@@ -9,14 +9,23 @@ VISUAL_LINE_SET = "visual_line_set"
 COLOR_LINE_SET = "color_line_set"
 X_MIN = "x_min"
 X_MAX = "x_max"
+X_TICK_MAIN = "x_tick_main"
+X_TICK_AUXILIARY = "x_tick_auxiliary"
 Y_MAX = "y_max"
 
 NUMBER_DISTRIBUTION_DENSITY_INTERVALS = "number_distribution_density_intervals"
 NUMBER_BATCH_DENSITY_INTERVALS = "number_batch_density_intervals"
 NUMBER_OPERATION_TIME = "number_operation_time"
 ORDER_SIZE = "order_size"
+BACKLOGS_SIZE = "backlogs_size"
+
 SEED = "seed"
 RANDOM_STEP = "random_step"
+
+SHOWED_LINE = "showed_line"
+EACH_N = "each_n"
+SIZE_PACKAGE = "size_package"
+
 NORMAL_DISTRIBUTION = "normal_distribution"
 UNIFORM_DISTRIBUTION = "uniform distribution"
 MEAN = "mean"

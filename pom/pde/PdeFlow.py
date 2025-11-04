@@ -4,8 +4,9 @@ from pom.pde.Constants import TECHNOLOGICAL_ROUTE, \
     MAX_OPERATION_TIME, NUMBER_DISTRIBUTION_DENSITY_INTERVALS, X, Y, DISTRIBUTION_DENSITY_LINE, INITIAL_DATA, \
     RESULT_DATA, X_LABEL_NAME, NUMBER_OPERATION_TIME, SEED, ORDER_SIZE, TECHNOLOGICAL_PATHS_LINE, VISUAL_LINE_SET, \
     COLOR_LINE_SET, N_TECHNOLOGICAL_PATHS_LINE, N_MIDDLE_TECHNOLOGICAL_PATHS_LINE, \
-    N_LAST_TECHNOLOGICAL_PATHS_LINE, RANDOM_STEP, BATCH_TIME_HIST, BATCH_TIME_DENSITY_LINE, \
-    NUMBER_BATCH_DENSITY_INTERVALS, PROBABILITY_LINE, X_MIN, X_MAX
+    N_LAST_TECHNOLOGICAL_PATHS_LINE, BATCH_TIME_HIST, BATCH_TIME_DENSITY_LINE, \
+    NUMBER_BATCH_DENSITY_INTERVALS, PROBABILITY_LINE, X_MIN, X_MAX, SIZE_PACKAGE, SHOWED_LINE, EACH_N, BACKLOGS_SIZE, \
+    X_TICK_MAIN, X_TICK_AUXILIARY
 from pom.pde.TechnologicalRoute import TechnologicalRoute
 from pom.pde.initData.inizialize_data_e7_e1_01_route_normal import experiments
 
@@ -27,8 +28,8 @@ class PdeFlow:
         self.number_batch_density_intervals = experiment[NUMBER_BATCH_DENSITY_INTERVALS]
         self.number_operation_time = experiment[NUMBER_OPERATION_TIME]
         self.order_size = experiment[ORDER_SIZE]
+        self.backlogs_size = experiment[BACKLOGS_SIZE]
         self.seed = experiment[SEED]
-        self.random_step = experiment[RANDOM_STEP]
         self.distribution_densities = None
 
         self.initial_dimensionless_flow = None
@@ -41,17 +42,16 @@ class PdeFlow:
     def create_route(self):
         technological_route \
             = TechnologicalRoute(self.route, self.max_operation_time, self.number_distribution_density_intervals,
-                                 self.number_operation_time, self.order_size, self.seed)
+                                 self.number_operation_time, self.order_size, self.seed, self.backlogs_size)
         technological_route.fill_normalization_factor()
-        # self.distribution_densities = technological_route.calculate_distribution_densities()
         self.route_operations_times = technological_route.generate_route_operations_times()
         self.generated_distribution_densities = technological_route.calculate_generated_distribution_densities()
         self.generated_technological_paths = technological_route.calculate_technological_paths(0)
 
-        random_size = round(self.number_operation_time/self.random_step) -1
+        random_size = round(self.number_operation_time/self.order_size) -1
         self.batch_times = self.initialization_batch_times(random_size)
         for i in range(random_size):
-            times_set = technological_route.calculate_technological_paths(i * self.random_step)
+            times_set = technological_route.calculate_technological_paths(i * self.order_size)
             last_times_set_element_number = len(times_set) - 1
             last_times_set_element = times_set[last_times_set_element_number]
             batch_time = last_times_set_element[X][len(last_times_set_element[X])-1]
@@ -64,6 +64,8 @@ class PdeFlow:
                                                                  self.number_batch_density_intervals)
         self.probability = self.calculate_probability(self.batch_times[Y],
                                                                  self.number_batch_density_intervals)
+        self.probability_per_detail = self.calculate_probability(self.batch_times[Y]/self.order_size,
+                                                      self.number_batch_density_intervals)
 
     def calculate_distribution_density(self, values, intervals):
         max_tau = values.max() * 1.01
@@ -166,6 +168,39 @@ class PdeFlow:
         batch_densities = [self.probability[X].values, 1.0 - self.probability[Y].values]
         show.common_line(self.experiment, path, batch_densities, f"risk_", plot_name)
 
+    def batch_time_probability_per_detail_line_show(self):
+        plot_name = PROBABILITY_LINE
+        result_data = self.result_data_structure[RESULT_DATA] + '/'
+        # :param sub_directory_name: the name of the directory where the visualization data is located.
+        initial_data_result = self.result_data_structure[INITIAL_DATA]
+        path = result_data + self.file_name + '/' + initial_data_result
+
+        x_min= self.experiment[PLOT_PARAMETERS][plot_name][X_MIN]
+        x_max= self.experiment[PLOT_PARAMETERS][plot_name][X_MAX]
+        x_tick_main= self.experiment[PLOT_PARAMETERS][plot_name][X_TICK_MAIN]
+        x_tick_auxiliary= self.experiment[PLOT_PARAMETERS][plot_name][X_TICK_AUXILIARY]
+        x_label_name = self.experiment[PLOT_PARAMETERS][plot_name][X_LABEL_NAME]
+
+        self.experiment[PLOT_PARAMETERS][plot_name][X_MIN] = 0.3 #0.2
+        self.experiment[PLOT_PARAMETERS][plot_name][X_MAX] = 1.8 #0.7
+        self.experiment[PLOT_PARAMETERS][plot_name][X_TICK_MAIN] = 0.3 #0.1
+        self.experiment[PLOT_PARAMETERS][plot_name][X_TICK_AUXILIARY] = 0.15 # 0.05
+        self.experiment[PLOT_PARAMETERS][plot_name][Y_LABEL_NAME] = r'$F_d(\tau_d)$'
+        self.experiment[PLOT_PARAMETERS][plot_name][X_LABEL_NAME] =  r'$\tau_d$'
+
+        batch_densities = [self.probability_per_detail[X].values, self.probability_per_detail[Y].values]
+        show.common_line(self.experiment, path, batch_densities, f"probability_per_detail", plot_name)
+
+        self.experiment[PLOT_PARAMETERS][plot_name][Y_LABEL_NAME] = r'$R_d(\tau_d)$'
+        batch_densities = [self.probability_per_detail[X].values, 1.0 - self.probability_per_detail[Y].values]
+
+        show.common_line(self.experiment, path, batch_densities, f"risk_per_detail", plot_name)
+        self.experiment[PLOT_PARAMETERS][plot_name][X_MIN] = x_min
+        self.experiment[PLOT_PARAMETERS][plot_name][X_MAX] = x_max
+        self.experiment[PLOT_PARAMETERS][plot_name][X_TICK_MAIN] = x_tick_main
+        self.experiment[PLOT_PARAMETERS][plot_name][X_TICK_AUXILIARY] = x_tick_auxiliary
+        self.experiment[PLOT_PARAMETERS][plot_name][X_LABEL_NAME] = x_label_name
+
     def batch_time_probability_loss_line_show(self):
         plot_name = PROBABILITY_LINE
         result_data = self.result_data_structure[RESULT_DATA] + '/'
@@ -194,8 +229,10 @@ class PdeFlow:
         path = result_data + self.file_name + '/' + initial_data_result
 
         generated_technological_paths = [self.generated_technological_paths[0][Y].values]
+        each_n = min(self.experiment[SHOWED_LINE][EACH_N], self.experiment[ORDER_SIZE])
         for i in range(len(self.generated_technological_paths)):
-            generated_technological_paths.append(self.generated_technological_paths[i][X].values)
+            if i%each_n==0: # showed each 5th trajectory
+                generated_technological_paths.append(self.generated_technological_paths[i][X].values)
         self.experiment[PLOT_PARAMETERS][TECHNOLOGICAL_PATHS_LINE][VISUAL_LINE_SET]\
             = self.create_visual_line_set(len(generated_technological_paths))
 
@@ -211,7 +248,8 @@ class PdeFlow:
         path = result_data + self.file_name + '/' + initial_data_result
 
         generated_technological_paths = [self.generated_technological_paths[0][Y].values]
-        for i in range(5):
+        size_package = min(self.experiment[SHOWED_LINE][SIZE_PACKAGE],self.experiment[ORDER_SIZE])
+        for i in range(size_package):
             generated_technological_paths.append(self.generated_technological_paths[i][X].values)
         self.experiment[PLOT_PARAMETERS][N_TECHNOLOGICAL_PATHS_LINE][VISUAL_LINE_SET] \
             = self.create_visual_line_set(len(generated_technological_paths))
@@ -230,7 +268,8 @@ class PdeFlow:
 
         generated_technological_paths = [self.generated_technological_paths[0][Y].values]
         size = round(len(self.generated_technological_paths)/2)
-        for i in range(size, size + 5):
+        size_package = min(self.experiment[SHOWED_LINE][SIZE_PACKAGE],self.experiment[ORDER_SIZE])
+        for i in range(size, min(size + size_package,self.experiment[ORDER_SIZE])):
             generated_technological_paths.append(self.generated_technological_paths[i][X].values)
         self.experiment[PLOT_PARAMETERS][N_MIDDLE_TECHNOLOGICAL_PATHS_LINE][VISUAL_LINE_SET] \
             = self.create_visual_line_set(len(generated_technological_paths))
@@ -249,7 +288,8 @@ class PdeFlow:
         plot_name = N_LAST_TECHNOLOGICAL_PATHS_LINE
         generated_technological_paths = [self.generated_technological_paths[0][Y].values]
         size = len(self.generated_technological_paths)
-        for i in range(size - 5, size):
+        size_package = min(self.experiment[SHOWED_LINE][SIZE_PACKAGE],self.experiment[ORDER_SIZE])
+        for i in range(size - size_package, size):
             generated_technological_paths.append(self.generated_technological_paths[i][X].values)
         self.experiment[PLOT_PARAMETERS][plot_name][VISUAL_LINE_SET] \
             = self.create_visual_line_set(len(generated_technological_paths))
@@ -343,7 +383,7 @@ class PdeFlow:
         # file.write("\n\n")
 
         self.save_parameters("Dimensionless parameters:               ",
-                             self.batch_times, file)
+                             self.batch_times[Y]/self.order_size, file)
         # self.save_parameters("Dimensionless parameters:               ",
         #                      self.initial_dimensionless_flow, file)
         # self.save_parameters("Dimensionless approximated parameters:               ",
@@ -392,17 +432,13 @@ class PdeFlow:
     def save_parameters(self, description, data, file):
         file.write(description)
         file.write("\n")
-        file.write("tMin       : %10.7f" % (data[X].min()))
+        file.write("t_d_min    : %10.7f" % (data.min()))
         file.write("\n")
-        file.write("tMax       : %10.7f" % (data[X].max()))
+        file.write("t_d_max    : %10.7f" % (data.max()))
         file.write("\n")
-        file.write("flowMin    : %10.7f" % (data[Y].min()))
+        file.write("t_d_Mean   : %10.7f" % (data.mean()))
         file.write("\n")
-        file.write("flowMax    : %10.7f" % (data[Y].max()))
-        file.write("\n")
-        file.write("flowMean   : %10.7f" % (data[Y].mean()))
-        file.write("\n")
-        file.write("flowStd    : %10.7f" % (data[Y].std()))
+        file.write("t_d_Std    : %10.7f" % (data.std()))
         file.write("\n\n")
 
 def common_data_show(experiment,

@@ -26,7 +26,7 @@ from pom.stochastic03.utils.Constants import CORRELATION, \
 import pandas as pd
 import pom.stochastic03.utils.show as show
 import pom.stochastic03.utils.CorrelationFunctions as cf
-from io.console.progress import progress
+from io_utils.console.progress import progress
 
 
 class InputFlow04:

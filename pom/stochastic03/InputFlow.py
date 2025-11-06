@@ -1,5 +1,4 @@
 import copy
-import math
 
 from approximate_model.ApproximateDimension import ApproximateDimension
 
@@ -17,7 +16,7 @@ from constants.flow_constants import APPROXIMATE_TYPE, STD, DIMENSIONLESS, APPRO
     HARMONIC_NUMBER, CORRELATION, VARTHETA, PROBABILITY, \
     NUMBER_DENSITY_INTERVALS, FLOW_PROBABILITY_Y, FLOW_PROBABILITY_X, FLOW_DENSITY_Y, CRITICAL_PROB_VALUE, \
     DIMLESS_FLOW3, AMPLITUDES_FOR_INTERVAL, PHASES_FOR_INTERVAL, \
-    COS_HARMONICS_FOR_INTERVAL, SIN_HARMONICS_FOR_INTERVAL
+    COS_HARMONICS_FOR_INTERVAL, SIN_HARMONICS_FOR_INTERVAL, APPROXIMATE_CORRELATION
 from approximate_model.spectrum_approximation import SpectrumWithMoreRealizationApproximate
 from io_utils.console.progress import progress
 from maths.stats import calculate_probability, calculate_density
@@ -48,6 +47,8 @@ class InputFlow:
         for i in range(self.numberExamples):
             self.initial_dimension_flow[time][i] = self.csv_data[time][i * load_period]
             self.initial_dimension_flow[flow][i] = self.csv_data[flow][i * load_period]
+            progress(i, self.numberExamples, "initial_load_dimension_data")
+        progress(self.numberExamples, self.numberExamples, "initial_load_dimension_data \n")
 
     def transform_initial_dimension_to_dimensionless(self):
         dimensionless_config = self.model_parameters[DIMENSIONLESS]
@@ -88,19 +89,50 @@ class InputFlow:
         progress(1, 1, "approximate_dimensionless \n")
 
     def execute_correlation(self):
-        dim = pd.DataFrame(copy.deepcopy({
-            TIME: self.initial_dimension_flow[TAU],
-            FLOW: self.initial_dimension_flow[DIMLESS_FLOW]
-        }))
-        correlation_function = CorrelationFunction(dim, self.model_parameters[CORRELATION]).get_correlation()
-        # self.approximate_initial_correlation \
-        #     = CorrelationFunction(self.approximate_initial_dimensionless_flow, self.experiment[PERIOD]).get_correlation()
+        """
+        Compute and store autocorrelation functions for original and approximate dimensionless flow.
+
+        This method:
+            1. Constructs time series DataFrames for:
+               - Original dimensionless flow
+               - Approximate dimensionless flow
+            2. Computes their autocorrelation using `CorrelationFunction`
+            3. Stores results in the internal data structure via `_add_column`
+
+        Specifically:
+            - Original flow: Adds columns `CORRELATION` and `VARTHETA` (time lag)
+            - Approximate flow: Adds column `APPROXIMATE_CORRELATION`
+
+        Notes:
+            - Uses `self.initial_dimension_flow[TAU]` as the time/lag axis for both.
+            - Autocorrelation is computed up to lag specified in `model_parameters[CORRELATION]`.
+            - Generated/long-generated flows are currently commented out.
+
+        Side effects:
+            - Modifies internal state by calling `self._add_column(...)`
+            - Populates correlation-related columns in the result table
+
+        Raises:
+            KeyError: If required columns (`TAU`, `DIMLESS_FLOW`, `APPROXIMATE_DIMLESS_FLOW`) are missing.
+            Any exception from `CorrelationFunction.get_correlation()` or `_add_column`
+        """
+
+        # Helper: create DataFrame with TIME and FLOW columns
+        def make_flow_df(flow_col):
+            return pd.DataFrame({TIME: self.initial_dimension_flow[TAU], FLOW: self.initial_dimension_flow[flow_col]})
+
+        # Original flow
+        original_correlation_function = CorrelationFunction(make_flow_df(DIMLESS_FLOW), self.model_parameters[CORRELATION]).get_correlation()
         # self.generated_correlation \
         #     = CorrelationFunction(self.generated_dimensionless_flow, self.experiment[PERIOD]).get_correlation()
         # self.long_generated_correlation \
         #     = CorrelationFunction(self.long_generated_dimensionless_flow, self.experiment[PERIOD]).get_correlation()
-        self._add_column(correlation_function[CORRELATION], CORRELATION, 1.0)
-        self._add_column(correlation_function[TIME], VARTHETA, 1.0)
+        self._add_column(original_correlation_function[CORRELATION], CORRELATION, 1.0)
+        self._add_column(original_correlation_function[TIME], VARTHETA, 1.0)
+
+        # Approximate flow
+        approximate_correlation_function = CorrelationFunction(make_flow_df(APPROXIMATE_DIMLESS_FLOW), self.model_parameters[CORRELATION]).get_correlation()
+        self._add_column(approximate_correlation_function[CORRELATION], APPROXIMATE_CORRELATION, 1.0)
 
     def execute_probability(self):
         _, density =  calculate_density(

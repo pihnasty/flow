@@ -11,7 +11,7 @@
     "approximate": {
       "approximate_type": "SPECTRUM_WITH_MORE_REALIZATION",
       "number_of_intervals": 1,
-      "number_of_harmonics": 8,
+      "number_of_harmonics": 32,
       "description": "number_of_intervals is the number of uniform intervals into which the total research time is divided"
     },
     "correlation": {
@@ -24,7 +24,7 @@
     "input_data_paths": {
       "1" : {
         "path": "C:\\A\\Pro\\flow\\pom\\stochastic03\\files\\dataset_2021_KaKr.csv",
-        "load_period" : 10,
+        "load_period" : 1,
         "description" : ""
       }
     },
@@ -353,7 +353,7 @@
           "y_tick_main": 1.0,
           "y_tick_auxiliary": 0.5,
           "x_label_name": "$\\tau$",
-          "y_label_name": "$\\gamma_a(\\tau)$"
+          "y_label_name": "$\\gamma(\\tau),\\gamma_a(\\tau)$"
         }
       },
       "output_data_path": "1",
@@ -376,13 +376,13 @@
           "y_tick_main": 0.2,
           "y_tick_auxiliary": 0.1,
           "x_label_name": "$\\vartheta$",
-          "y_label_name": "$k(\\vartheta)$"
+          "y_label_name": "$k(\\vartheta), k_a(\\vartheta)$"
         }
       },
       "output_data_path": "1",
       "path": "plots//correlation",
       "file_name": "corr",
-      "y_columns": ["correlation"],
+      "y_columns": ["correlation", "approximate_correlation"],
       "x_column": "vartheta"
     },
     {

@@ -349,7 +349,7 @@
           "x_tick_main": 0.2,
           "x_tick_auxiliary": 0.1,
           "y_min": 0.0,
-          "y_max": 5.0,
+          "y_max": 6.0,
           "y_tick_main": 1.0,
           "y_tick_auxiliary": 0.5,
           "x_label_name": "$\\tau$",
@@ -359,7 +359,7 @@
       "output_data_path": "1",
       "path": "plots//approximateDimlessFlow",
       "file_name": "initDimlessFlow",
-      "y_columns": ["dimless_flow", "approximate_dimless_flow"],
+      "y_columns": ["dimless_flow", "approximate_dimless_flow","approximate_dimless_flow_cos3"],
       "x_column": "tau"
     },
     {
@@ -410,6 +410,29 @@
     },
     {
       "plot_template" : {
+        "plot_name": "init_flow_line",
+        "plot_type": "line",
+        "plot_parameters": {
+          "x_min": 1.0,
+          "x_max": 6.0,
+          "x_tick_main": 1.0,
+          "x_tick_auxiliary": 0.5,
+          "y_min": 0.0,
+          "y_max": 0.8,
+          "y_tick_main": 0.2,
+          "y_tick_auxiliary": 0.1,
+          "x_label_name": "$\\gamma$",
+          "y_label_name": "f($\\gamma),f_a(\\gamma),f_g(\\gamma$)"
+        }
+      },
+      "output_data_path": "1",
+      "path": "plots//density",
+      "file_name": "density",
+      "y_columns": ["initial_dimensionless_flow_density_y", "approximate_initial_dimensionless_flow_density_y", "approximate_initial_dimensionless_flow_for_cos3_density_y"],
+      "x_column": "flow_probability_x"
+    },
+    {
+      "plot_template" : {
         "plot_name": "init_flow_hist",
         "plot_type": "hist",
         "plot_parameters": {
@@ -434,6 +457,51 @@
       "path": "plots//inputDimlessFlow",
       "file_name": "flow_dimless_hist",
       "y_columns": ["dimless_flow"],
+      "x_column": "tau"
+    },
+    {
+      "plot_template" : {
+        "plot_name": "init_flow_hist",
+        "plot_type": "hist",
+        "plot_parameters": {
+          "x_label_name": "$\\gamma$",
+          "y_label_name": "f($\\gamma$)"
+        }
+      },
+      "output_data_path": "1",
+      "path": "plots//inputDimlessFlow",
+      "file_name": "dimless_flow_hist",
+      "y_columns": [  "dimless_flow"],
+      "x_column": "tau"
+    },
+    {
+      "plot_template" : {
+        "plot_name": "init_flow_hist",
+        "plot_type": "hist",
+        "plot_parameters": {
+          "x_label_name": "$\\gamma$",
+          "y_label_name": "$f_a\\gamma$)"
+        }
+      },
+      "output_data_path": "1",
+      "path": "plots//inputDimlessFlow",
+      "file_name": "approximate_dimless_flow_hist",
+      "y_columns": ["approximate_dimless_flow"],
+      "x_column": "tau"
+    },
+    {
+      "plot_template" : {
+        "plot_name": "init_flow_hist",
+        "plot_type": "hist",
+        "plot_parameters": {
+          "x_label_name": "$\\gamma$",
+          "y_label_name": "$f_g(\\gamma$)"
+        }
+      },
+      "output_data_path": "1",
+      "path": "plots//inputDimlessFlow",
+      "file_name": "approximate_dimless_flow_cos3_hist",
+      "y_columns": ["approximate_dimless_flow_cos3" ],
       "x_column": "tau"
     },
     {

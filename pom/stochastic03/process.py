@@ -14,15 +14,19 @@ from pom.stochastic03.InputFlow import InputFlow
 
 start_time = datetime.now()
 FILE_NAME = "C:\\A\\Pro\\flow\\pom\\stochastic03\\project\\dataset_2020_ZeYaWuWa\\data.json"
-# FILE_NAME = "C:\\A\\Pro\\flow\\pom\\stochastic03\\project\\dataset_2018_Buy\\data.json"
+#FILE_NAME = "C:\\A\\Pro\\flow\\pom\\stochastic03\\project\\dataset_2018_Buy\\data.json"
 #FILE_NAME = "C:\\A\\Pro\\flow\\pom\\stochastic03\\project\\dataset_2021_BhAsHuHoEv\\data.json"
-# FILE_NAME = "C:\\A\\Pro\\flow\\pom\\stochastic03\\project\\dataset_2021_KaKr\\data.json"
+#FILE_NAME = "C:\\A\\Pro\\flow\\pom\\stochastic03\\project\\dataset_2021_KaKr\\data.json"
+# FILE_NAME = "C:\\A\\Pro\\flow\\pom\\stochastic03\\project\\dataset_2021_DoKrWa\\data.json"
+#FILE_NAME = "C:\\A\\Pro\\flow\\pom\\stochastic03\\project\\dataset_2021_CuSa\\data.json"
+
 input_flow = InputFlow(FILE_NAME)
 
 input_flow.initial_load_dimension_data()
 input_flow.transform_initial_dimension_to_dimensionless()
 input_flow.approximate_dimensionless()
 input_flow.execute_correlation()
+input_flow.generate_dimensionless_flow_for_cos3()
 input_flow.execute_probability()
 input_flow.write_to_scv()
 input_flow.paremeter_model_save()

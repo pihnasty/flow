@@ -14,9 +14,12 @@ from dim_less.dimensionless import Dimensionless
 from constants.flow_constants import APPROXIMATE_TYPE, STD, DIMENSIONLESS, APPROXIMATE, FLOW, TIME, DIMLESS_FLOW, TAU, \
     NUMBER_OF_INTERVALS, NUMBER_OF_HARMONICS, APPROXIMATE_DIMLESS_FLOW, APPROXIMATE_ERR_DIMLESS_FLOW, \
     HARMONIC_NUMBER, CORRELATION, VARTHETA, PROBABILITY, \
-    NUMBER_DENSITY_INTERVALS, FLOW_PROBABILITY_Y, FLOW_PROBABILITY_X, FLOW_DENSITY_Y, CRITICAL_PROB_VALUE, \
+    NUMBER_DENSITY_INTERVALS, FLOW_PROBABILITY_Y, FLOW_PROBABILITY_X, CRITICAL_PROB_VALUE, \
     DIMLESS_FLOW3, AMPLITUDES_FOR_INTERVAL, PHASES_FOR_INTERVAL, \
-    COS_HARMONICS_FOR_INTERVAL, SIN_HARMONICS_FOR_INTERVAL, APPROXIMATE_CORRELATION
+    COS_HARMONICS_FOR_INTERVAL, SIN_HARMONICS_FOR_INTERVAL, APPROXIMATE_CORRELATION, PHASE0S_FOR_INTERVAL, \
+    C_COS3_HARMONICS_FOR_INTERVAL, C_SIN3_HARMONICS_FOR_INTERVAL, APPROXIMATE_DIMLESS_FLOW_COS3, \
+    INITIAL_DIMENSIONLESS_FLOW_DENSITY_Y, APPROXIMATE_INITIAL_DIMENSIONLESS_FLOW_DENSITY_Y, \
+    APPROXIMATE_INITIAL_DIMENSIONLESS_FLOW_FOR_COS3_DENSITY_Y, FLOW_DENSITY_Y
 from approximate_model.spectrum_approximation import SpectrumWithMoreRealizationApproximate
 from io_utils.console.progress import progress
 from maths.stats import calculate_probability, calculate_density
@@ -63,28 +66,28 @@ class InputFlow:
         self._add_column(initial_dimensionless_flow[TIME], TAU)
 
     def approximate_dimensionless(self):
-        approximate_dimension = ApproximateDimension(
+        self.approximate_dimension = ApproximateDimension(
             pd.DataFrame(copy.deepcopy({
                 TIME: self.initial_dimension_flow[TAU],
                 FLOW: self.initial_dimension_flow[DIMLESS_FLOW]
             })),
             self.model_parameters[APPROXIMATE]
         )
-        approximate_initial_dimensionless_flow = approximate_dimension.get_approximate_dim()
+        approximate_initial_dimensionless_flow = self.approximate_dimension.get_approximate_dim()
         # need to discuss
-        self.approximate_tau_sequence = approximate_dimension.get_tau_sequence()
+        self.approximate_tau_sequence = self.approximate_dimension.get_tau_sequence()
 
         self._add_column(range(self.model_parameters[APPROXIMATE][NUMBER_OF_HARMONICS]), HARMONIC_NUMBER)
-        cos_harmonic_values, sin_harmonic_values = approximate_dimension.get_cos_and_sin_harmonic_values()
-        amplitudes_for_intervals, phases_for_intervals = approximate_dimension.get_amplitudes_and_phases_for_interval()
+        cos_harmonic_values, sin_harmonic_values = self.approximate_dimension.get_cos_and_sin_harmonic_values()
+        self.amplitudes_for_intervals, self.phases_for_intervals = self.approximate_dimension.get_amplitudes_and_phases_for_interval()
 
         for i in range(self.model_parameters[APPROXIMATE][NUMBER_OF_INTERVALS]):
             self._add_column(cos_harmonic_values[i], COS_HARMONICS_FOR_INTERVAL + str(i + 1))
             self._add_column(sin_harmonic_values[i], SIN_HARMONICS_FOR_INTERVAL + str(i + 1))
-            self._add_column(amplitudes_for_intervals[i], AMPLITUDES_FOR_INTERVAL + str(i + 1))
-            self._add_column(phases_for_intervals[i], PHASES_FOR_INTERVAL + str(i + 1))
+            self._add_column(self.amplitudes_for_intervals[i], AMPLITUDES_FOR_INTERVAL + str(i + 1))
+            self._add_column(self.phases_for_intervals[i], PHASES_FOR_INTERVAL + str(i + 1))
 
-        self._add_column(approximate_dimension.get_error_approximate_dim()[FLOW], APPROXIMATE_ERR_DIMLESS_FLOW)
+        self._add_column(self.approximate_dimension.get_error_approximate_dim()[FLOW], APPROXIMATE_ERR_DIMLESS_FLOW)
         self._add_column(approximate_initial_dimensionless_flow[FLOW], APPROXIMATE_DIMLESS_FLOW)
         progress(1, 1, "approximate_dimensionless \n")
 
@@ -133,13 +136,58 @@ class InputFlow:
         # Approximate flow
         approximate_correlation_function = CorrelationFunction(make_flow_df(APPROXIMATE_DIMLESS_FLOW), self.model_parameters[CORRELATION]).get_correlation()
         self._add_column(approximate_correlation_function[CORRELATION], APPROXIMATE_CORRELATION, 1.0)
+        progress(1, 1, "execute_correlation \n")
+
+    def generate_dimensionless_flow_for_cos3(self):
+        """
+        Generate and record the dimensionless flow approximation using harmonic coefficients.
+
+        This method:
+        1. Retrieves the sine, cosine, and phase coefficients for each interval
+           from the approximation model.
+        2. Stores these coefficients as columns in the current dataset.
+        3. Computes the initial dimensionless flow approximation based on the
+           interval amplitudes and phases, and saves the resulting flow column.
+
+        Returns
+        -------
+        None
+        """
+        c_sin3s, c_cos3s, phase0s_for_intervals  = self.approximate_dimension.get_c_sin3_and_c_cos3_from_phases_for_interval()
+        for i in range(self.model_parameters[APPROXIMATE][NUMBER_OF_INTERVALS]):
+            idx = str(i + 1)
+            self._add_column(c_sin3s[i],  f"{C_SIN3_HARMONICS_FOR_INTERVAL}{idx}")
+            self._add_column(c_cos3s[i], f"{C_COS3_HARMONICS_FOR_INTERVAL}{idx}")
+            self._add_column(phase0s_for_intervals[i], f"{PHASE0S_FOR_INTERVAL}{idx}")
+
+        self.approximate_initial_dimensionless_flow_for_cos3 = self.approximate_dimension.get_approximate_dim_by_amplitudes_and_phases(
+            self.amplitudes_for_intervals, phase0s_for_intervals
+        )
+
+        self._add_column(self.approximate_initial_dimensionless_flow_for_cos3[FLOW], APPROXIMATE_DIMLESS_FLOW_COS3)
+        progress(1, 1, "generate_dimensionless_flow_for_cos3 \n")
+
 
     def execute_probability(self):
-        _, density =  calculate_density(
+        _, initial_dimensionless_flow_density =  calculate_density(
             self.initial_dimension_flow[DIMLESS_FLOW],
             self.model_parameters[PROBABILITY][NUMBER_DENSITY_INTERVALS],
             FLOW_DENSITY_Y, FLOW_PROBABILITY_X
         )
+
+        approximate_initial_dimensionless_flow = self.approximate_dimension.get_approximate_dim()
+        _, approximate_initial_dimensionless_flow_density =  calculate_density(
+            approximate_initial_dimensionless_flow[FLOW],
+            self.model_parameters[PROBABILITY][NUMBER_DENSITY_INTERVALS],
+            FLOW_DENSITY_Y, FLOW_PROBABILITY_X
+        )
+
+        _, approximate_initial_dimensionless_flow_for_cos3_density =  calculate_density(
+            self.approximate_initial_dimensionless_flow_for_cos3[FLOW],
+            self.model_parameters[PROBABILITY][NUMBER_DENSITY_INTERVALS],
+            FLOW_DENSITY_Y, FLOW_PROBABILITY_X
+        )
+
         probability =  calculate_probability(
             self.initial_dimension_flow[DIMLESS_FLOW],
             self.model_parameters[PROBABILITY][NUMBER_DENSITY_INTERVALS],
@@ -151,9 +199,12 @@ class InputFlow:
         dimension_flow_for_conveyor3 = self.execute_dimension_flow_for_conveyor3(1.0)
 
         self._add_column(probability[FLOW_PROBABILITY_Y], FLOW_PROBABILITY_Y, 1.0)
-        self._add_column(probability[FLOW_PROBABILITY_X], FLOW_PROBABILITY_X, 2.0)
+        self._add_column(probability[FLOW_PROBABILITY_X], FLOW_PROBABILITY_X, 1000.0)
 
-        self._add_column(density[FLOW_DENSITY_Y], FLOW_DENSITY_Y, 1.0)
+        self._add_column(initial_dimensionless_flow_density[FLOW_DENSITY_Y], INITIAL_DIMENSIONLESS_FLOW_DENSITY_Y, 0.0)
+        self._add_column(approximate_initial_dimensionless_flow_density[FLOW_DENSITY_Y], APPROXIMATE_INITIAL_DIMENSIONLESS_FLOW_DENSITY_Y, 0.0)
+        self._add_column(approximate_initial_dimensionless_flow_for_cos3_density[FLOW_DENSITY_Y], APPROXIMATE_INITIAL_DIMENSIONLESS_FLOW_FOR_COS3_DENSITY_Y, 0.0)
+
         self._add_column(
             [critical_prob_value]*len(probability[FLOW_PROBABILITY_Y]), CRITICAL_PROB_VALUE, critical_prob_value
         )
@@ -217,6 +268,7 @@ class InputFlow:
         file.write("\n")
         file.write("flowStd    : %10.7f" % (data[y_row_name].std()))
         file.write("\n")
-        file.write("pi1=flowMean/flowStd : %10.7f" % (data[y_row_name].std()/data[y_row_name].mean()))
+        file.write("pi1=flowMean/flowStd : %10.7f" % (data[y_row_name].mean()/data[y_row_name].std()))
+        file.write("\n")
         file.write("Max time value       : %10.7f" % (self.model_parameters[DIMENSIONLESS][Constants.JsonNames.max_time_value]))
         file.write("\n\n")

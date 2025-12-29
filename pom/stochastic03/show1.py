@@ -7,7 +7,7 @@ import math
 import common_utils.Graph.Graphics.LineCharts.LineChart as lineChart
 import common_utils.Graph.Graphics.Q_Q_Charts.Q_Q_Chart as q_q_Chart
 import common_utils.Graph.Graphics.Histograms.Hist as hist
-import utils.FileUtil as file_util
+import io_utils.FileUtil as file_util
 
 RESULT_DATA = 'resultData/'
 def visual_lines(lines, experiment, plot_name):

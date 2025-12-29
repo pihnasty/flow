@@ -1,4 +1,7 @@
+from datetime import datetime
+
 from constants.flow_constants import FLOW
+from io_utils.csv.csv_writer import write_csv, write_multiple_matrices_to_csv
 from io_utils.console.progress import progress
 from pom.pde.Constants import TECHNOLOGICAL_ROUTE, \
     MAX_OPERATION_TIME, NUMBER_DISTRIBUTION_DENSITY_INTERVALS, X, Y, DISTRIBUTION_DENSITY_LINE, INITIAL_DATA, \
@@ -8,6 +11,7 @@ from pom.pde.Constants import TECHNOLOGICAL_ROUTE, \
     NUMBER_BATCH_DENSITY_INTERVALS, PROBABILITY_LINE, X_MIN, X_MAX, SIZE_PACKAGE, SHOWED_LINE, EACH_N, BACKLOGS_SIZE, \
     X_TICK_MAIN, X_TICK_AUXILIARY
 from pom.pde.TechnologicalRoute import TechnologicalRoute
+from pom.pde.flowshop_2m.flow_shop_analyzer import FlowShopAnalyzer
 from pom.pde.initData.inizialize_data_e7_e1_01_route_normal import experiments
 
 
@@ -39,6 +43,10 @@ class PdeFlow:
 
         self.numberExamples = 0
 
+
+
+
+
     def create_route(self):
         technological_route \
             = TechnologicalRoute(self.route, self.max_operation_time, self.number_distribution_density_intervals,
@@ -47,6 +55,10 @@ class PdeFlow:
         self.route_operations_times = technological_route.generate_route_operations_times()
         self.generated_distribution_densities = technological_route.calculate_generated_distribution_densities()
         self.generated_technological_paths = technological_route.calculate_technological_paths(0)
+
+
+        flow_shop_analyzer = FlowShopAnalyzer(self.route, self.result_data_structure, self.file_name)
+        flow_shop_analyzer.calculate_operation_delays()
 
         random_size = round(self.number_operation_time/self.order_size) -1
         self.batch_times = self.initialization_batch_times(random_size)
@@ -370,63 +382,11 @@ class PdeFlow:
 
     def parameter_model_save(self):
         result_data = self.result_data_structure["result_data"] + '/'
-        path_file = result_data + self.file_name + "\ModelDescription.txt"
+        path_file = result_data + self.file_name + "\\ModelDescription.txt"
 
         file = open(path_file, "w")
-        # file.write("Model name:               " + self.file_name)
-        # file.write("\n\n")
-        # file.write("Number of harmonics:      %10d " % (self.experiment["number_of_harmonics"]))
-        # file.write("\n\n")
-        # file.write("Period             :      %10d " % (self.experiment["period"]))
-        # file.write("\n\n")
-        # file.write("Load_period        :      %10d " % (self.experiment["load_period"]))
-        # file.write("\n\n")
-
         self.save_parameters("Dimensionless parameters:               ",
                              self.batch_times[Y]/self.order_size, file)
-        # self.save_parameters("Dimensionless parameters:               ",
-        #                      self.initial_dimensionless_flow, file)
-        # self.save_parameters("Dimensionless approximated parameters:               ",
-        #                      self.approximate_initial_dimensionless_flow, file)
-        # self.save_parameters("Dimensionless generated parameters:               ",
-        #                      self.generated_dimensionless_flow, file)
-        #
-        # approximate_tau_sequence = pd.DataFrame()
-        # approximate_tau_sequence[FLOW] = self.approximate_tau_sequence
-        # approximate_tau_sequence[TIME] = self.approximate_tau_sequence
-        # self.save_parameters("Approximate_tau_sequence        :               ",
-        #                      approximate_tau_sequence, file)
-        #
-        # generated_tau_sequence = pd.DataFrame()
-        # generated_tau_sequence[FLOW] = self.generated_tau_sequence
-        # generated_tau_sequence[TIME] = self.generated_tau_sequence
-        # self.save_parameters("Generated_tau_sequence         :               ",
-        #                      generated_tau_sequence, file)
-        #
-        # long_generated_tau_sequence = pd.DataFrame()
-        # long_generated_tau_sequence[FLOW] = self.long_generated_tau_sequence
-        # long_generated_tau_sequence[TIME] = self.long_generated_tau_sequence
-        # self.save_parameters("Long_generated_tau_sequence         :               ",
-        #                      long_generated_tau_sequence, file)
-        #
-        # file.write("Optimal parameters:               ")
-        # file.write("Fourier coefficients               :")
-        # file.write("\n")
-        # if hasattr(self, 'coefficients'):
-        #     for n in range(len(self.coefficients)):
-        #         file.write("  n: %2d  " % n)
-        #         file.write("%10.5f" % self.coefficients[n])
-        # file.write("\n")
-        #
-        # from sklearn.metrics import mean_squared_error
-        # mean_squared_error_appr_init = mean_squared_error(self.initial_dimensionless_flow[FLOW], self.approximate_initial_dimensionless_flow[FLOW])
-        # file.write("MSE appr-init               :      %10.5f " % mean_squared_error_appr_init)
-        # file.write("\n\n")
-        # mean_squared_error_appr_init_to_mean = mean_squared_error_appr_init / self.initial_dimensionless_flow[FLOW].mean()
-        # file.write("MSE appr-init / init_mean   :      %10.5f " % mean_squared_error_appr_init_to_mean)
-        # file.write("\n\n")
-
-
         file.close()
 
     def save_parameters(self, description, data, file):

@@ -34,7 +34,7 @@ experiments = {
         , NUMBER_BATCH_DENSITY_INTERVALS: 50
         , NUMBER_OPERATION_TIME: 10000  # 1000->100000
         , ORDER_SIZE: 1024    # number of parts into batch
-        , BACKLOGS_SIZE: 1,  # accumulate bunker size
+        , BACKLOGS_SIZE: 1,  # accumulate bunker size = in buffer+ one in processing
         SHOWED_LINE : {
             EACH_N: 4,
             SIZE_PACKAGE: 128    # size of the package with shows in plot. For instance:

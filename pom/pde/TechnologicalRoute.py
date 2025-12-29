@@ -95,11 +95,8 @@ class TechnologicalRoute:
                     tau_m = self.route_operations_times[m][Y][n + random_step]
                     if n<=k:
                         if n == 0:
-                            try:
-                                technological_path["Xmin"][m] = technological_path[X][m - 1] + tau_m
-                                technological_path[X][m] = technological_path["Xmin"][m]
-                            except KeyError:
-                                pass
+                            technological_path["Xmin"][m] = technological_path[X][m - 1] + tau_m
+                            technological_path[X][m] = technological_path["Xmin"][m]
                         else:
                             if m < len(self.technological_route):
                                 technological_path["Xmin"][m] = technological_path[X][m - 1]  + tau_m
